@@ -1,12 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.css'
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-loading-skeleton/dist/skeleton.css'
-import App from './App'
-ReactDOM.createRoot(document.getElementById('root')).render(
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import { Provider } from "react-redux";
+import store from "./sagas/configureStore";
+import App from "./App";
+ReactDOM.createRoot(document.getElementById("root")).render(
   <>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
+    <ToastContainer
+      autoClose={1000}
+      style={{ zIndex: "9999999" }}
+    ></ToastContainer>
   </>
-)
-
+);
