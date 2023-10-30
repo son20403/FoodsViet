@@ -44,7 +44,7 @@ const AddNewPosts = () => {
     }
     useEffect(() => {
         dispatch(categoriesRequest())
-    }, []);
+    }, [token]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>

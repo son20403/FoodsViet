@@ -27,14 +27,14 @@ const InfoUser = () => {
     useEffect(() => {
         dispatch(customersRequest())
         dispatch(postsRequest())
-    }, []);
+    }, [token]);
 
     return (
         <div className='bg-gray-50 relative'>
             <LoadingRequest show={loading}></LoadingRequest>
             <LoadingRequest show={loadingPost}></LoadingRequest>
             <div className='w-full h-auto flex flex-col gap-5 '>
-                <BannerCommon className='py-16 bg-bottom' image={'../src/assets/image/banner-user.jpg'} />
+                <BannerCommon className=' bg-bottom' image={'../src/assets/image/banner-user.jpg'} />
                 <div className='page-content relative h-[240px] md:h-[120px] lg:h-[150px] flex justify-between bg-white
                     rounded-xl flex-col items-center'>
                     <div className=' flex flex-col items-center md:flex-row w-full absolute bottom-0 left-1/2 

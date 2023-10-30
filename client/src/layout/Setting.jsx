@@ -7,13 +7,18 @@ import { closeSetting } from '../sagas/global/globalSlice';
 
 const Setting = ({ show, onClick }) => {
     const navigate = useNavigate();
-    const { infoAuth } = useSelector((state) => state.auth)
+    const { token, infoAuth } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
     const handleLogout = () => {
         startTransition(() => {
             dispatch(logout());
-            navigate('/signin');
             dispatch(closeSetting());
+            // navigate('/signin');
+        });
+    }
+    const handleSignin = () => {
+        startTransition(() => {
+            navigate('/signin');
         });
     }
     return (
@@ -24,11 +29,16 @@ const Setting = ({ show, onClick }) => {
                 flex-col px-5 py-5 text-sm z-[10] right-0 shadow-soft border-t border-primary 
                 md:max-w-[200px] lg:text-center
                 ${show ? 'top-full' : 'invisible opacity-0'}`}>
-                <Link to={`/info/${infoAuth?.slug}`}>Thông tin người dùng</Link>
-                <Link to={'/add-post'}>Thêm bài viết</Link>
-                <div>Nhắn tin</div>
-                <hr />
-                <div className='cursor-pointer text-red-500' onClick={handleLogout}>Đăng xuất</div>
+                {token ? <>
+                    <Link to={`/info/${infoAuth?.slug}`}>Thông tin người dùng</Link>
+                    <Link to={'/add-post'}>Thêm bài viết</Link>
+                    <div>Nhắn tin</div>
+                    <hr />
+                    <div className='cursor-pointer text-red-500' onClick={handleLogout}>Đăng xuất</div>
+                </> :
+                    <>
+                        <div onClick={handleSignin} className='cursor-pointer text-primary'>Đăng Nhập</div>
+                    </>}
             </div>
         </>
     );
