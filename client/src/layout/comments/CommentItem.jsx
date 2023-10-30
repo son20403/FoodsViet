@@ -91,9 +91,10 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
                         {timeSince(comment?.timestamps || Date.now())}</span>
                     <p className='text-xs md:text-sm my-2 mb-5  lg:my-4'>
                         {comment.content}</p>
-                    <div ref={domReply}>
+                    {token && <div ref={domReply}>
                         <div ref={domEdit}>
-                            <div className='flex items-center gap-x-4 lg:gap-x-6 text-text-gray flex-wrap gap-y-5'>
+                            <div className='flex items-center gap-x-4 lg:gap-x-6 text-text-gray flex-wrap 
+                            gap-y-5'>
                                 <div onClick={handleShowReply} className="z-[2] ">
                                     <IconWrap className='cursor-pointer'><CommentIcon />
                                         <p className='text-[10px] md:text-xs'>
@@ -147,7 +148,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
                                     <ButtonComment isLoading={isSubmittingEditComment} />
                                 </form>
                             </div>
-                        </div></div>
+                        </div></div>}
                     {/* LIST COMMENT REPLY 1 lần */}
                     {listReplies?.length > 0 && countReply < 3 && listReplies.map(reply => (
                         <CommentItem key={reply._id} comment={reply} replies={replies}

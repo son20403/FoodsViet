@@ -34,7 +34,7 @@ const DetailPage = () => {
 
     const dispatch = useDispatch()
     const { posts, detail_post, loading } = useSelector((state) => state.posts);
-    const { infoAuth } = useSelector((state) => state.auth);
+    const { token, infoAuth } = useSelector((state) => state.auth);
     const { customers } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
     const { comments } = useSelector((state) => state.comments);
@@ -79,12 +79,13 @@ const DetailPage = () => {
     }
     const handleLikePost = () => {
         if (isLiked) return toast.warning("Bạn đã thích bài viết này!")
+        if (!token) return toast.warning("Bạn chưa đăng nhập!")
         dispatch(likePostRequest({ id: detail_post?._id, slug }))
     }
     useEffect(() => {
         dispatch(postDetailRequest({ slug }))
         dispatch(commentsRequest())
-    }, [slug]);
+    }, [slug, token]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
@@ -154,7 +155,7 @@ const DetailPage = () => {
                             </Heading>
                             <span>({commentByPosts?.length})</span>
                         </div>
-                        <div className='mt-5 lg:mb-10 w-full bg-white border py-3 px-2'>
+                        {token && <div className='mt-5 lg:mb-10 w-full bg-white border py-3 px-2'>
                             <form onSubmit={handleSubmit(handleComment)} autoComplete='off'
                                 className='flex items-center gap-x-4'>
                                 <div className='flex-1'>
@@ -165,7 +166,7 @@ const DetailPage = () => {
                                 </div>
                                 <ButtonComment isLoading={isSubmitting} />
                             </form>
-                        </div>
+                        </div>}
                         <div className='my-5'>
                             {rootComment?.length > 0 && rootComment.map(comment => (
                                 <CommentItem key={comment._id} comment={comment} replies={getReplies}
@@ -178,7 +179,7 @@ const DetailPage = () => {
                         <Heading isHeading className='mb-10 ml-0 text-center'>
                             - Bài viết liên quan -
                         </Heading>
-                        <ListPostsSidebar data={postByCategories}></ListPostsSidebar>
+                        <ListPostsSidebar message='Không có bài viết liên quan' data={postByCategories}></ListPostsSidebar>
                     </div>
                     <div className='mt-20'>
                         <Heading isHeading className='mb-10 ml-0 text-center'>

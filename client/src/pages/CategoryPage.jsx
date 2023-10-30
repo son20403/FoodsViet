@@ -12,11 +12,11 @@ import { categoriesRequest } from '../sagas/categories/categoriesSlice';
 
 const CategoryPage = () => {
     const { categories, loading } = useSelector((state) => state.categories);
-    console.log("🚀 ~ file: CategoryPage.jsx:14 ~ CategoryPage ~ loading:", loading)
+    const { token } = useSelector((state) => state.auth);
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(categoriesRequest())
-    }, []);
+    }, [token]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>

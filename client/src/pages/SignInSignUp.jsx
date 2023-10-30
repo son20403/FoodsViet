@@ -4,7 +4,7 @@ import useToggle from '../hooks/useToggle';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const SignInSignUp = () => {
     const { token } = useSelector((state) => state.auth);
     const { handleToggle, toggle, handleToggleFalse } = useToggle(false);

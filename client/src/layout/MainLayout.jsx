@@ -13,6 +13,7 @@ function MainLayout() {
   const location = useLocation();
 
   const { token } = useSelector((state) => state.auth);
+  console.log("🚀 ~ file: MainLayout.jsx:16 ~ MainLayout ~ token:", token)
   const tokenLocal = localStorage.getItem("authToken");
   useEffect(() => {
     dispatch(customersRequest());
@@ -21,9 +22,9 @@ function MainLayout() {
     dispatch(setNotifyGlobal(""));
   }, [token, dispatch, tokenLocal, location?.pathname]);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!token) navigate("/signin");
-  }, [token]);
+  // useEffect(() => {
+  //   if (!token) navigate("/signin");
+  // }, [token]);
   return (
     <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col ">
       <Header />
