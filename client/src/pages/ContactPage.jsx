@@ -1,5 +1,4 @@
 import React from "react";
-import InputFocus from "./InputFocus";
 
 const ContactPage = () => {
   return (

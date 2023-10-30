@@ -6,6 +6,8 @@ import ScrollToTop from "../layout/common/ScrollToTop";
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 
+const AboutPage = lazy(() => import("../pages/AboutPage"));
+const ContactPage = lazy(() => import("../pages/ContactPage"));
 const InfoUser = lazy(() => import("../pages/InfoUser"));
 const DetailPage = lazy(() => import("../pages/DetailPage"));
 const SignInSignUp = lazy(() => import("../pages/SignInSignUp"));
@@ -27,6 +29,8 @@ export const router = createBrowserRouter([
       { path: "/info-user/:id", element: <InfoUser /> },
       { path: "/posts", element: <PostPage /> },
       { path: "/add-post", element: <AddNewPosts /> },
+      { path: "/about", element: <AboutPage /> },
+      { path: "/contact", element: <ContactPage /> },
       {
         path: "/message",
         element: <MessagePage />,
