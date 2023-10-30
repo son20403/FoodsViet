@@ -1,5 +1,5 @@
 import { CKEditor } from '@ckeditor/ckeditor5-react'
-import Editor from 'ckeditor5-custom-build';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import React, { useEffect, useRef } from 'react';
 import { useController } from 'react-hook-form';
 import { Typography } from '../typography';
@@ -29,7 +29,7 @@ const Textarea = ({ name, control, value = '', errors }) => {
                     extraPlugins: [uploadPlugin],
                 }}
                 {...field}
-                editor={Editor}
+                editor={ClassicEditor}
                 data={field.value}
                 onBlur={field.onBlur}
                 onFocus={() => { }}
