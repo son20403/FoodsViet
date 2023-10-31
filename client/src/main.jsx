@@ -8,13 +8,8 @@ import { Provider } from "react-redux";
 import store from "./sagas/configureStore";
 import App from "./App";
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <div className="overflow-hidden">
-    <Provider store={store}>
-      <App />
-    </Provider>
-    <ToastContainer
-      autoClose={1000}
-      style={{ zIndex: "9999999" }}
-    ></ToastContainer>
-  </div>
+  <>
+    <Provider store={store}> <App /> </Provider>
+    <ToastContainer autoClose={1000} style={{ zIndex: "9999999" }}></ToastContainer>
+  </>
 );

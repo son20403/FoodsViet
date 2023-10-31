@@ -12,6 +12,7 @@ class BaseController {
         const fileData = req.file;
         const image = fileData?.path;
         const id_image = fileData?.filename;
+        const timeCreated = Date.now()
         try {
             const existingUser = await this.model.findOne({ user_name });
             if (existingUser) {
@@ -24,6 +25,7 @@ class BaseController {
                 id_image,
                 user_name,
                 password: hashPass,
+                timeCreated
             };
             const newUser = await this.model(userData).save();
             if (!newUser) {

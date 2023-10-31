@@ -25,7 +25,7 @@ const Portal = ({
             style={containerStyle}
         >
             {overlay && (
-                <div className={`${overlayClassName} fixed cursor-pointer inset-0 bg-black bg-opacity-50`} onClick={onClose}></div>
+                <div className={`${overlayClassName} fixed z-[99] cursor-pointer inset-0 bg-black bg-opacity-50`} onClick={onClose}></div>
             )}
             <div className={bodyClassName}
                 style={bodyStyle}
