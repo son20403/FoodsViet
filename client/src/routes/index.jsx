@@ -5,6 +5,8 @@ import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
+import Admin from "../ADMIN/Admin";
+const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
@@ -31,10 +33,7 @@ export const router = createBrowserRouter([
       { path: "/add-post", element: <AddNewPosts /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/contact", element: <ContactPage /> },
-      {
-        path: "/message",
-        element: <MessagePage />,
-      },
+      { path: "/message", element: <MessagePage /> },
     ],
   },
   //   {
@@ -50,26 +49,26 @@ export const router = createBrowserRouter([
   { path: "/signin", element: <SignInSignUp /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
-  // {
-  //     path: "/admin",
-  //     element: <AppAdminWrapper />,
-  //     children: [
-  //         { path: "", element: <ListPost /> },
-  //         { path: "list-post", element: <ListPost /> },
-  //         { path: "login", element: <LoginAdmin /> },
-  //         { path: "edit-post/:slug", element: <EditPost /> },
-  //         { path: "edit-customer/:id", element: <EditCustomer /> },
-  //         { path: "edit-admin/:id", element: <EditAdmin /> },
-  //         { path: "edit-category/:slug", element: <EditCategory /> },
-  //         { path: "list-category", element: <ListCategory /> },
-  //         { path: "list-customer", element: <ListCustomer /> },
-  //         { path: "list-admin", element: <ListAdmin /> },
-  //         { path: "add-post", element: <AddPost /> },
-  //         { path: "add-category", element: <AddCategory /> },
-  //         { path: "add-customer", element: <AddCustomer /> },
-  //         { path: "add-admin", element: <AddAdmin /> },
-  //     ]
-  // },
+  {
+    path: "/admin",
+    element: <AppAdmin />,
+    children: [
+      { path: "", element: <>Home</> },
+      { path: "home", element: <>Home</> },
+      { path: "posts", element: <PostPageAdmin /> },
+      // { path: "edit-post/:slug", element: <EditPost /> },
+      // { path: "edit-customer/:id", element: <EditCustomer /> },
+      // { path: "edit-admin/:id", element: <EditAdmin /> },
+      // { path: "edit-category/:slug", element: <EditCategory /> },
+      // { path: "list-category", element: <ListCategory /> },
+      // { path: "list-customer", element: <ListCustomer /> },
+      // { path: "list-admin", element: <ListAdmin /> },
+      // { path: "add-post", element: <AddPost /> },
+      // { path: "add-category", element: <AddCategory /> },
+      // { path: "add-customer", element: <AddCustomer /> },
+      // { path: "add-admin", element: <AddAdmin /> },
+    ]
+  },
 ]);
 function AppCustomer() {
   return (
@@ -78,6 +77,18 @@ function AppCustomer() {
       <ThemeProvider>
         <Suspense fallback={<LoadingPage></LoadingPage>}>
           <MainLayout />
+        </Suspense>
+      </ThemeProvider>
+    </div>
+  );
+}
+function AppAdmin() {
+  return (
+    <div>
+      <ScrollToTop />
+      <ThemeProvider>
+        <Suspense fallback={<LoadingPage></LoadingPage>}>
+          <Admin />
         </Suspense>
       </ThemeProvider>
     </div>

@@ -18,6 +18,9 @@ const Customer = new Schema(
         status: { type: Boolean, default: true },
         online: { type: Boolean, default: false },
         favourites: { type: Array, default: [String] },
+        timeOnlined: { type: Number },
+        timeCreated: { type: Number },
+        timeDestroy: { type: Number },
     },
     {
         timestamps: true,

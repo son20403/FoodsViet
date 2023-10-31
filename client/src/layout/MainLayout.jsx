@@ -26,7 +26,7 @@ function MainLayout() {
   //   if (!token) navigate("/signin");
   // }, [token]);
   return (
-    <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col ">
+    <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col overflow-hidden ">
       <Header />
       <Outlet />
       <Footer />

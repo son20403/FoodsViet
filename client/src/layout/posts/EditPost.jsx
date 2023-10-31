@@ -50,8 +50,8 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     }, []);
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <div className='absolute top-10  left-1/2 -translate-x-1/2   page-content mt-5'>
-                <div className='content transition-all  w-full z-[8] p-10 bg-white  rounded-lg'>
+            <div className='absolute top-10  left-1/2 -translate-x-1/2   page-content mt-5 z-[100]'>
+                <div className='content transition-all  w-full z-[100] p-10 bg-white  rounded-lg'>
                     <Heading isHeading>Chỉnh sửa bài viết </Heading>
                     <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 pt-10 mb-10'>
