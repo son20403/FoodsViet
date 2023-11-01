@@ -12,7 +12,6 @@ const PostItemAdmin = ({ data }) => {
     const { customers } = useSelector((state) => state.customers);
     const dataCategory = categories.filter((cate) => cate._id === data?.category)[0]
     const dataCustomer = customers.filter((cus) => cus._id === data?.id_customer)[0]
-
     const { handleToggle, toggle } = useToggle(false);
     return (
         <>
@@ -42,11 +41,11 @@ const PostItemAdmin = ({ data }) => {
                         {dataCustomer?.user_name || ''}
                     </Typography>
                 </td>
-                <td className={className}>
+                <td className={`${className} text-center`}>
                     <Chip
                         variant="gradient"
                         color={data?.status === 'approved' ? "green" : data?.status === 'pending' ? "yellow" : 'red'}
-                        value={data?.status}
+                        value={data?.status === 'approved' ? "Đã duyệt" : data?.status === 'pending' ? "Chờ duyệt" : 'Đã hủy'}
                         className="py-0.5 px-2 text-[11px] font-medium inline-block"
                     />
                 </td>
@@ -57,7 +56,7 @@ const PostItemAdmin = ({ data }) => {
                 </td>
                 <td className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}>
                     <Typography
-                        className="text-xs font-semibold  text-blue-gray-600 "
+                        className="text-xs font-semibold  text-blue-gray-600 cursor-pointer"
                     >
                         <EyeIcon {...icon} onClick={handleToggle}></EyeIcon>
                     </Typography>

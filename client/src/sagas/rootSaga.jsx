@@ -4,6 +4,7 @@ import { all, fork } from "redux-saga/effects";
 import commetsSagas from "./comments/commentsSagas";
 import customersSagas from "./customers/customersSagas";
 import categoriesSagas from "./categories/categoriesSagas";
+import adminSagas from "./admin/adminSagas";
 
 
 export default function* rootSaga() {
@@ -13,5 +14,6 @@ export default function* rootSaga() {
         fork(commetsSagas),
         fork(customersSagas),
         fork(categoriesSagas),
+        fork(adminSagas)
     ])
 }

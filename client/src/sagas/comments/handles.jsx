@@ -5,6 +5,8 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetAllComments({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getAllComments, payload);
         if (response) {
             yield put(getCommentsSuccess(response.data))
@@ -16,12 +18,12 @@ export function* handleGetAllComments({ payload }) {
 export function* handlePostComments({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(postComments, payload.comment);
         if (response) {
             yield put(postCommentsSuccess(response.data.message))
             yield put(commentsRequest())
             yield put(setNotifyGlobal(response.data?.message))
-
         }
     } catch (error) {
         yield handleCommonError(error)
@@ -31,6 +33,7 @@ export function* handlePostComments({ payload }) {
 export function* handleUpdateComment({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(updateComments, payload?.id, payload?.comment);
         if (response) {
             yield put(updateCommentSuccess())
@@ -44,6 +47,7 @@ export function* handleUpdateComment({ payload }) {
 export function* handleDeleteComment({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(deleteComment, payload?.id);
         if (response) {
             yield put(deleteCommentSuccess())

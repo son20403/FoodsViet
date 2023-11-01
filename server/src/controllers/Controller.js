@@ -1,7 +1,7 @@
 const cloudinary = require("cloudinary").v2;
 import argon2 from "argon2";
 import { generateAccessToken, generateRefreshToken } from "../jwt";
-
+import Post from '../models/Post'
 class BaseController {
     constructor(model) {
         this.model = model;
@@ -65,10 +65,10 @@ class BaseController {
                 });
             }
             if (user && passwordValid) {
+                const isAdmin = user.admin
                 const accessToken = generateAccessToken(user);
-                console.log("🚀 ~ file: Controller.js:67 ~ BaseController ~ login= ~ accessToken:", accessToken)
                 const refreshToken = generateRefreshToken(user);
-                res.cookie('refreshToken', refreshToken, {
+                res.cookie(isAdmin ? 'refreshTokenAdmin' : 'refreshToken', refreshToken, {
                     httpOnly: true,
                     secure: false,
                     path: '/',
@@ -111,6 +111,64 @@ class BaseController {
                 });
             return res.status(200).json(data);
         } catch (error) {
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Lỗi Server",
+            });
+        }
+    };
+
+    updatePost = async (req, res) => {
+        const id = req.query.id;
+        const formData = req.body;
+        const fileData = req.file;
+        const id_customer = req.customer?.id
+        let id_admin = ''
+        if (req.customer?.admin) {
+            id_admin = req.customer.id
+        }
+        try {
+            const hasPost = await Post.findOne({ _id: id });
+            if (!hasPost) {
+                if (fileData) cloudinary.uploader.destroy(fileData.filename);
+                return res.status(400).json({
+                    message: "Không tồn tại bài viết này",
+                });
+            }
+            const isValid = hasPost.id_customer === id_customer || req.customer?.admin
+            if (!isValid)
+                return res.status(400).json({
+                    message: "Bạn không có quyền để sửa bài viết này",
+                });
+            let newImage = hasPost.image;
+            let newIdImage = hasPost.id_image;
+
+            if (fileData) {
+                cloudinary.uploader.destroy(hasPost.id_image);
+                newImage = fileData.path;
+                newIdImage = fileData.filename;
+            }
+
+            const updatedData = {
+                ...formData,
+                image: newImage,
+                id_image: newIdImage,
+                id_admin
+            }
+
+            const updatedPost = await Post.findByIdAndUpdate(id, updatedData, {
+                new: true,
+            });
+            if (!updatedPost) {
+                if (fileData) cloudinary.uploader.destroy(fileData.filename);
+                return res.status(400).json({
+                    message: "Có lỗi xảy ra, không thể update",
+                });
+            }
+            const { id_image, updatedAt, createdAt, ...others } = updatedPost._doc;
+            return res.status(200).json({ ...others, message: "Cập nhật thành công" });
+        } catch (error) {
+            if (fileData) cloudinary.uploader.destroy(fileData.filename);
             console.log('err', error);
             return res.status(500).json({
                 message: "Lỗi Server",

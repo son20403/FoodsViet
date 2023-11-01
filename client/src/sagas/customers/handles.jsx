@@ -5,6 +5,8 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetDetailCustomer({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getDetailCustomer, payload.slug);
         if (response) {
             yield put(customerDetailSuccess(response.data))
@@ -16,6 +18,8 @@ export function* handleGetDetailCustomer({ payload }) {
 
 export function* handleGetAllCustomers({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getAllCustomers, payload);
         if (response) {
             yield put(customersSuccess(response.data))
@@ -27,32 +31,12 @@ export function* handleGetAllCustomers({ payload }) {
 
 export function* handleUpdateCustomers({ payload }) {
     try {
-        yield put(setLoadingCustomer(true))
-
-        const { response, timeout } = yield race({
-            response: call(updateCustomer, payload?.info),
-            timeout: delay(15000), // Chờ 5 giây, bạn có thể thay đổi thời gian tùy ý
-        });
-
-        if (timeout) {
-            yield put(setErrorGlobal('Quá thời gian'));
-            yield put(setLoadingCustomer(false))
-            return;
-        }
-
-        if (response) {
-            try {
-                yield put(customersRequest());
-            } catch (error) {
-                handleCommonError(error)
-            }
-
-            try {
-                yield put(setNotifyGlobal(response.data?.message));
-            } catch (error) {
-                handleCommonError(error)
-            }
-            yield put(setLoadingCustomer(false))
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = call(updateCustomer, payload?.info)
+        if (response?.data) {
+            yield put(customersRequest());
+            yield put(setNotifyGlobal(response.data?.message));
         }
     } catch (error) {
         yield handleCommonError(error)

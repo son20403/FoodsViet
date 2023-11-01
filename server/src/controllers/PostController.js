@@ -164,54 +164,7 @@ class PostController extends BaseController {
             });
         }
     };
-    updatePost = async (req, res) => {
-        const id = req.query.id;
-        const formData = req.body;
-        const fileData = req.file;
 
-        try {
-            const hasPost = await this.model.findOne({ _id: id });
-            if (!hasPost) {
-                if (fileData) cloudinary.uploader.destroy(fileData.filename);
-                return res.status(400).json({
-                    message: "Không tồn tại bài viết này",
-                });
-            }
-
-            let newImage = hasPost.image;
-            let newIdImage = hasPost.id_image;
-
-            if (fileData) {
-                cloudinary.uploader.destroy(hasPost.id_image);
-                newImage = fileData.path;
-                newIdImage = fileData.filename;
-            }
-
-            const updatedData = {
-                ...formData,
-                image: newImage,
-                id_image: newIdImage,
-            }
-
-            const updatedPost = await this.model.findByIdAndUpdate(id, updatedData, {
-                new: true,
-            });
-            if (!updatedPost) {
-                if (fileData) cloudinary.uploader.destroy(fileData.filename);
-                return res.status(400).json({
-                    message: "Có lỗi xảy ra, không thể update",
-                });
-            }
-            const { id_image, updatedAt, createdAt, ...others } = updatedPost._doc;
-            return res.status(200).json({ ...others, message: "Cập nhật thành công" });
-        } catch (error) {
-            if (fileData) cloudinary.uploader.destroy(fileData.filename);
-            console.log('err', error);
-            return res.status(500).json({
-                message: "Lỗi Server",
-            });
-        }
-    };
     uploadImage = async (req, res) => {
         const fileData = req.file;
         console.log("🚀 ~ file: PostController.js:214 ~ PostController ~ uploadImage= ~ fileData:", fileData)

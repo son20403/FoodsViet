@@ -4,24 +4,32 @@ import { generateAccessToken } from "../jwt";
 const middlewareAuth = {
   verifyToken: (req, res, next) => {
     const token = req.headers.token;
-    if (!token) return res.status(401).json({ message: "You're not authenticated" });
+    const usertype = req.headers.usertype;
+    if (!token) return res.status(401).json({ message: "Bạn chưa đăng nhập để sử dụng dịch vụ!" });
     const accessToken = token.split(" ")[1];
+    if (accessToken === 'null' || accessToken === '' || accessToken === 'undefined')
+      return res.status(401).json({ message: "Bạn chưa đăng nhập để sử dụng dịch vụ!" });
     jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, customer) => {
-      if (err) {
-        if (err.name === 'TokenExpiredError') {
-          const refreshToken = req.cookies.refreshToken;
-          if (!refreshToken) return res.status(401).json({ message: "Refresh token is missing", status: 'notAuth' });
-          jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, customer) => {
-            if (err) return res.status(403).json({ message: "Refresh token is not valid", status: 'notAuth' });
-            const dataCustomer = { _id: customer?.id, admin: customer?.admin, role: customer?.role }
-            const newAccessToken = generateAccessToken(dataCustomer);
-            if (newAccessToken) {
-              res.setHeader('new-token', newAccessToken);
-            }
-            req.customer = customer;
-            next();
-          });
+      if (err && err.name === 'TokenExpiredError') {
+        let chosenRefreshToken = null
+        const refreshToken = req.cookies.refreshToken;
+        const refreshTokenAdmin = req.cookies.refreshTokenAdmin;
+        if (usertype === 'customer') {
+          chosenRefreshToken = refreshToken;
+        } else if (usertype === 'admin') {
+          chosenRefreshToken = refreshTokenAdmin;
         }
+        if (!chosenRefreshToken) return res.status(401).json({ message: "Refresh token is missing", status: 'notAuth' });
+        jwt.verify(chosenRefreshToken, process.env.JWT_REFRESH_KEY, (err, customer) => {
+          if (err) return res.status(403).json({ message: "Refresh token is not valid", status: 'notAuth' });
+          const dataCustomer = { _id: customer?.id, admin: customer?.admin, role: customer?.role }
+          const newAccessToken = generateAccessToken(dataCustomer);
+          if (newAccessToken) {
+            res.setHeader('new-token', newAccessToken);
+          }
+          req.customer = customer;
+          next();
+        });
       } else {
         req.customer = customer;
         next();
@@ -29,14 +37,15 @@ const middlewareAuth = {
     });
   },
 
-  verifyTokenAdmin: (role = 'admin') => {
-    return (req, res, next) => {
-      if (req.customer && req.customer.role === role) {
+  verifyTokenAdmin: (req, res, next) => {
+    middlewareAuth.verifyToken(req, res, () => {
+      const customer = req.customer
+      if (customer && customer.admin === true) {
         next();
       } else {
-        res.status(403).json({ message: `You're not authenticated as ${role}` });
+        res.status(403).json({ message: `Bạn không phải là quản trị viên!` });
       }
-    };
+    });
   },
 };
 

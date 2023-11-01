@@ -10,6 +10,6 @@ import App from "./App";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
     <Provider store={store}> <App /> </Provider>
-    <ToastContainer autoClose={1000} style={{ zIndex: "9999999" }}></ToastContainer>
+    <ToastContainer autoClose={2500} style={{ zIndex: "9999999" }}></ToastContainer>
   </>
 );
