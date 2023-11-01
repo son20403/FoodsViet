@@ -14,7 +14,7 @@ const corsOptions = {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true, // Cho phép gửi cookies
     optionsSuccessStatus: 204,
-    exposedHeaders: ['new-token']
+    exposedHeaders: ['new-token', 'new-token-admin']
 }
 
 app.use(cors(corsOptions));

@@ -5,6 +5,8 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetAllCategories({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getAllCaterories, payload);
         if (response) {
             yield put(getCategoriesSuccess(response.data))

@@ -14,6 +14,7 @@ const authSlice = createSlice({
         customersRequest: (state) => {
             return {
                 ...state,
+                loading: true,
                 error: null,
             }
         },
@@ -21,12 +22,14 @@ const authSlice = createSlice({
             return {
                 ...state,
                 customers: action.payload,
+                loading: false,
                 error: null,
             }
         },
         updateCustomerRequest: (state) => {
             return {
                 ...state,
+                loading: true,
                 error: null,
             }
         },
@@ -34,6 +37,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 error: null,
+                loading: false,
             }
         },
         requestFailure: (state, action) => {
@@ -47,6 +51,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 error: null,
+                loading: true,
             }
         },
         customerDetailSuccess: (state, action) => {

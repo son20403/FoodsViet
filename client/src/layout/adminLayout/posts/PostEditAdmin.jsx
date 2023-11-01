@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
-import ModalBase from '../modal/ModalBase';
-import { Heading } from '../../components/heading';
-import { Field } from '../../components/field';
-import { BookmarkIcon } from '../../components/Icon';
-import { Label } from '../../components/label';
-import { Textarea } from '../../components/textarea';
-import { FileInput, Input } from '../../components/input';
-import { Select } from '../../components/select';
-import { Button } from '../../components/button';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
-import { updatePostRequest } from '../../sagas/posts/postsSlice';
-import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
+import { useEffect } from 'react';
+import { categoriesRequest } from '../../../sagas/categories/categoriesSlice';
+import ModalBase from '../../modal/ModalBase';
+import { Heading } from '../../../components/heading';
+import { Field } from '../../../components/field';
+import { FileInput, Input } from '../../../components/input';
+import { BookmarkIcon } from '../../../components/Icon';
+import { Select } from '../../../components/select';
+import { Label } from '../../../components/label';
+import { Textarea } from '../../../components/textarea';
+import { Button } from '../../../components/button';
+import LayoutEditAdmin from './LayoutEditAdmin';
+import { updatePostAdminRequest } from '../../../sagas/admin/adminSlice';
 
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
@@ -21,7 +23,7 @@ const schemaValidate = Yup.object({
     image: Yup.mixed(),
 })
 
-const EditPost = ({ data, show, onClick = () => { } }) => {
+const PostEditAdmin = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
@@ -29,7 +31,7 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     const handleSubmits = (value) => {
         try {
             const post = { ...value }
-            dispatch(updatePostRequest({ id: data._id, post, slug: data.slug }))
+            dispatch(updatePostAdminRequest({ id: data._id, post, slug: data.slug }))
             onClick()
             resetImageField()
         } catch (error) {
@@ -45,11 +47,11 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     }, []);
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <div className='absolute top-10  left-1/2 -translate-x-1/2   page-content mt-5 z-[100]'>
-                <div className='content transition-all  w-full z-[100] p-10 bg-white  rounded-lg'>
-                    <Heading isHeading>Chỉnh sửa bài viết </Heading>
-                    <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 pt-10 mb-10'>
+            <LayoutEditAdmin onClick={onClick}>
+                <div className='p-2 md:p-5'>
+                    <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center p-2 md:p-5 bg-white'>
+                        <Heading isHeading>Chỉnh sửa bài viết </Heading>
+                        <div className='grid grid-cols-1  gap-10 pt-10 mb-10'>
                             <Field>
                                 <Input control={control} errors={errors} value={data?.title} name='title'
                                     placeholder='Nhập tiêu đề bài viết' type='text' >
@@ -59,24 +61,22 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
                             <Field>
                                 <Select value={data?.category} data={categories} control={control} name={'category'} />
                             </Field>
-                            <div className=' col-span-1 md:col-span-2 mb-10'>
+                            <Field className=' col-span-1 mb-10'>
                                 <Label htmlFor={"image"}>Hình ảnh</Label>
                                 <FileInput oldImage={data?.image}
                                     control={control} name={'image'} errors={errors} lable={'Hình ảnh'} />
-                            </div>
-                            <div className=' col-span-1 md:col-span-2'>
-                                <Field>
-                                    <Label htmlFor={'content'}>Nội dung</Label>
-                                    <Textarea value={data?.content} control={control} errors={errors} name={'content'} />
-                                </Field>
-                            </div>
+                            </Field>
+                            <Field>
+                                <Label htmlFor={'content'}>Nội dung</Label>
+                                <Textarea value={data?.content} control={control} errors={errors} name={'content'} />
+                            </Field>
                         </div>
                         <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
                     </form>
                 </div>
-            </div>
+            </LayoutEditAdmin>
         </ModalBase>
     );
 };
 
-export default EditPost;
+export default PostEditAdmin;

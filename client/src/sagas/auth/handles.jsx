@@ -5,7 +5,8 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* authenticateCustomer({ payload }) {
     try {
-        yield put(setErrorGlobal(''));
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(loginAuth, payload);
         if (response) {
             const { message, accessToken, ...info } = response.data
@@ -21,7 +22,8 @@ export function* authenticateCustomer({ payload }) {
 
 export function* registerCustomer({ payload }) {
     try {
-        yield put(setErrorGlobal(''));
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(registerAuth, payload);
         if (response) {
             yield put(registerSuccess())
@@ -34,6 +36,8 @@ export function* registerCustomer({ payload }) {
 }
 export function* logoutCustomer({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(logoutAuth, payload);
         if (response) {
             yield put(setErrorGlobal(''));

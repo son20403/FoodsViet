@@ -4,8 +4,9 @@ import { createPostsSuccess, getDetailPostSuccess, getPostsSuccess, getSearchPos
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetAllPosts({ payload }) {
-    yield put(setLoadingPost(true))
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getAllPost, payload);
         if (response?.data) {
             yield put(getPostsSuccess(response.data?.reverse()))
@@ -15,13 +16,14 @@ export function* handleGetAllPosts({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-    yield put(setLoadingPost(false))
+
 
 }
 export function* handleGetDetailPosts({ payload }) {
-    yield put(setLoadingPost(true))
 
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getDetailPost, payload?.slug);
         if (response?.data) {
             yield put(getDetailPostSuccess(response.data))
@@ -31,12 +33,13 @@ export function* handleGetDetailPosts({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-    yield put(setLoadingPost(false))
+
 
 }
 export function* handleGetSearchPosts({ payload }) {
-    yield put(setLoadingPost(true))
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(getSearchPost, payload?.query);
         if (response?.data) {
             yield put(getSearchPostsSuccess(response.data))
@@ -44,11 +47,12 @@ export function* handleGetSearchPosts({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-    yield put(setLoadingPost(false))
+
 }
 export function* handleCreatePosts({ payload }) {
-    yield put(setLoadingPost(true))
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(createPost, payload?.post);
         if (response?.data) {
             yield put(createPostsSuccess())
@@ -57,11 +61,13 @@ export function* handleCreatePosts({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-    yield put(setLoadingPost(false))
+
 }
 export function* handleLikePost({ payload }) {
     console.log('')
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(likePost, payload?.id);
         if (response?.data) {
             yield put(likePostSuccess())
@@ -74,6 +80,8 @@ export function* handleLikePost({ payload }) {
 }
 export function* handleUploadImage({ payload }) {
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(uploadImage, payload?.image);
         if (response?.data) {
             yield put(setNotifyGlobal(response.data?.message));
@@ -83,8 +91,9 @@ export function* handleUploadImage({ payload }) {
     }
 }
 export function* handleUpdatePost({ payload }) {
-    yield put(setLoadingPost(true))
     try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
         const response = yield call(updatePost, payload?.id, payload?.post);
         if (response?.data) {
             yield put(updatePostSuccess());
@@ -94,7 +103,7 @@ export function* handleUpdatePost({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-    yield put(setLoadingPost(false))
+
 }
 function* handleCommonError(error) {
     console.log("error post:", error)

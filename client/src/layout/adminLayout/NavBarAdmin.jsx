@@ -2,39 +2,24 @@ import { useLocation, Link } from "react-router-dom";
 import {
   Navbar,
   Typography,
-  Button,
   IconButton,
   Breadcrumbs,
   Input,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
   Avatar,
 } from "@material-tailwind/react";
 import {
-  UserCircleIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  ClockIcon,
-  CreditCardIcon,
   Bars3Icon,
 } from "@heroicons/react/24/solid";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../sagas/global/globalSlice";
-// import {
-//   useMaterialTailwindController,
-//   setOpenConfigurator,
-//   setOpenSidenav,
-// } from "@/context";
+
 
 export function DashboardNavbar() {
-  // const [controller, dispatch] = useMaterialTailwindController();
-  // const { fixedNavbar, openSidenav } = controller;
   const dispatch = useDispatch()
   const fixedNavbar = true
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+  const { infoAdmin } = useSelector((state) => state.admin)
   const setOpenSidenav = () => {
     dispatch(toggleNavbar())
   }
@@ -87,31 +72,10 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Link to="/auth/sign-in">
-            <Button
-              variant="text"
-              color="blue-gray"
-              className="hidden items-center gap-1 px-4 xl:flex"
-            >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-              Sign In
-            </Button>
-            <IconButton
-              variant="text"
-              color="blue-gray"
-              className="grid xl:hidden"
-            >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-            </IconButton>
-          </Link>
-          <IconButton
-            variant="text"
-            color="blue-gray"
-          // onClick={() => setOpenConfigurator(dispatch, true)}
-          >
-            <Cog6ToothIcon className="h-5 w-5 text-blue-gray-500" />
-          </IconButton>
-          <Menu>
+          <div>
+            <Avatar src={infoAdmin?.image} size="sm" />
+          </div>
+          {/* <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">
                 <BellIcon className="h-5 w-5 text-blue-gray-500" />
@@ -188,7 +152,7 @@ export function DashboardNavbar() {
                 </div>
               </MenuItem>
             </MenuList>
-          </Menu>
+          </Menu> */}
         </div>
       </div>
     </Navbar>

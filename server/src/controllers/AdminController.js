@@ -17,6 +17,7 @@ class AdminController extends BaseController {
         this.categoryModel = categoryModel;
     }
 
+
     deleteRelatedData = async (id, userType) => {
         const posts = await this.postModel.find({ id_customer: id });
         let deleteTasks = posts.map(post => {
@@ -166,8 +167,9 @@ class AdminController extends BaseController {
         }
     };
     updateStatus = async (req, res) => {
-        const id = req.query.id;
-        const admin = req.customer.admin
+        const id = req.query?.id;
+        const admin = req.customer?.admin
+        const id_admin = req.customer?.id
         const { status } = req.body;
         const modelType = req.query.model;
         let model;
@@ -194,12 +196,12 @@ class AdminController extends BaseController {
                     message: "Không tồn tại sản phẩm này",
                 });
             }
-            if (!admin) {
-                return res.status(400).json({
-                    message: "Bạn không phải là Admin",
-                });
-            }
-            const dataPostStatus = await model.findByIdAndUpdate(dataPost._id, { status: status }, {
+            // if (!admin) {
+            //     return res.status(400).json({
+            //         message: "Bạn không phải là Admin",
+            //     });
+            // }
+            const dataPostStatus = await model.findByIdAndUpdate(dataPost._id, { status, id_admin }, {
                 new: true,
             });
             if (!dataPostStatus) {

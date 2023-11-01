@@ -15,7 +15,7 @@ const Admin = new Schema(
         full_name: { type: String, default: "" },
         id_image: { type: String, default: "" },
         address: { type: String, default: "" },
-        admin: { type: String, default: true },
+        admin: { type: Boolean, default: true },
         role: { type: String, default: "staff" },
         status: { type: Boolean, default: true },
         online: { type: Boolean, default: false },

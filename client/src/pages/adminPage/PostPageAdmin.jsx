@@ -7,23 +7,22 @@ import {
 } from "@material-tailwind/react";
 import PostItemAdmin from '../../layout/adminLayout/posts/PostItemAdmin';
 import { useDispatch, useSelector } from 'react-redux';
-import { postsRequest } from '../../sagas/posts/postsSlice';
 import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
 import { customersRequest } from '../../sagas/customers/customersSlice';
 import LoadingRequest from '../../layout/loading/LoadingRequest';
-// import { authorsTableData } from "@/data";
+import { getPostsAdminRequest } from '../../sagas/admin/adminSlice';
 
 const PostPageAdmin = () => {
-    const { posts, loading } = useSelector((state) => state.posts)
+    const { posts, loading } = useSelector((state) => state.admin)
     const dispatch = useDispatch()
 
-    const { token } = useSelector((state) => state.auth);
-    const tokenLocal = localStorage.getItem('authToken')
+    const { tokenAdmin } = useSelector((state) => state.admin);
+    const tokenLocal = localStorage.getItem('adminToken')
     useEffect(() => {
-        dispatch(postsRequest())
+        dispatch(getPostsAdminRequest())
         dispatch(categoriesRequest())
         dispatch(customersRequest())
-    }, [token, dispatch, tokenLocal]);
+    }, [tokenAdmin, dispatch, tokenLocal]);
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>

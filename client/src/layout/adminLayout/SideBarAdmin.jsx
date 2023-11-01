@@ -7,14 +7,11 @@ import {
     IconButton,
     Typography,
 } from "@material-tailwind/react";
-import useToggle from "../../hooks/useToggle";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../sagas/global/globalSlice";
-// import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 export function Sidenav({ brandImg, brandName, routes }) {
-    // const [controller, dispatch] = useMaterialTailwindController();
-    // const { sidenavColor, sidenavType, openSidenav } = controller;
+    const { infoAdmin } = useSelector((state) => state.admin)
     const dispatch = useDispatch()
     const sidenavTypes = {
         dark: "bg-gradient-to-br from-blue-gray-800 to-blue-gray-900",
@@ -38,7 +35,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
                     }`}
             >
                 <Link to="/" className="flex items-center gap-4 py-6 px-8">
-                    <Avatar src={brandImg} size="sm" />
+                    <Avatar src={infoAdmin?.image || brandImg} size="sm" />
                     <Typography
                         variant="h6"
                         color={sidenavType === "dark" ? "white" : "blue-gray"}
