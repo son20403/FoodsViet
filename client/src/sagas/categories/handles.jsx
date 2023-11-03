@@ -1,56 +1,40 @@
 import { call, put } from "redux-saga/effects";
-import { createCaterories, getAllAdminCaterories, getAllCaterories } from "./request";
+import {
+  createCaterories,
+  getAllAdminCaterories,
+  getAllCaterories,
+} from "./request";
 import { getCategoriesSuccess, requestFailure } from "./categoriesSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { addCategoriesAdminSuccess, getCategoriesAdminRequest, getCategoriesAdminSuccess } from "../admin/adminSlice";
+import {
+  addCategoriesAdminSuccess,
+  getCategoriesAdminRequest,
+  getCategoriesAdminSuccess,
+} from "../admin/adminSlice";
 
 export function* handleGetAllCategories({ payload }) {
-    try {
-        yield put(setNotifyGlobal(''))
-        yield put(setErrorGlobal(''))
-        const response = yield call(getAllCaterories, payload);
-        if (response) {
-            yield put(getCategoriesSuccess(response.data))
-        }
-    } catch (error) {
-        yield handleCommonError(error)
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getAllCaterories, payload);
+    if (response) {
+      yield put(getCategoriesSuccess(response.data));
     }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
 }
-export function* handleGetAllAdminCategories({ payload }) {
-    try {
-        yield put(setNotifyGlobal(''))
-        yield put(setErrorGlobal(''))
-        const response = yield call(getAllAdminCaterories, payload);
-        if (response) {
-            yield put(getCategoriesAdminSuccess(response.data))
-        }
-    } catch (error) {
-        yield handleCommonError(error)
-    }
-}
-export function* handleCreateCategories({ payload }) {
-    try {
-        yield put(setNotifyGlobal(''))
-        yield put(setErrorGlobal(''))
-        const response = yield call(createCaterories, payload);
-        if (response) {
-            yield put(addCategoriesAdminSuccess())
-            yield put(getCategoriesAdminRequest())
-        }
-    } catch (error) {
-        yield handleCommonError(error)
-    }
-}
+
 function* handleCommonError(error) {
-    console.log("error:", error)
-    if (error?.code === 'ERR_NETWORK') {
-        yield put(requestFailure(error));
-        yield put(setErrorGlobal(error?.message));
-    } else {
-        yield put(setNotifyGlobal(''))
-        yield put(requestFailure(error?.response?.data));
-        yield put(setErrorGlobal(error?.response?.data?.message));
-    }
+  console.log("error:", error);
+  if (error?.code === "ERR_NETWORK") {
+    yield put(requestFailure(error));
+    yield put(setErrorGlobal(error?.message));
+  } else {
+    yield put(setNotifyGlobal(""));
+    yield put(requestFailure(error?.response?.data));
+    yield put(setErrorGlobal(error?.response?.data?.message));
+  }
 }
 
 // export function* registerCustomer({ payload }) {

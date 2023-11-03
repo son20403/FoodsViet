@@ -7,7 +7,13 @@ import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
-const SignInPageAdmin = lazy(() => import("../pages/adminPage/SignInPageAdmin"));
+const CategoriPageAdmin = lazy(() =>
+  import("../pages/adminPage/CategoriPageAdmin")
+);
+
+const SignInPageAdmin = lazy(() =>
+  import("../pages/adminPage/SignInPageAdmin")
+);
 
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
@@ -57,6 +63,7 @@ export const router = createBrowserRouter([
       { path: "", element: <>Home</> },
       { path: "home", element: <>Home</> },
       { path: "posts", element: <PostPageAdmin /> },
+      { path: "categories", element: <CategoriPageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },
@@ -68,10 +75,9 @@ export const router = createBrowserRouter([
       // { path: "add-category", element: <AddCategory /> },
       // { path: "add-customer", element: <AddCustomer /> },
       // { path: "add-admin", element: <AddAdmin /> },
-    ]
+    ],
   },
   { path: "admin/signin", element: <SignInPageAdmin /> },
-
 ]);
 function AppCustomer() {
   return (
