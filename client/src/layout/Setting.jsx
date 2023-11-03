@@ -13,7 +13,7 @@ const Setting = ({ show, onClick }) => {
         startTransition(() => {
             dispatch(logout());
             dispatch(closeSetting());
-            // navigate('/signin');
+            navigate('/');
         });
     }
     const handleSignin = () => {

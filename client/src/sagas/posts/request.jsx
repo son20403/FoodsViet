@@ -7,7 +7,7 @@ export function getDetailPost(slug) {
     return axios.get(`/${COLLECTION_NAME}/detail?slug=${slug}`)
 }
 export function createPost(entity) {
-    return axios.post(`/${COLLECTION_NAME}/create`, entity, {
+    return axios.post(`/${COLLECTION_NAME}/createPost`, entity, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

@@ -20,33 +20,35 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-const navLink = [
-    {
-        id: 1,
-        title: 'Thêm bài viết',
-        icon: <DocumentPlusIcon className="h-5 w-5" />,
-        onclick: () => { },
-    },
-    {
-        id: 2,
-        title: 'Thêm loại',
-        icon: <FolderPlusIcon className="h-5 w-5" />,
-        onclick: () => { },
-    },
-    {
-        id: 3,
-        title: 'Thêm người dùng',
-        icon: <UserPlusIcon className="h-5 w-5" />,
-        onclick: () => { },
-    },
-    {
-        id: 4,
-        title: 'Thêm nhân viên',
-        icon: <UserCircleIcon className="h-5 w-5" />,
-        onclick: () => { },
-    }
-]
+import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
+import useToggle from "../hooks/useToggle";
 export function Dashboard() {
+    const navLink = [
+        {
+            id: 1,
+            title: 'Thêm bài viết',
+            icon: <DocumentPlusIcon className="h-5 w-5" />,
+            onclick: () => { handleToggleAddPost() },
+        },
+        {
+            id: 2,
+            title: 'Thêm loại',
+            icon: <FolderPlusIcon className="h-5 w-5" />,
+            onclick: () => { },
+        },
+        {
+            id: 3,
+            title: 'Thêm người dùng',
+            icon: <UserPlusIcon className="h-5 w-5" />,
+            onclick: () => { },
+        },
+        {
+            id: 4,
+            title: 'Thêm nhân viên',
+            icon: <UserCircleIcon className="h-5 w-5" />,
+            onclick: () => { },
+        }
+    ]
     const labelProps = {
         variant: "small",
         color: "blue-gray",
@@ -54,6 +56,7 @@ export function Dashboard() {
              -translate-y-2/4 -translate-x-3/4 font-normal  `,
     };
     const { tokenAdmin } = useSelector((state) => state.admin);
+    const { handleToggle: handleToggleAddPost, toggle: showAddPost } = useToggle(false)
     const navigate = useNavigate();
     useEffect(() => {
         if (!tokenAdmin) navigate('/admin/signin')
@@ -77,9 +80,12 @@ export function Dashboard() {
                             <PlusIcon className="h-5 w-5 transition-transform group-hover:rotate-45" />
                         </IconButton>
                     </SpeedDialHandler>
-                    <SpeedDialContent className="rounded-full border  border-blue-gray-50 bg-white shadow-xl shadow-black/10">
+                    <SpeedDialContent className="rounded-full border  
+                    border-blue-gray-50 bg-white shadow-xl shadow-black/10">
                         {navLink.map((nav) => (
-                            <SpeedDialAction key={nav.id} className="relative bg-primary/90 text-white">
+                            <SpeedDialAction
+                                onClick={nav.onclick} key={nav.id}
+                                className="relative bg-primary/90 text-white">
                                 {nav.icon}
                                 <Typography {...labelProps}>{nav.title}</Typography>
                             </SpeedDialAction>
@@ -87,6 +93,8 @@ export function Dashboard() {
                     </SpeedDialContent>
                 </SpeedDial>
             </div>
+            <AddPostAdmin onClick={handleToggleAddPost} show={showAddPost} ></AddPostAdmin>
+
         </div>
     );
 }

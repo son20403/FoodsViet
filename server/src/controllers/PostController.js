@@ -167,7 +167,6 @@ class PostController extends BaseController {
 
     uploadImage = async (req, res) => {
         const fileData = req.file;
-        console.log("🚀 ~ file: PostController.js:214 ~ PostController ~ uploadImage= ~ fileData:", fileData)
         try {
             if (!fileData) {
                 return res.status(400).json({

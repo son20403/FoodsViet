@@ -117,7 +117,50 @@ class BaseController {
             });
         }
     };
-
+    createPost = async (req, res) => {
+        const id_customer = req.customer.id;
+        let id_admin = null;
+        let status = 'pending';
+        let authorType = 'customer';
+        const isAdmin = req.customer.admin || null;
+        const formData = req.body;
+        const fileData = req.file;
+        const image = fileData?.path || '';
+        const id_image = fileData?.filename || '';
+        if (isAdmin) {
+            id_admin = req.customer.id
+            authorType = 'admin';
+        }
+        try {
+            const modelPost = {
+                ...formData,
+                image,
+                id_image,
+                id_customer,
+                authorType,
+                id_admin,
+                status
+            };
+            const dataPost = await Post(modelPost).save();
+            if (dataPost) {
+                return res.status(200).json({
+                    message: "Tạo bài viết thành công",
+                });
+            } else {
+                if (fileData) cloudinary.uploader.destroy(id_image);
+                return res.status(401).json({
+                    message: "Tạo bài viết thất bại",
+                });
+            }
+        } catch (error) {
+            if (fileData) cloudinary.uploader.destroy(id_image);
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Có lỗi xảy ra",
+                error: error._message,
+            });
+        }
+    };
     updatePost = async (req, res) => {
         const id = req.query.id;
         const formData = req.body;

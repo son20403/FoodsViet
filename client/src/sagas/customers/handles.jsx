@@ -33,10 +33,13 @@ export function* handleUpdateCustomers({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = call(updateCustomer, payload?.info)
+        const response = yield call(updateCustomer, payload?.info)
         if (response?.data) {
             yield put(customersRequest());
+            yield put(updateCustomerSuccess())
             yield put(setNotifyGlobal(response.data?.message));
+        } else {
+            yield put(requestFailure('Có lỗi xảy ra!'));
         }
     } catch (error) {
         yield handleCommonError(error)

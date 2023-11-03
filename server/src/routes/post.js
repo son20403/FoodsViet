@@ -4,7 +4,7 @@ import postController from '../controllers/PostController'
 import uploadCloud from '../middlewares/uploader'
 import middlewareAuth from '../middlewares/auth'
 
-router.post('/create', middlewareAuth.verifyToken, uploadCloud.single("image"), postController.create)
+router.post('/createPost', middlewareAuth.verifyToken, uploadCloud.single("image"), postController.create)
 router.get('/getAll', postController.getAll)
 router.get('/search?:key', postController.search)
 router.get('/getAllPostByCustomer?:id', postController.getAllPostByCustomer)

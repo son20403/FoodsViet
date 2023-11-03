@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
 import { CommentIcon, EditIcon, HeartIcon, TrashIcon } from '../components/Icon';
@@ -74,6 +74,7 @@ const DetailPage = () => {
     const listLikes = detail_post?.likes;
     const isLiked = listLikes?.some((id) => id === infoAuth?._id)
     const isAuth = customerByPosts?._id === infoAuth?._id
+    const typeAuthor = detail_post?.authorType;
     const getReplies = (commentId) => {
         return commentByPosts?.filter(commentByPost => commentByPost?.parent_comment_id === commentId)
     }
@@ -82,6 +83,7 @@ const DetailPage = () => {
         if (!token) return toast.warning("Bạn chưa đăng nhập!")
         dispatch(likePostRequest({ id: detail_post?._id, slug }))
     }
+
     useEffect(() => {
         dispatch(postDetailRequest({ slug }))
         dispatch(commentsRequest())
@@ -99,8 +101,11 @@ const DetailPage = () => {
                             {detail_post?.title}
                         </Heading>
                         <div className='text-white text-xs md:text-sm lg:text-base uppercase opacity-80  mt-10 flex '>
-                            <Link to={`/info/${customerByPosts?.slug}`}
+                            {typeAuthor === 'customer' ? <Link to={`/info/${customerByPosts?.slug}`}
                                 className='px-2 border-r last:border-none'>{customerByPosts?.full_name}</Link>
+                                : typeAuthor === 'admin'
+                                    ? <div className='px-2 border-r last:border-none'>Quản Trị Viên</div>
+                                    : ''}
                             <div className='px-2 border-r last:border-none'>{detail_post?.date} </div>
                             <Link to={`/category/${dataCategory?.slug}`}
                                 className='px-2 border-r last:border-none'>{dataCategory?.title}</Link></div>
@@ -112,10 +117,19 @@ const DetailPage = () => {
                     <div className='border-b border-b-primary mb-10'>
                         <div className='flex  gap-x-5 md:gap-x-10 gap-y-3 items-center justify-between md:justify-normal
                             !text-xs my-5 '>
-                            <Link to={`/info/${customerByPosts?.slug}`} className='flex gap-3 items-center'>
-                                <Avatar image={customerByPosts?.image}></Avatar>
-                                <h2 className='text-xs md:text-sm font-medium'>{customerByPosts?.full_name}</h2>
-                            </Link>
+                            {typeAuthor === 'customer'
+                                ? (
+                                    <Link to={`/info/${customerByPosts?.slug}`} className='flex gap-3 items-center'>
+                                        <Avatar image={customerByPosts?.image}></Avatar>
+                                        <h2 className='text-xs md:text-sm font-medium'>{customerByPosts?.full_name}</h2>
+                                    </Link>
+                                )
+                                : typeAuthor === 'admin'
+                                    ? <div className='flex gap-3 items-center'>
+                                        <Avatar image='../src/assets/image/admin-avatar.png'></Avatar>
+                                        <h2 className='text-xs md:text-sm font-bold'>Quản Trị Viên</h2>
+                                    </div>
+                                    : ''}
                             <div className=' flex gap-10 items-center'>
                                 <DataPost timestamps={detail_post?.timestamps}
                                     comments={commentByPosts?.length} likes={listLikes}></DataPost>

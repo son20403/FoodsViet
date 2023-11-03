@@ -10,7 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
 import { customersRequest } from '../../sagas/customers/customersSlice';
 import LoadingRequest from '../../layout/loading/LoadingRequest';
-import { getPostsAdminRequest } from '../../sagas/admin/adminSlice';
+import { getAllAdminRequest, getPostsAdminRequest } from '../../sagas/admin/adminSlice';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { icon } from '../../ADMIN/routes';
 
 const PostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
@@ -22,17 +24,22 @@ const PostPageAdmin = () => {
         dispatch(getPostsAdminRequest())
         dispatch(categoriesRequest())
         dispatch(customersRequest())
+        dispatch(getAllAdminRequest())
     }, [tokenAdmin, dispatch, tokenLocal]);
+    const handLoad = () => {
+        dispatch(getPostsAdminRequest())
+    }
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>
             <div className="mt-12 mb-8 flex flex-col gap-12 relative">
                 <Card>
                     <CardHeader variant="gradient"
-                        className='z-10 mb-8 p-6  bg-primary' >
+                        className='z-10 mb-8 p-6  bg-primary flex items-center justify-between' >
                         <Typography variant="h6" color="white">
                             Danh sách bài viết
                         </Typography>
+                        <span onClick={handLoad} className='text-white cursor-pointer'><ArrowPathIcon {...icon} /></span>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-0 pt-0 pb-2 mt-0">
                         <table className="w-full min-w-[840px] table-auto">
