@@ -1,23 +1,22 @@
-import React, { useEffect } from 'react';
-import { Heading } from '../components/heading';
-import { Field } from '../components/field';
-import { Label } from '../components/label';
-import { FileInput, Input } from '../components/input';
-import { BookmarkIcon } from '../components/Icon';
-import { useForm } from "react-hook-form"
-import { Select } from '../components/select';
-import { Textarea } from '../components/textarea';
-import { Button } from '../components/button';
-import { yupResolver } from "@hookform/resolvers/yup"
-import { categoriesRequest } from '../sagas/categories/categoriesSlice';
-import Section from '../layout/common/Section';
-import BannerCommon from '../layout/common/BannerCommon';
-import { getDate, getTimestamp } from '../hooks/useGetTime';
-import { createPostsRequest } from '../sagas/posts/postsSlice';
-import PageWrap from '../layout/common/PageWrap';
-import LoadingRequest from '../layout/loading/LoadingRequest';
 import * as Yup from "yup";
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { getDate, getTimestamp } from "../../../hooks/useGetTime";
+import { useEffect } from "react";
+import LoadingRequest from "../../loading/LoadingRequest";
+import PageWrap from "../../common/PageWrap";
+import { Heading } from "../../../components/heading";
+import { Field } from "../../../components/field";
+import { FileInput, Input } from "../../../components/input";
+import { Select } from "../../../components/select";
+import { Label } from "../../../components/label";
+import { Textarea } from "../../../components/textarea";
+import { Button } from "../../../components/button";
+import ModalBase from "../../modal/ModalBase";
+import LayoutEditAdmin from "./LayoutEditAdmin";
+import { BookmarkIcon } from "../../../components/Icon";
+import { addPostAdminRequest } from "../../../sagas/admin/adminSlice";
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
     content: Yup.string().required("Vui lòng nhập nội dung!"),
@@ -25,13 +24,12 @@ const schemaValidate = Yup.object({
     // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 
 })
-const AddNewPosts = () => {
+const AddPostAdmin = ({ onClick = () => { }, show }) => {
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
     const { categories, loading } = useSelector((state) => state.categories)
-    console.log("🚀 ~ file: AddNewPosts.jsx:34 ~ AddNewPosts ~ loading:", loading)
     const handleSubmits = (value) => {
         const date = getDate()
         const timestamps = getTimestamp()
@@ -40,19 +38,17 @@ const AddNewPosts = () => {
             date,
             timestamps
         }
-        dispatch(createPostsRequest({ post }))
+        dispatch(addPostAdminRequest({ post }))
+        onClick()
     }
     useEffect(() => {
-        dispatch(categoriesRequest())
+        // dispatch(categoriesRequest())
     }, [token]);
     return (
-        <>
+        <ModalBase onClose={onClick} visible={show}>
             <LoadingRequest show={loading}></LoadingRequest>
-            <Section className='mb-10'>
-                <BannerCommon image={'./src/assets/image/bg-add-post.jpg'} title={'Tạo bài viết'} />
-            </Section>
-            <PageWrap>
-                <div className='page-content mt-5 px-2'>
+            <LayoutEditAdmin onClick={onClick}>
+                <div className='p-10 bg-white'>
                     <Heading isHeading>Thêm bài viết </Heading>
                     <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
                         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 pt-10 mb-10'>
@@ -80,9 +76,9 @@ const AddNewPosts = () => {
                         <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
                     </form>
                 </div>
-            </PageWrap>
-        </>
+            </LayoutEditAdmin>
+        </ModalBase>
     );
 };
 
-export default AddNewPosts;
+export default AddPostAdmin;

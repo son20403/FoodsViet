@@ -12,6 +12,9 @@ export function logoutAdmin() {
 export function getAllPostAdmin() {
     return axios.get(`/${COLLECTION_NAME}/getAllPostByAdmin`,)
 }
+export function getListAdmin() {
+    return axios.get(`/${COLLECTION_NAME}/getListAdmin`,)
+}
 export function updateStatus(id, model, entity) {
     return axios.put(`/${COLLECTION_NAME}/updateStatus?id=${id}&model=${model}`,
         entity
@@ -22,6 +25,14 @@ export function updatePostAdmin(id, entity) {
         headers: {
             "Content-Type": "multipart/form-data",
         }
+    })
+}
+export function createPostAdmin(entity) {
+    console.log("🚀 ~ file: request.jsx:28 ~ createPostAdmin ~ entity:", entity)
+    return axios.post(`/${COLLECTION_NAME}/createPost`, entity, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
     })
 }
 // headers: {

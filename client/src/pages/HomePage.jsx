@@ -39,7 +39,7 @@ const HomePage = () => {
             <Section className=' bg-[#f7f7f7] mb-48 relative'>
                 <div className='w-full h-auto bg-[#f7f7f7] bg-fixed p-2 md:p-10 bg-cover relative'
                     style={{ backgroundImage: 'url(./src/assets/image/banner4.jpg)' }}>
-                    <div className='bg-black opacity-40 inset-0 absolute'></div>
+                    <div className='bg-black opacity-80 inset-0 absolute'></div>
                     <div className='page-content my-28 mt-10'>
                         <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-14 '>
                             {categories?.length > 0 && categories?.slice(0, 4).map(item => (

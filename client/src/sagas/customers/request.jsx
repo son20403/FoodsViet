@@ -7,6 +7,7 @@ export function getAllCustomers() {
     return axios.get(`/${COLLECTION_NAME}/getAll`)
 }
 export function updateCustomer(entity) {
+    console.log("🚀 ~ file: request.jsx:10 ~ updateCustomer ~ entity:", entity)
     return axios.put(`/${COLLECTION_NAME}/updateCustomer`, entity, {
         headers: {
             "Content-Type": "multipart/form-data",

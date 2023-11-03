@@ -13,7 +13,6 @@ function MainLayout() {
   const location = useLocation();
 
   const { token } = useSelector((state) => state.auth);
-  console.log("🚀 ~ file: MainLayout.jsx:16 ~ MainLayout ~ token:", token)
   const tokenLocal = localStorage.getItem("authToken");
   useEffect(() => {
     dispatch(customersRequest());

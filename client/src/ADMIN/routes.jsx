@@ -16,12 +16,12 @@ const routes = [
         pages: [
             {
                 icon: <HomeIcon {...icon} />,
-                name: "Home",
+                name: "Thống kê",
                 path: "/",
             },
             {
                 icon: <NewspaperIcon {...icon} />,
-                name: "Posts",
+                name: "Bài viết",
                 path: "/posts",
             },
             {

@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
-import { getAllPostAdmin, loginAdmin, logoutAdmin, registerAdmin, updatePostAdmin, updateStatus } from "./request";
+import { createPostAdmin, getAllPostAdmin, getListAdmin, loginAdmin, logoutAdmin, registerAdmin, updatePostAdmin, updateStatus } from "./request";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { getPostsAdminRequest, getPostsAdminSuccess, loginAdminSuccess, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updatePostAdminSuccess, updateStatusSuccess } from "./adminSlice";
+import { addCategoriesAdminSuccess, getAllAdminSuccess, getPostsAdminRequest, getPostsAdminSuccess, loginAdminSuccess, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updatePostAdminSuccess, updateStatusSuccess } from "./adminSlice";
 
 export function* handleLoginAdmin({ payload }) {
     try {
@@ -62,6 +62,20 @@ export function* handleGetAllPostsAdmin({ payload }) {
         yield handleCommonError(error)
     }
 }
+export function* handleGetAllAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getListAdmin, payload);
+        if (response?.data) {
+            yield put(getAllAdminSuccess(response.data?.reverse()))
+        } else {
+            yield put(getAllAdminSuccess([]))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
 export function* handleUpdateStatus({ payload }) {
     const { id, model, status } = payload
     try {
@@ -88,6 +102,20 @@ export function* handleUpdatePostAdmin({ payload }) {
             yield put(getPostsAdminRequest())
             yield put(setNotifyGlobal(response.data?.message));
         }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleCreatePostsAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(createPostAdmin, payload?.post);
+        if (response?.data) {
+            yield put(addCategoriesAdminSuccess())
+            yield put(getPostsAdminRequest())
+        }
+        yield put(setNotifyGlobal(response?.data?.message));
     } catch (error) {
         yield handleCommonError(error)
     }

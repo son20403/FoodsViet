@@ -8,6 +8,7 @@ import middlewareAuth from '../middlewares/auth'
 router.post('/register', middlewareAuth.verifyTokenAdmin, adminController.register)
 router.post('/createCustomer', middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.createCustomer)
 router.post('/createAdmin', middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.register)
+router.post('/createPost', middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.createPost)
 router.post('/login', adminController.login) //middlewareAuth.verifyTokenAdmin
 router.delete('/deleteCustomer?:id', middlewareAuth.verifyTokenAdmin, adminController.deleteCustomer)
 router.delete('/deleteAdmin?:id', middlewareAuth.verifyTokenAdmin, adminController.deleteAdmin)

@@ -71,7 +71,7 @@ const PostEditAdmin = ({ data, show, onClick = () => { } }) => {
                                 <Textarea value={data?.content} control={control} errors={errors} name={'content'} />
                             </Field>
                         </div>
-                        <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
+                        <Button type='submit' className=' mx-auto'>Sửa bài viết</Button>
                     </form>
                 </div>
             </LayoutEditAdmin>
