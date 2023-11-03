@@ -196,11 +196,11 @@ class AdminController extends BaseController {
                     message: "Không tồn tại sản phẩm này",
                 });
             }
-            // if (!admin) {
-            //     return res.status(400).json({
-            //         message: "Bạn không phải là Admin",
-            //     });
-            // }
+            if (!admin) {
+                return res.status(400).json({
+                    message: "Bạn không phải là Admin",
+                });
+            }
             const dataPostStatus = await model.findByIdAndUpdate(dataPost._id, { status, id_admin }, {
                 new: true,
             });
@@ -377,6 +377,7 @@ class AdminController extends BaseController {
             });
         }
     };
+
     updateAdmin = async (req, res) => {
         const id = req.query.id;
         const formData = req.body;
