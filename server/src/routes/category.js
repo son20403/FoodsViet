@@ -4,7 +4,9 @@ import categoryController from '../controllers/CategoryController'
 import middlewareAuth from '../middlewares/auth'
 
 router.post('/create', middlewareAuth.verifyToken, categoryController.create)
-router.get('/get_all_categories', categoryController.get_all_categories)
+router.post('/createCategory', middlewareAuth.verifyTokenAdmin, categoryController.createCategory)
+router.get('/getAllCategories', categoryController.getAllCategories)
+router.get('/getAllCategoriesAdmin', middlewareAuth.verifyTokenAdmin, categoryController.getAllCategoriesAdmin)
 router.get('/detailBySlug?:slug', categoryController.detailBySlug)
 router.get('/detail?:id', categoryController.detail)
 // router.get('/detail', categoryController.detail)

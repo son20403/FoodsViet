@@ -10,6 +10,8 @@ const Categories = new Schema(
         id_image: { type: String, default: "" },
         date: { type: String },
         timestamps: { type: Number },
+        id_author: { type: String },
+        status: { type: String, default: "pending", },
     },
     {
         timestamps: true,
