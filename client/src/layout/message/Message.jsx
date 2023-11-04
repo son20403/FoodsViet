@@ -1,25 +1,25 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-const Message = ({ own }) => {
+const Message = ({ own, message }) => {
+  const { customers } = useSelector((state) => state.customers);
+  const user = customers.find((u) => u._id === message.sender);
   return (
     <div className={`flex flex-col ${own ? "items-end" : ""}`}>
       <div
         className={`flex ${own ? "flex-row-reverse" : ""} items-center gap-x-3`}
       >
         <img
-          src="https://source.unsplash.com/random"
+          src={user.image}
           className="object-cover w-8 h-8 rounded-full"
           alt=""
         />
         <p
           className={`p-2.5 rounded-2xl text-white md:max-w-[350px] max-w-[300px] ${
-            own ? "bg-gray-500" : "bg-[#1877f2]"
+            own ? "bg-[#1877f2]" : "bg-gray-500"
           }`}
         >
-          Hello this is a message Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Accusamus inventore dolorum natus voluptatem
-          consequuntur ipsam aliquam ducimus id aperiam, magni aliquid velit,
-          officia rerum quo molestiae nobis? Velit, vitae molestiae.
+          {message?.text}
         </p>
       </div>
       <div className="text-xs my-2.5 text-black">1 hour ago</div>
