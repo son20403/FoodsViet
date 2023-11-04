@@ -24,15 +24,14 @@ const schemaValidate = Yup.object().shape({
 
 const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
-    const { token } = useSelector((state) => state.auth)
+    const slug = data?.slug
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
     const handleEditUser = (value) => {
         try {
             dispatch(setLoadingCustomer(true))
             const info = { ...value };
-            dispatch(updateCustomerRequest({ info }));
-            dispatch(setNotifyGlobal(''));
+            dispatch(updateCustomerRequest({ info, slug }));
             onClick()
             resetImageField()
         } catch (error) {

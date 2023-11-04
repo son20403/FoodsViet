@@ -7,12 +7,11 @@ export default defineConfig({
     include: [
       "@ckeditor/ckeditor5-react",
       "@ckeditor/ckeditor5-build-classic",
-      "ckeditor5-custom-build",
     ],
   },
   server: {
     host: "0.0.0.0", // Địa chỉ IP. Sử dụng '0.0.0.0' để nghe trên tất cả các địa chỉ IP.
-    port: 4000, // Thay đổi cổng tại đây
+    // port: 4000, // Thay đổi cổng tại đây
   },
 });
 // "ckeditor5-custom-build"

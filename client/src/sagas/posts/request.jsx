@@ -3,6 +3,12 @@ const COLLECTION_NAME = 'post'
 export function getAllPost() {
     return axios.get(`/${COLLECTION_NAME}/getAll`)
 }
+export function getAllPostsByCategory(id) {
+    return axios.get(`/${COLLECTION_NAME}/getAllPostByCategory?id=${id}`)
+}
+export function getAllPostsByCustomer(id) {
+    return axios.get(`/${COLLECTION_NAME}/getAllPostByCustomer?id=${id}`)
+}
 export function getDetailPost(slug) {
     return axios.get(`/${COLLECTION_NAME}/detail?slug=${slug}`)
 }

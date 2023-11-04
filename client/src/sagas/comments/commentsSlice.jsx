@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     comments: [],
+    commentsPost: [],
     loading: false,
     error: null,
     notify: '',
@@ -18,13 +19,6 @@ const commentsSlice = createSlice({
                 error: null,
             }
         },
-        postCommentsRequest: (state) => {
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            }
-        },
         getCommentsSuccess: (state, action) => {
             return {
                 ...state,
@@ -33,7 +27,29 @@ const commentsSlice = createSlice({
                 error: null,
             }
         },
-        postCommentsSuccess: (state, action) => {
+        getcommentsByPostRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        getcommentsByPostSuccess: (state, action) => {
+            return {
+                ...state,
+                commentsPost: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
+        createCommentsRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        createCommentsSuccess: (state, action) => {
             return {
                 ...state,
                 notify: action.payload,
@@ -85,5 +101,5 @@ const commentsSlice = createSlice({
     }
 })
 
-export const { getCommentsSuccess, commentsRequest, requestFailure, postCommentsRequest, postCommentsSuccess, setNotify, updateCommentRequest, updateCommentSuccess, deleteCommentRequest, deleteCommentSuccess } = commentsSlice.actions
+export const { getCommentsSuccess, commentsRequest, requestFailure, createCommentsRequest, createCommentsSuccess, setNotify, updateCommentRequest, updateCommentSuccess, deleteCommentRequest, deleteCommentSuccess, getcommentsByPostRequest, getcommentsByPostSuccess } = commentsSlice.actions
 export default commentsSlice.reducer

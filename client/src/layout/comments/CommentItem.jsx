@@ -1,14 +1,8 @@
-import {
-    Popover,
-    PopoverHandler,
-    PopoverContent,
-    Button,
-} from "@material-tailwind/react";
-import React, { useEffect, useRef } from 'react';
+import React, { } from 'react';
 import Avatar from '../customers/Avatar';
 import { Heading } from '../../components/heading';
 import IconWrap from '../../components/Icon/IconWrap';
-import { ArrowNextIcon, CommentIcon, EditIcon, EllipsisIcon, HeartIcon, TrashIcon } from '../../components/Icon';
+import { CommentIcon, EditIcon, TrashIcon } from '../../components/Icon';
 import { Input } from '../../components/input';
 import useClickOutSide from '../../hooks/useClickOutSide';
 import { useForm } from 'react-hook-form';
@@ -17,7 +11,7 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from 'react-redux';
 import useTimeSince from '../../hooks/useTimeSince';
 import { getDate, getTimestamp } from '../../hooks/useGetTime';
-import { commentsRequest, deleteCommentRequest, postCommentsRequest, updateCommentRequest } from '../../sagas/comments/commentsSlice';
+import { deleteCommentRequest, createCommentsRequest, updateCommentRequest } from '../../sagas/comments/commentsSlice';
 import { ButtonComment } from '../../components/button';
 import { DiaLog } from '../DiaLog';
 import useToggle from '../../hooks/useToggle';
@@ -37,7 +31,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
     const listReplies = replies(comment._id);
     const { show: showReply, setShow: setShowReply, domRef: domReply } = useClickOutSide("#reply");
     const { show: showEdit, setShow: setShowEdit, domRef: domEdit } = useClickOutSide("#edit_comment");
-    const { handleToggle, toggle } = useToggle(false)
+    const { handleToggle, handleToggleFalse, toggle } = useToggle(false)
     const { token } = useSelector((state => state.auth))
     // REPLY :)
     const { handleSubmit: handleSubmitReply, formState: { errors: errorsReply,
@@ -54,7 +48,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
             timestamps,
             parent_comment_id: comment._id
         }
-        dispatch(postCommentsRequest({ comment: comments }))
+        dispatch(createCommentsRequest({ comment: comments, id_post }))
         setShowReply(false)
     }
 
@@ -63,11 +57,12 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
         isSubmitting: isSubmittingEditComment, isValid: isValidEditComment }, control: controlEditComment } =
         useForm({ resolver: yupResolver(schemaValidateReply), mode: 'onBlur', })
     const handleEditComment = (value) => {
-        dispatch(updateCommentRequest({ id: comment._id, comment: value }))
+        dispatch(updateCommentRequest({ id: comment._id, comment: value, id_post }))
         setShowEdit(false)
     }
     const handleDeleteComment = () => {
-        dispatch(deleteCommentRequest({ id: comment._id }))
+        dispatch(deleteCommentRequest({ id: comment._id, id_post }))
+        handleToggleFalse()
     }
 
     const handleShowReply = () => {
@@ -100,7 +95,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
                                         <p className='text-[10px] md:text-xs'>
                                             Trả lời </p></IconWrap>
                                 </div>
-                                {isAuth && <>
+                                {isAuth &&
                                     <PopoverDrop x={-80}>
                                         <div className="flex items-center gap-5">
                                             <div onClick={(e) => { e.stopPropagation(); handleShowEdit(); }}>
@@ -117,7 +112,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
                                             </div>
                                         </div>
                                     </PopoverDrop>
-                                </>}
+                                }
                             </div>
                             {/* REPLY */}
                             <div className={`mt-5 lg:mb-10 w-full bg-white border py-3 z-[0] px-2 transition-all

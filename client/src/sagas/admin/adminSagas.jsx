@@ -12,10 +12,8 @@ import {
   updateStatusRequest,
 } from "./adminSlice";
 import {
-  handleCreateAdminCategories,
   handleCreatePostsAdmin,
   handleGetAllAdmin,
-  handleGetAllAdminCategories,
   handleGetAllPostsAdmin,
   handleLoginAdmin,
   handleLogoutAdmin,
@@ -23,10 +21,8 @@ import {
   handleUpdatePostAdmin,
   handleUpdateStatus,
 } from "./handles";
-// import {
-//   handleCreateCategories,
-//   handleGetAllAdminCategories,
-// } from "../categories/handles";
+import { handleCreateCategoryAdmin, handleGetAllCategoriesAdmin } from "../categories/handles";
+
 
 export default function* adminSagas() {
   yield takeLatest(loginAdminRequest.type, handleLoginAdmin);
@@ -37,6 +33,6 @@ export default function* adminSagas() {
   yield takeLatest(updatePostAdminRequest.type, handleUpdatePostAdmin);
   yield takeLatest(addPostAdminRequest.type, handleCreatePostsAdmin);
   yield takeLatest(getAllAdminRequest.type, handleGetAllAdmin);
-  yield takeLatest(getCategoriesAdminRequest.type, handleGetAllAdminCategories);
-  yield takeLatest(addCategoriesAdminRequest.type, handleCreateAdminCategories);
+  yield takeLatest(getCategoriesAdminRequest.type, handleGetAllCategoriesAdmin);
+  yield takeLatest(addCategoriesAdminRequest.type, handleCreateCategoryAdmin);
 }

@@ -3,9 +3,6 @@ const COLLECTION_NAME = "admin";
 export function loginAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/login`, entity);
 }
-export function getAllCategoryAdmin() {
-  return axios.get(`/${COLLECTION_NAME}/getAllCategoryByAdmin`);
-}
 export function registerAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/register`, entity);
 }
@@ -32,19 +29,7 @@ export function updatePostAdmin(id, entity) {
   });
 }
 export function createPostAdmin(entity) {
-  console.log("🚀 ~ file: request.jsx:28 ~ createPostAdmin ~ entity:", entity);
   return axios.post(`/${COLLECTION_NAME}/createPost`, entity, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-}
-export function createCategoryAdmin(entity) {
-  console.log(
-    "🚀 ~ file: request.jsx:43 ~ createCategoryAdmin ~ entity:",
-    entity
-  );
-  return axios.post(`/${COLLECTION_NAME}/createCategory`, entity, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

@@ -5,8 +5,8 @@ import middlewareAuth from '../middlewares/auth'
 
 router.post('/create', middlewareAuth.verifyToken, commentController.create)
 router.put('/updateComment', middlewareAuth.verifyToken, commentController.updateComment)
-router.get('/get_all_comments', commentController.get_all_comments)
-router.get('/getByPost', commentController.getByPost)
+router.get('/getAllComments', commentController.getAllComments)
+router.get('/getAllCommentsByPost', commentController.getAllCommentsByPost)
 router.delete('/deleteComment?:id', middlewareAuth.verifyToken, commentController.deleteComment)
 
 module.exports = router;
