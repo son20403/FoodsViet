@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     posts: [],
+    postsCustomer: [],
+    postsCategory: [],
     search_posts: [],
     detail_post: {},
     loading: false,
@@ -26,6 +28,34 @@ const postsSlice = createSlice({
                 loading: false
             }
         },
+        getPostsByCategoryRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getPostsByCategorySuccess: (state, action) => {
+            return {
+                ...state,
+                postsCategory: action.payload,
+                error: null,
+                loading: false
+            }
+        },
+        getPostsByCustomerRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+            }
+        },
+        getPostsByCustomerSuccess: (state, action) => {
+            return {
+                ...state,
+                postsCustomer: action.payload,
+                error: null,
+                loading: false
+            }
+        },
         createPostsRequest: (state) => {
             return {
                 ...state,
@@ -39,18 +69,6 @@ const postsSlice = createSlice({
                 loading: false
             }
         },
-        uploadImageRequest: (state) => {
-            return {
-                ...state,
-                loading: true
-            }
-        },
-        // uploadImageSuccess: (state) => {
-        //     return {
-        //         ...state,
-        //         error: null,
-        //     }
-        // },
         searchPostsRequest: (state) => {
             return {
                 ...state,
@@ -115,14 +133,8 @@ const postsSlice = createSlice({
                 loading: false,
             }
         },
-        setLoadingPost: (state, action) => {
-            return {
-                ...state,
-                loading: action.payload
-            }
-        }
     }
 })
 
-export const { getPostsSuccess, postsRequest, requestFailure, likePostRequest, likePostSuccess, setLoadingPost, getDetailPostSuccess, postDetailRequest, getSearchPostsSuccess, searchPostsRequest, uploadImageRequest, createPostsRequest, createPostsSuccess, updatePostRequest, updatePostSuccess } = postsSlice.actions
+export const { createPostsRequest, createPostsSuccess, getDetailPostSuccess, getPostsSuccess, getSearchPostsSuccess, likePostRequest, likePostSuccess, postDetailRequest, postsRequest, requestFailure, searchPostsRequest, updatePostRequest, updatePostSuccess, getPostsByCategoryRequest, getPostsByCategorySuccess, getPostsByCustomerRequest, getPostsByCustomerSuccess } = postsSlice.actions
 export default postsSlice.reducer

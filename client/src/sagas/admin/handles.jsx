@@ -1,8 +1,6 @@
 import { call, put } from "redux-saga/effects";
 import {
-  createCategoryAdmin,
   createPostAdmin,
-  getAllCategoryAdmin,
   getAllPostAdmin,
   getListAdmin,
   loginAdmin,
@@ -15,8 +13,6 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
   addCategoriesAdminSuccess,
   getAllAdminSuccess,
-  getCategoriesAdminRequest,
-  getCategoriesAdminSuccess,
   getPostsAdminRequest,
   getPostsAdminSuccess,
   loginAdminSuccess,
@@ -51,31 +47,6 @@ export function* handleRegisterAdmin({ payload }) {
     if (response) {
       yield put(registerAdminSuccess());
       yield put(setNotifyGlobal(response.data?.message));
-    }
-  } catch (error) {
-    yield handleCommonError(error);
-  }
-}
-export function* handleGetAllAdminCategories({ payload }) {
-  try {
-    yield put(setNotifyGlobal(""));
-    yield put(setErrorGlobal(""));
-    const response = yield call(getAllCategoryAdmin, payload);
-    if (response) {
-      yield put(getCategoriesAdminSuccess(response.data.reverse()));
-    }
-  } catch (error) {
-    yield handleCommonError(error);
-  }
-}
-export function* handleCreateAdminCategories({ payload }) {
-  try {
-    yield put(setNotifyGlobal(""));
-    yield put(setErrorGlobal(""));
-    const response = yield call(createCategoryAdmin, payload?.category);
-    if (response) {
-      yield put(addCategoriesAdminSuccess());
-      yield put(getCategoriesAdminRequest());
     }
   } catch (error) {
     yield handleCommonError(error);

@@ -27,12 +27,6 @@ router.post(
   uploadCloud.single("image"),
   adminController.createPost
 );
-router.post(
-  "/createCategory",
-  middlewareAuth.verifyTokenAdmin,
-  //   uploadCloud.single("image"),
-  adminController.createCategory
-);
 router.post("/login", adminController.login); //middlewareAuth.verifyTokenAdmin
 router.delete(
   "/deleteCustomer?:id",
@@ -101,11 +95,6 @@ router.get(
   "/getAllPostByAdmin",
   middlewareAuth.verifyTokenAdmin,
   adminController.getAllPostByAdmin
-);
-router.get(
-  "/getAllCategoryByAdmin",
-  middlewareAuth.verifyTokenAdmin,
-  adminController.getAllCategoryByAdmin
 );
 router.get(
   "/getDetailAdmin",

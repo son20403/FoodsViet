@@ -5,41 +5,6 @@ class PostController extends BaseController {
     constructor(model) {
         super(model)
     }
-    create = async (req, res) => {
-        const id_customer = req.customer.id;
-        const isAdmin = req.customer.admin || null
-        const formData = req.body;
-        const fileData = req.file;
-        const image = fileData?.path || '';
-        const id_image = fileData?.filename || '';
-        try {
-            const modelPost = {
-                ...formData,
-                image,
-                id_image,
-                id_customer,
-                authorType: isAdmin ? 'admin' : 'customer'
-            };
-            const dataPost = await Post(modelPost).save();
-            if (dataPost) {
-                return res.status(200).json({
-                    message: "Tạo bài viết thành công",
-                });
-            } else {
-                if (fileData) cloudinary.uploader.destroy(id_image);
-                return res.status(401).json({
-                    message: "Tạo bài viết thất bại",
-                });
-            }
-        } catch (error) {
-            if (fileData) cloudinary.uploader.destroy(id_image);
-            console.log('err', error);
-            return res.status(500).json({
-                message: "Có lỗi xảy ra",
-                error: error._message,
-            });
-        }
-    };
     like = async (req, res) => {
         const id = req.customer.id;
         const id_post = req.query.id;
@@ -89,10 +54,10 @@ class PostController extends BaseController {
             });
         }
     };
-    getPostByCategory = async (req, res) => {
+    getAllPostByCategory = async (req, res) => {
         const id = req.query.id;
         try {
-            const dataPost = await this.model.find({ category: id });
+            const dataPost = await this.model.find({ category: id, status: 'approved' });
             if (!dataPost) {
                 return res.status(400).json({
                     message: "Có lỗi xảy ra",
@@ -134,29 +99,29 @@ class PostController extends BaseController {
     search = async (req, res) => {
         try {
             const value = req.query.key;
-            if (value !== '') {
-                // const key = unidecode(value)
-                const keyRegex = new RegExp(value, 'i')
-                const query = {
-                    $and: [
-                        {
-                            $or: [
-                                { title: { $regex: keyRegex } },
-                                { slug: { $regex: keyRegex } },
-                            ],
-                        },
-                        { status: 'approved' } // Điều kiện trạng thái "approved"
-                    ],
-                };
-                const dataPost = await this.model.find(query);
-                if (!dataPost)
-                    return res.status(400).json({
-                        message: "Có lỗi xảy ra",
-                    });
-                return res.status(200).json(dataPost);
-            } else {
-                return res.status(200).json([])
-            }
+            // if (value !== '') {
+            // const key = unidecode(value)
+            const keyRegex = new RegExp(value, 'i')
+            const query = {
+                $and: [
+                    {
+                        $or: [
+                            { title: { $regex: keyRegex } },
+                            { slug: { $regex: keyRegex } },
+                        ],
+                    },
+                    { status: 'approved' } // Điều kiện trạng thái "approved"
+                ],
+            };
+            const dataPost = await this.model.find(query);
+            if (!dataPost)
+                return res.status(400).json({
+                    message: "Có lỗi xảy ra",
+                });
+            return res.status(200).json(dataPost);
+            // } else {
+            //     return res.status(200).json([])
+            // }
         } catch (error) {
             console.log('err', error);
             return res.status(500).json({

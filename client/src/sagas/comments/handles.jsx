@@ -1,6 +1,6 @@
 import { call, put } from "redux-saga/effects";
-import { deleteComment, getAllComments, postComments, updateComments } from "./request";
-import { commentsRequest, deleteCommentSuccess, getCommentsSuccess, postCommentsSuccess, requestFailure, updateCommentSuccess } from "./commentsSlice";
+import { createComments, deleteComment, getAllComments, getAllCommentsByPost, updateComments } from "./request";
+import { commentsRequest, createCommentsSuccess, deleteCommentSuccess, getCommentsSuccess, getcommentsByPostRequest, getcommentsByPostSuccess, requestFailure, updateCommentSuccess } from "./commentsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetAllComments({ payload }) {
@@ -15,13 +15,27 @@ export function* handleGetAllComments({ payload }) {
         yield handleCommonError(error)
     }
 }
-export function* handlePostComments({ payload }) {
+
+export function* handleGetAllCommentsByPost({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(postComments, payload.comment);
+        const response = yield call(getAllCommentsByPost, payload?.id_post);
         if (response) {
-            yield put(postCommentsSuccess(response.data.message))
+            yield put(getcommentsByPostSuccess(response.data?.reverse()))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleCreateComments({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(createComments, payload?.comment);
+        if (response) {
+            yield put(createCommentsSuccess(response.data.message))
+            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
             yield put(commentsRequest())
             yield put(setNotifyGlobal(response.data?.message))
         }
@@ -37,6 +51,7 @@ export function* handleUpdateComment({ payload }) {
         const response = yield call(updateComments, payload?.id, payload?.comment);
         if (response) {
             yield put(updateCommentSuccess())
+            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
             yield put(commentsRequest())
             yield put(setNotifyGlobal(response.data?.message))
         }
@@ -52,6 +67,7 @@ export function* handleDeleteComment({ payload }) {
         if (response) {
             yield put(deleteCommentSuccess())
             yield put(commentsRequest())
+            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
             yield put(setNotifyGlobal(response.data?.message))
         }
     } catch (error) {

@@ -1,8 +1,8 @@
 import { call, put } from "redux-saga/effects";
 import {
-  createCaterories,
-  getAllAdminCaterories,
+  createCategoryAdmin,
   getAllCaterories,
+  getAllCateroriesAdmin,
 } from "./request";
 import { getCategoriesSuccess, requestFailure } from "./categoriesSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
@@ -19,6 +19,32 @@ export function* handleGetAllCategories({ payload }) {
     const response = yield call(getAllCaterories, payload);
     if (response) {
       yield put(getCategoriesSuccess(response.data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+
+export function* handleGetAllCategoriesAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getAllCateroriesAdmin, payload);
+    if (response) {
+      yield put(getCategoriesAdminSuccess(response.data.reverse()));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleCreateCategoryAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(createCategoryAdmin, payload?.category);
+    if (response) {
+      yield put(addCategoriesAdminSuccess());
+      yield put(getCategoriesAdminRequest());
     }
   } catch (error) {
     yield handleCommonError(error);
