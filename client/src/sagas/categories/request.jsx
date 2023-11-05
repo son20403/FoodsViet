@@ -14,4 +14,11 @@ export function createCategoryAdmin(entity) {
         },
     });
 }
+export function updateCategoryAdmin(id, entity) {
+    return admin.post(`/${COLLECTION_NAME}/updateCategory?id=${id}`, entity, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
 // "Content-Type": "multipart/form-data",

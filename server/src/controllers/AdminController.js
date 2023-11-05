@@ -213,11 +213,10 @@ class AdminController extends BaseController {
         });
       }
       return res.status(200).json({
-        message: `${
-          dataPostStatus.status === "pending"
-            ? "Bạn đã không duyệt bài này"
-            : "Duyệt bài thành công"
-        }`,
+        message: `${dataPostStatus.status === "pending"
+          ? "Bạn đã không duyệt bài này"
+          : "Duyệt bài thành công"
+          }`,
       });
     } catch (error) {
       console.log("err", error);
@@ -258,80 +257,7 @@ class AdminController extends BaseController {
       });
     }
   };
-  createCategory = async (req, res) => {
-    const id_admin = req.customer?.id;
-    const status = "pending";
-    const formData = req.body;
-    const { title } = formData;
-    const fileData = req.file;
-    const image = fileData?.path || "";
-    const id_image = fileData?.filename || "";
-    try {
-      const modelCategory = {
-        ...formData,
-        image,
-        id_image,
-        id_admin,
-        status,
-      };
-      const hasCategory = await this.categoryModel.findOne({ title });
-      if (hasCategory)
-        return res.status(401).json({
-          message: "Đã tồn tại loại này",
-        });
-      const dataCategory = await this.categoryModel(modelCategory).save();
-      if (dataCategory) {
-        return res.status(200).json({
-          message: "Thêm loại thành công",
-        });
-      } else {
-        return res.status(401).json({
-          message: "Thêm thất bại thất bại",
-        });
-      }
-    } catch (error) {
-      if (fileData) cloudinary.uploader.destroy(id_image);
-      console.log("err", error);
-      return res.status(500).json({
-        message: "Có lỗi xảy ra",
-        error: error._message,
-      });
-    }
-  };
-  updateCategory = async (req, res) => {
-    const id = req.query.id;
-    const formData = req.body;
-    try {
-      const hasCategory = await this.categoryModel.findOne({ _id: id });
-      if (!hasCategory) {
-        return res.status(400).json({
-          message: "Không tồn tại danh mục này",
-        });
-      }
-      const updatedCategory = await this.categoryModel.findByIdAndUpdate(
-        id,
-        formData,
-        {
-          new: true,
-        }
-      );
-      if (!updatedCategory) {
-        return res.status(400).json({
-          message: "Có lỗi xảy ra, không thể update",
-        });
-      }
-      const { id_image, updatedAt, createdAt, ...others } =
-        updatedCategory._doc;
-      return res
-        .status(200)
-        .json({ ...others, message: "Cập nhật thành công" });
-    } catch (error) {
-      console.log("err", error);
-      return res.status(500).json({
-        message: "Lỗi Server",
-      });
-    }
-  };
+
   updateCustomer = async (req, res) => {
     const id = req.query.id;
     const formData = req.body;
@@ -345,7 +271,6 @@ class AdminController extends BaseController {
           message: "Không tồn tại người dùng này",
         });
       }
-
       let newImage = hasCustomer.image;
       let newIdImage = hasCustomer.id_image;
       if (fileData) {
