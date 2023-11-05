@@ -1,13 +1,13 @@
-import { call, delay, put, race } from "redux-saga/effects";
+import { call, put } from "redux-saga/effects";
 import { getAllCustomers, getDetailCustomer, updateCustomer } from "./request";
-import { customerDetailSuccess, customersRequest, customersSuccess, requestFailure, setLoadingCustomer, updateCustomerSuccess } from "./customersSlice";
+import { customerDetailRequest, customerDetailSuccess, customersRequest, customersSuccess, requestFailure, updateCustomerSuccess } from "./customersSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetDetailCustomer({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(getDetailCustomer, payload.slug);
+        const response = yield call(getDetailCustomer, payload?.slug);
         if (response) {
             yield put(customerDetailSuccess(response.data))
         }
@@ -33,10 +33,14 @@ export function* handleUpdateCustomers({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = call(updateCustomer, payload?.info)
+        const response = yield call(updateCustomer, payload?.info)
         if (response?.data) {
+            yield put(updateCustomerSuccess())
             yield put(customersRequest());
+            yield put(customerDetailRequest({ slug: payload?.slug }))
             yield put(setNotifyGlobal(response.data?.message));
+        } else {
+            yield put(requestFailure('Có lỗi xảy ra!'));
         }
     } catch (error) {
         yield handleCommonError(error)

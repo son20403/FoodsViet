@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import Overlay from '../common/Overlay';
 import { AtIcon, CloseIcon, EmailIcon, LocationIcon, UserIcon } from '../../components/Icon';
 import { Heading } from '../../components/heading';
-import { Button } from '../../components/button';
 import { FileInput, Input } from '../../components/input';
 import { Field } from '../../components/field';
 import ModalBase from '../modal/ModalBase';
@@ -13,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { customersRequest, setLoadingCustomer, updateCustomerRequest } from '../../sagas/customers/customersSlice';
 import { setNotifyGlobal } from '../../sagas/global/globalSlice';
 import { useEffect } from 'react';
+import { Button } from '@material-tailwind/react';
 const schemaValidate = Yup.object().shape({
     address: Yup.string().required("Vui lòng nhập địa chỉ!"),
     image: Yup.mixed(),
@@ -24,15 +24,14 @@ const schemaValidate = Yup.object().shape({
 
 const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
-    const { token } = useSelector((state) => state.auth)
+    const slug = data?.slug
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
     const handleEditUser = (value) => {
         try {
             dispatch(setLoadingCustomer(true))
             const info = { ...value };
-            dispatch(updateCustomerRequest({ info }));
-            dispatch(setNotifyGlobal(''));
+            dispatch(updateCustomerRequest({ info, slug }));
             onClick()
             resetImageField()
         } catch (error) {
@@ -44,13 +43,13 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
     };
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <div className={`content absolute md:fixed w-full top-20  transition-all bg-white z-[8] p-10 pb-20`}>
+            <div className={`content absolute md:fixed w-full top-20  transition-all bg-white z-[99] p-10 pb-20`}>
                 <div className='absolute right-2 top-2 text-2xl cursor-pointer'
                     onClick={onClick}><CloseIcon></CloseIcon></div>
                 <form onSubmit={handleSubmit(handleEditUser)} className=' px-2'>
                     <div className=' flex justify-between items-center border-b border-primary pb-5'>
                         <Heading isHeading className=''>Chỉnh sửa thông tin</Heading>
-                        <Button type='submit'>SAVE</Button>
+                        <Button className='bg-primary' type='submit'>SAVE</Button>
                     </div>
                     <div className='flex gap-x-5 items-center my-10'>
                     </div>

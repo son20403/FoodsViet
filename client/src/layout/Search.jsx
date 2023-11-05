@@ -7,21 +7,25 @@ import { SearchIcon } from '../components/Icon';
 import { Input } from '@material-tailwind/react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { searchPostsRequest } from '../sagas/posts/postsSlice';
 import Loading from './loading/Loading';
 
-const Search = ({ showSearch, handleShowSearch }) => {
+const Search = ({ showSearch = false, handleShowSearch = () => { } }) => {
     const dispatch = useDispatch()
+    const location = useLocation();
+
     const { search_posts, loading } = useSelector((state) => state.posts)
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState(null);
     const handleOnChange = _.debounce((e) => {
         setQuery(e.target.value)
     }, 1000)
     useEffect(() => {
         dispatch(searchPostsRequest({ query }))
     }, [query]);
-
+    useEffect(() => {
+        setQuery(null)
+    }, [location.pathname]);
     return (
         <>
             <Overlay show={showSearch} onClick={handleShowSearch}></Overlay>

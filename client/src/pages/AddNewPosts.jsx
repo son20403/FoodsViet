@@ -9,15 +9,15 @@ import { Select } from '../components/select';
 import { Textarea } from '../components/textarea';
 import { Button } from '../components/button';
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as Yup from "yup";
-import PageWrap from '../layout/common/PageWrap';
-import { useDispatch, useSelector } from 'react-redux';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';
 import Section from '../layout/common/Section';
 import BannerCommon from '../layout/common/BannerCommon';
 import { getDate, getTimestamp } from '../hooks/useGetTime';
 import { createPostsRequest } from '../sagas/posts/postsSlice';
+import PageWrap from '../layout/common/PageWrap';
 import LoadingRequest from '../layout/loading/LoadingRequest';
+import * as Yup from "yup";
+import { useDispatch, useSelector } from 'react-redux';
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
     content: Yup.string().required("Vui lòng nhập nội dung!"),
@@ -28,10 +28,10 @@ const schemaValidate = Yup.object({
 const AddNewPosts = () => {
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
-    const { handleSubmit, formState: { errors, isSubmitting, isValid }, control } =
+    const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
     const { categories, loading } = useSelector((state) => state.categories)
-    console.log("🚀 ~ file: AddNewPosts.jsx:34 ~ AddNewPosts ~ loading:", loading)
+    const { loading: loadingPost } = useSelector((state) => state.posts)
     const handleSubmits = (value) => {
         const date = getDate()
         const timestamps = getTimestamp()
@@ -40,7 +40,10 @@ const AddNewPosts = () => {
             date,
             timestamps
         }
-        dispatch(createPostsRequest({ post }))
+        if (isValid) {
+            dispatch(createPostsRequest({ post }))
+            reset()
+        }
     }
     useEffect(() => {
         dispatch(categoriesRequest())
@@ -48,6 +51,7 @@ const AddNewPosts = () => {
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
+            <LoadingRequest show={loadingPost}></LoadingRequest>
             <Section className='mb-10'>
                 <BannerCommon image={'./src/assets/image/bg-add-post.jpg'} title={'Tạo bài viết'} />
             </Section>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
 import { CommentIcon, EditIcon, HeartIcon, TrashIcon } from '../components/Icon';
@@ -15,10 +15,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
 import { toast } from 'react-toastify';
-import { commentsRequest, postCommentsRequest } from '../sagas/comments/commentsSlice';
+import { commentsRequest, createCommentsRequest, getcommentsByPostRequest } from '../sagas/comments/commentsSlice';
 import { getDate, getTimestamp } from '../hooks/useGetTime';
 import { ButtonComment } from '../components/button';
-import { likePostRequest, postDetailRequest } from '../sagas/posts/postsSlice';
+import { getPostsByCategoryRequest, getPostsByCustomerRequest, likePostRequest, postDetailRequest } from '../sagas/posts/postsSlice';
 import EditPost from '../layout/posts/EditPost';
 import useToggle from '../hooks/useToggle';
 import IconWrap from '../components/Icon/IconWrap';
@@ -33,11 +33,11 @@ const DetailPage = () => {
     const { slug } = useParams()
 
     const dispatch = useDispatch()
-    const { posts, detail_post, loading } = useSelector((state) => state.posts);
+    const { detail_post, loading, postsCategory, postsCustomer } = useSelector((state) => state.posts);
     const { token, infoAuth } = useSelector((state) => state.auth);
     const { customers } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
-    const { comments } = useSelector((state) => state.comments);
+    const { comments, commentsPost } = useSelector((state) => state.comments);
     const { handleToggle, toggle } = useToggle(false);
 
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
@@ -55,7 +55,7 @@ const DetailPage = () => {
                 date,
                 timestamps
             }
-            dispatch(postCommentsRequest({ comment }))
+            dispatch(createCommentsRequest({ comment, id_post }))
             handleResetForm()
         } else {
             toast.error('Nhập nội dung trước khi bình luận')
@@ -64,28 +64,40 @@ const DetailPage = () => {
 
 
     const dataCategory = categories?.filter((cate) => cate._id === detail_post?.category)[0]
-    const postByCategories = posts?.filter((post) => post?.category === detail_post?.category)
-        ?.filter((post) => post?.slug !== slug);
-    const commentByPosts = comments?.filter((comment) => comment?.id_post === detail_post?._id)?.reverse();
-    const customerByPosts = customers?.filter((customer) => customer?._id === detail_post?.id_customer)[0];
-    const postByCustomer = posts?.filter((post) => post?.id_customer === detail_post?.id_customer);
+    const postByCategories = postsCategory?.filter((post) => post?.slug !== slug);
 
-    const rootComment = commentByPosts?.filter(comment => comment?.parent_comment_id === '')
+    const customerByPosts = customers?.filter((customer) => customer?._id === detail_post?.id_customer)[0];
+
+    const rootComment = commentsPost?.filter(comment => comment?.parent_comment_id === '')
     const listLikes = detail_post?.likes;
+    const id_post = detail_post?._id;
+    const id_category = detail_post?.category;
+    const id_customer = detail_post?.id_customer;
     const isLiked = listLikes?.some((id) => id === infoAuth?._id)
     const isAuth = customerByPosts?._id === infoAuth?._id
+    const typeAuthor = detail_post?.authorType;
     const getReplies = (commentId) => {
-        return commentByPosts?.filter(commentByPost => commentByPost?.parent_comment_id === commentId)
+        return commentsPost?.filter(commentByPost => commentByPost?.parent_comment_id === commentId)
     }
     const handleLikePost = () => {
         if (isLiked) return toast.warning("Bạn đã thích bài viết này!")
         if (!token) return toast.warning("Bạn chưa đăng nhập!")
-        dispatch(likePostRequest({ id: detail_post?._id, slug }))
+        dispatch(likePostRequest({ id: id_post, slug }))
     }
+
     useEffect(() => {
         dispatch(postDetailRequest({ slug }))
         dispatch(commentsRequest())
-    }, [slug, token]);
+    }, [slug]);
+    useEffect(() => {
+        dispatch(getPostsByCategoryRequest({ id_category }))
+    }, [id_category]);
+    useEffect(() => {
+        dispatch(getcommentsByPostRequest({ id_post }))
+    }, [id_post]);
+    useEffect(() => {
+        dispatch(getPostsByCustomerRequest({ id_customer }))
+    }, [id_customer]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
@@ -99,8 +111,11 @@ const DetailPage = () => {
                             {detail_post?.title}
                         </Heading>
                         <div className='text-white text-xs md:text-sm lg:text-base uppercase opacity-80  mt-10 flex '>
-                            <Link to={`/info/${customerByPosts?.slug}`}
+                            {typeAuthor === 'customer' ? <Link to={`/info/${customerByPosts?.slug}`}
                                 className='px-2 border-r last:border-none'>{customerByPosts?.full_name}</Link>
+                                : typeAuthor === 'admin'
+                                    ? <div className='px-2 border-r last:border-none'>Quản Trị Viên</div>
+                                    : ''}
                             <div className='px-2 border-r last:border-none'>{detail_post?.date} </div>
                             <Link to={`/category/${dataCategory?.slug}`}
                                 className='px-2 border-r last:border-none'>{dataCategory?.title}</Link></div>
@@ -112,13 +127,22 @@ const DetailPage = () => {
                     <div className='border-b border-b-primary mb-10'>
                         <div className='flex  gap-x-5 md:gap-x-10 gap-y-3 items-center justify-between md:justify-normal
                             !text-xs my-5 '>
-                            <Link to={`/info/${customerByPosts?.slug}`} className='flex gap-3 items-center'>
-                                <Avatar image={customerByPosts?.image}></Avatar>
-                                <h2 className='text-xs md:text-sm font-medium'>{customerByPosts?.full_name}</h2>
-                            </Link>
+                            {typeAuthor === 'customer'
+                                ? (
+                                    <Link to={`/info/${customerByPosts?.slug}`} className='flex gap-3 items-center'>
+                                        <Avatar image={customerByPosts?.image}></Avatar>
+                                        <h2 className='text-xs md:text-sm font-medium'>{customerByPosts?.full_name}</h2>
+                                    </Link>
+                                )
+                                : typeAuthor === 'admin'
+                                    ? <div className='flex gap-3 items-center'>
+                                        <Avatar image='../src/assets/image/admin-avatar.png'></Avatar>
+                                        <h2 className='text-xs md:text-sm font-bold'>Quản Trị Viên</h2>
+                                    </div>
+                                    : ''}
                             <div className=' flex gap-10 items-center'>
                                 <DataPost timestamps={detail_post?.timestamps}
-                                    comments={commentByPosts?.length} likes={listLikes}></DataPost>
+                                    comments={commentsPost?.length} likes={listLikes}></DataPost>
                                 {isAuth && <PopoverDrop x={80}>
                                     <div className='flex items-center gap-5'>
                                         <div onClick={handleToggle} className='flex items-center'>
@@ -153,7 +177,7 @@ const DetailPage = () => {
                             <Heading isHeading className='ml-0'>
                                 Bình luận
                             </Heading>
-                            <span>({commentByPosts?.length})</span>
+                            <span>({commentsPost?.length})</span>
                         </div>
                         {token && <div className='mt-5 lg:mb-10 w-full bg-white border py-3 px-2'>
                             <form onSubmit={handleSubmit(handleComment)} autoComplete='off'
@@ -186,7 +210,7 @@ const DetailPage = () => {
                             - Bài viết khác của tác giả -
                         </Heading>
                         <SlideWrap desktop={3} tablet={2} mobile={1} spaceBetween={10}>
-                            {postByCustomer?.length > 0 && postByCustomer.map(item => (
+                            {postsCustomer?.length > 0 && postsCustomer.map(item => (
                                 <SwiperSlide key={item._id}>
                                     <PostItem isSingle data={item}></PostItem>
                                 </SwiperSlide>

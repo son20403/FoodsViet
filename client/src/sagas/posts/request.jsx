@@ -3,11 +3,17 @@ const COLLECTION_NAME = 'post'
 export function getAllPost() {
     return axios.get(`/${COLLECTION_NAME}/getAll`)
 }
+export function getAllPostsByCategory(id) {
+    return axios.get(`/${COLLECTION_NAME}/getAllPostByCategory?id=${id}`)
+}
+export function getAllPostsByCustomer(id) {
+    return axios.get(`/${COLLECTION_NAME}/getAllPostByCustomer?id=${id}`)
+}
 export function getDetailPost(slug) {
     return axios.get(`/${COLLECTION_NAME}/detail?slug=${slug}`)
 }
 export function createPost(entity) {
-    return axios.post(`/${COLLECTION_NAME}/create`, entity, {
+    return axios.post(`/${COLLECTION_NAME}/createPost`, entity, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

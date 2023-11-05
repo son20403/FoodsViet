@@ -117,16 +117,56 @@ class BaseController {
             });
         }
     };
-
+    createPost = async (req, res) => {
+        const id_customer = req.customer.id;
+        let id_admin = null;
+        let status = 'pending';
+        let authorType = 'customer';
+        const isAdmin = req.customer.admin || null;
+        const formData = req.body;
+        const fileData = req.file;
+        const image = fileData?.path || '';
+        const id_image = fileData?.filename || '';
+        if (isAdmin) {
+            id_admin = req.customer.id
+            authorType = 'admin';
+        }
+        try {
+            const modelPost = {
+                ...formData,
+                image,
+                id_image,
+                id_customer,
+                authorType,
+                id_admin,
+                status
+            };
+            const dataPost = await Post(modelPost).save();
+            if (dataPost) {
+                return res.status(200).json({
+                    message: "Tạo bài viết thành công",
+                });
+            } else {
+                if (fileData) cloudinary.uploader.destroy(id_image);
+                return res.status(401).json({
+                    message: "Tạo bài viết thất bại",
+                });
+            }
+        } catch (error) {
+            if (fileData) cloudinary.uploader.destroy(id_image);
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Có lỗi xảy ra",
+                error: error._message,
+            });
+        }
+    };
     updatePost = async (req, res) => {
         const id = req.query.id;
         const formData = req.body;
         const fileData = req.file;
         const id_customer = req.customer?.id
-        let id_admin = ''
-        if (req.customer?.admin) {
-            id_admin = req.customer.id
-        }
+        const id_admin = req.customer.id
         try {
             const hasPost = await Post.findOne({ _id: id });
             if (!hasPost) {
@@ -135,7 +175,7 @@ class BaseController {
                     message: "Không tồn tại bài viết này",
                 });
             }
-            const isValid = hasPost.id_customer === id_customer || req.customer?.admin
+            const isValid = hasPost.id_customer === id_customer
             if (!isValid)
                 return res.status(400).json({
                     message: "Bạn không có quyền để sửa bài viết này",
@@ -182,7 +222,7 @@ class BaseController {
             const data = await this.model.findOne({ slug });
             if (!data)
                 return res.status(400).json({
-                    message: "Có lỗi xảy ra",
+                    message: "Không có nội dung này",
                 });
             return res.status(200).json(data);
         } catch (error) {
@@ -204,11 +244,11 @@ class BaseController {
             const response = await this.model.findByIdAndUpdate(data._id, { status: 'destroy' });
             if (!response) {
                 return res.status(400).json({
-                    message: "Có lỗi xảy ra không thê hủy bỏ!",
+                    message: "Có lỗi xảy ra không thể ẩn Nội dung!",
                 });
             }
             return res.status(200).json({
-                message: "Hủy bỏ thành công!"
+                message: "Đã ẩn thành công!"
             });
         } catch (error) {
             console.log('err', error);

@@ -38,13 +38,13 @@ class CommentController extends BaseController {
             });
         }
     };
-    getByPost = async (req, res) => {
+    getAllCommentsByPost = async (req, res) => {
         try {
             const id_post = req.query.id
             const dataCommentByPost = await this.model.find({ id_post });
             if (!dataCommentByPost) {
                 return res.status(400).json({
-                    message: "Có lỗi xảy ra",
+                    message: "Không tồn tại bài viết này",
                 });
             }
             return res.status(200).json(dataCommentByPost);
@@ -55,7 +55,7 @@ class CommentController extends BaseController {
             });
         }
     };
-    get_all_comments = async (req, res) => {
+    getAllComments = async (req, res) => {
         try {
             const data = await this.model.find();
             if (!data) {

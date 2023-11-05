@@ -5,6 +5,8 @@ const initialState = {
     tokenAdmin: getObjectFromLocalStorage('adminToken') || null,
     infoAdmin: getObjectFromLocalStorage('infoAdmin') || null,
     isAuthenticatedAdmin: !!localStorage.getItem('adminToken'),
+    admin: [],
+    adminDetail: {},
     customers: [],
     customerDetail: {},
     categories: [],
@@ -347,8 +349,81 @@ const adminSlice = createSlice({
                 error: null,
             }
         },
+        //Admin
+        getAllAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        getAllAdminSuccess: (state, action) => {
+            return {
+                ...state,
+                admin: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
+        addAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        addAdminSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
+        },
+        updateAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        updateAdminSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
+        },
+        deteteAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        deteteAdminSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
+        },
+        detailAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        detailAdminSuccess: (state, action) => {
+            return {
+                ...state,
+                adminDetail: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
     }
 })
 
-export const { loginAdminRequest, addCategoriesAdminRequest, addCategoriesAdminSuccess, addPostAdminRequest, addPostAdminSuccess, customerDetailAdminRequest, customerDetailAdminSuccess, deleteCommentAdminRequest, deleteCommentAdminSuccess, deteteCategoriesAdminRequest, deteteCategoriesAdminSuccess, deteteCustomerAdminRequest, deteteCustomerAdminSuccess, detetePostAdminRequest, detetePostAdminSuccess, getCategoriesAdminRequest, getCategoriesAdminSuccess, getCommentsAdminRequest, getCommentsAdminSuccess, getCustomersAdminRequest, getCustomersAdminSuccess, loginAdminSuccess, logoutAdmin, postDetailAdminRequest, postDetailAdminSuccess, refreshAccessTokenAdminRequest, refreshAccessTokenAdminSuccess, registerAdminRequest, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updateCategoriesAdminRequest, updateCategoriesAdminSuccess, updateCustomerAdminRequest, updateCustomerAdminSuccess, updatePostAdminRequest, updatePostAdminSuccess, addCustomerAdminRequest, addCustomerAdminSuccess, getPostsAdminRequest, getPostsAdminSuccess, updateStatusRequest, updateStatusSuccess } = adminSlice.actions
+export const { loginAdminRequest, addCategoriesAdminRequest, addCategoriesAdminSuccess, addPostAdminRequest, addPostAdminSuccess, customerDetailAdminRequest, customerDetailAdminSuccess, deleteCommentAdminRequest, deleteCommentAdminSuccess, deteteCategoriesAdminRequest, deteteCategoriesAdminSuccess, deteteCustomerAdminRequest, deteteCustomerAdminSuccess, detetePostAdminRequest, detetePostAdminSuccess, getCategoriesAdminRequest, getCategoriesAdminSuccess, getCommentsAdminRequest, getCommentsAdminSuccess, getCustomersAdminRequest, getCustomersAdminSuccess, loginAdminSuccess, logoutAdmin, postDetailAdminRequest, postDetailAdminSuccess, refreshAccessTokenAdminRequest, refreshAccessTokenAdminSuccess, registerAdminRequest, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updateCategoriesAdminRequest, updateCategoriesAdminSuccess, updateCustomerAdminRequest, updateCustomerAdminSuccess, updatePostAdminRequest, updatePostAdminSuccess, addCustomerAdminRequest, addCustomerAdminSuccess, getPostsAdminRequest, getPostsAdminSuccess, updateStatusRequest, updateStatusSuccess, addAdminRequest, addAdminSuccess, detailAdminRequest, detailAdminSuccess, deteteAdminRequest, deteteAdminSuccess, getAllAdminRequest, getAllAdminSuccess, updateAdminRequest, updateAdminSuccess } = adminSlice.actions
 export default adminSlice.reducer

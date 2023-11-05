@@ -1,6 +1,6 @@
 import { call, put } from "redux-saga/effects";
-import { createPost, getAllPost, getDetailPost, getSearchPost, likePost, updatePost, uploadImage } from "./request";
-import { createPostsSuccess, getDetailPostSuccess, getPostsSuccess, getSearchPostsSuccess, likePostSuccess, postDetailRequest, postsRequest, requestFailure, setLoadingPost, updatePostSuccess } from "./postsSlice";
+import { createPost, getAllPost, getAllPostsByCategory, getAllPostsByCustomer, getDetailPost, getSearchPost, likePost, updatePost } from "./request";
+import { createPostsSuccess, getDetailPostSuccess, getPostsByCategorySuccess, getPostsByCustomerSuccess, getPostsSuccess, getSearchPostsSuccess, likePostSuccess, postDetailRequest, requestFailure, updatePostSuccess } from "./postsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 
 export function* handleGetAllPosts({ payload }) {
@@ -16,8 +16,34 @@ export function* handleGetAllPosts({ payload }) {
     } catch (error) {
         yield handleCommonError(error)
     }
-
-
+}
+export function* handleGetAllPostsByCategory({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getAllPostsByCategory, payload?.id_category);
+        if (response?.data) {
+            yield put(getPostsByCategorySuccess(response.data?.reverse()))
+        } else {
+            yield put(getPostsByCategorySuccess([]))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleGetAllPostsByCustomer({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getAllPostsByCustomer, payload?.id_customer);
+        if (response?.data) {
+            yield put(getPostsByCustomerSuccess(response.data?.reverse()))
+        } else {
+            yield put(getPostsByCustomerSuccess([]))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
 }
 export function* handleGetDetailPosts({ payload }) {
 
@@ -73,18 +99,6 @@ export function* handleLikePost({ payload }) {
             yield put(likePostSuccess())
             yield put(setNotifyGlobal(response.data?.message));
             yield put(postDetailRequest({ slug: payload?.slug }));
-        }
-    } catch (error) {
-        yield handleCommonError(error)
-    }
-}
-export function* handleUploadImage({ payload }) {
-    try {
-        yield put(setNotifyGlobal(''))
-        yield put(setErrorGlobal(''))
-        const response = yield call(uploadImage, payload?.image);
-        if (response?.data) {
-            yield put(setNotifyGlobal(response.data?.message));
         }
     } catch (error) {
         yield handleCommonError(error)
