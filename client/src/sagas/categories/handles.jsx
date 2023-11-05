@@ -3,6 +3,7 @@ import {
   createCategoryAdmin,
   getAllCaterories,
   getAllCateroriesAdmin,
+  updateCategoryAdmin,
 } from "./request";
 import { getCategoriesSuccess, requestFailure } from "./categoriesSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
@@ -42,6 +43,20 @@ export function* handleCreateCategoryAdmin({ payload }) {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
     const response = yield call(createCategoryAdmin, payload?.category);
+    if (response) {
+      yield put(addCategoriesAdminSuccess());
+      yield put(getCategoriesAdminRequest());
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+
+export function* handleUpdateCategoryAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(updateCategoryAdmin, payload?.id, payload?.category);
     if (response) {
       yield put(addCategoriesAdminSuccess());
       yield put(getCategoriesAdminRequest());
