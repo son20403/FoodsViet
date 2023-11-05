@@ -23,10 +23,6 @@ const CategoriPageAdmin = () => {
   const { posts, loading, tokenAdmin, categories } = useSelector(
     (state) => state.admin
   );
-  console.log(
-    "🚀 ~ file: CategoriPageAdmin.jsx:12 ~ CategoriPageAdmin ~ categories:",
-    categories
-  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPostsAdminRequest());

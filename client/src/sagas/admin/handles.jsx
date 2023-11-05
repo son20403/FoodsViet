@@ -13,6 +13,7 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
   addCategoriesAdminSuccess,
   getAllAdminSuccess,
+  getCategoriesAdminRequest,
   getPostsAdminRequest,
   getPostsAdminSuccess,
   loginAdminSuccess,
@@ -103,6 +104,7 @@ export function* handleUpdateStatus({ payload }) {
     if (response?.data) {
       yield put(updateStatusSuccess());
       yield put(getPostsAdminRequest());
+      yield put(getCategoriesAdminRequest());
       yield put(setNotifyGlobal("Cập nhật trạng thái thành công"));
     }
   } catch (error) {

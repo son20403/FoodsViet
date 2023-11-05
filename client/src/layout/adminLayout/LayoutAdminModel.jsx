@@ -6,7 +6,7 @@ const LayoutAdminModel = ({ children, onClick = () => {} }) => {
   return (
     <div
       className=" fixed top-1/2 -translate-y-1/2  left-1/2 -translate-x-1/2  
-            h-full max-h-[80%] w-full max-w-[850px] mx-auto  z-[990] rounded-sm overflow-hidden "
+            h-full max-h-[80%] w-full max-w-[1000px] mx-auto  z-[990] rounded-sm overflow-hidden "
     >
       <div className="zoom bg-blue-gray-50 h-full max-h-[650px] overflow-y-auto transition-all overscroll-none">
         <div
