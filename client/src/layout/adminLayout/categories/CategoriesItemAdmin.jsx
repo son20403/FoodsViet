@@ -5,16 +5,22 @@ import { useSelector } from "react-redux";
 import { icon } from "../../../ADMIN/routes";
 import useToggle from "../../../hooks/useToggle";
 import useTimeSince from "../../../hooks/useTimeSince";
+import DetailCategoriesAdmin from "./DetailCategoriesAdmin";
 
 const CategoriesItemAdmin = ({ data }) => {
   const className = "px-5 py-3";
   const { admin } = useSelector((state) => state.admin);
   const timeSince = useTimeSince();
   const dataAdmin = admin.filter((ad) => ad._id === data?.id_author)[0];
-  console.log(
-    "🚀 ~ file: CategoriesItemAdmin.jsx:14 ~ CategoriesItemAdmin ~ dataAdmin:",
-    dataAdmin
-  );
+  const { categories } = useSelector((state) => state.categories);
+  const { customers } = useSelector((state) => state.customers);
+  const dataCategory = categories.filter(
+    (cate) => cate._id === data?.category
+  )[0];
+  const dataCustomer = customers.filter(
+    (cus) => cus._id === data?.id_customer
+  )[0];
+
   const authorType = data?.authorType;
   const { handleToggle, toggle } = useToggle(false);
   return (
@@ -78,13 +84,13 @@ const CategoriesItemAdmin = ({ data }) => {
           </Typography>
         </td>
       </tr>
-      {/* <PostDetailAdmin
+      <DetailCategoriesAdmin
         data={data}
         customers={dataCustomer}
         categories={dataCategory}
         show={toggle}
         onClick={handleToggle}
-      ></PostDetailAdmin> */}
+      ></DetailCategoriesAdmin>
     </>
   );
 };
