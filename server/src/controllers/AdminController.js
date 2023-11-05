@@ -189,10 +189,10 @@ class AdminController extends BaseController {
         return res.status(400).json({ message: "Model không hợp lệ" });
     }
     try {
-      const dataPost = await model.findOne({ _id: id });
-      if (!dataPost) {
+      const dataModel = await model.findOne({ _id: id });
+      if (!dataModel) {
         return res.status(400).json({
-          message: "Không tồn tại sản phẩm này",
+          message: "Không tồn tại nội dung này",
         });
       }
       if (!admin) {
@@ -200,23 +200,20 @@ class AdminController extends BaseController {
           message: "Bạn không phải là Admin",
         });
       }
-      const dataPostStatus = await model.findByIdAndUpdate(
-        dataPost._id,
+      const dataModelStatus = await model.findByIdAndUpdate(
+        dataModel._id,
         { status, id_admin },
         {
           new: true,
         }
       );
-      if (!dataPostStatus) {
+      if (!dataModelStatus) {
         return res.status(400).json({
           message: "Có lỗi xảy ra",
         });
       }
       return res.status(200).json({
-        message: `${dataPostStatus.status === "pending"
-          ? "Bạn đã không duyệt bài này"
-          : "Duyệt bài thành công"
-          }`,
+        message: `Cập nhật thành công`,
       });
     } catch (error) {
       console.log("err", error);

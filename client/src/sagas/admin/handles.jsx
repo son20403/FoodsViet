@@ -103,8 +103,26 @@ export function* handleUpdateStatus({ payload }) {
     const response = yield call(updateStatus, id, model, { status });
     if (response?.data) {
       yield put(updateStatusSuccess());
-      yield put(getPostsAdminRequest());
-      yield put(getCategoriesAdminRequest());
+      switch (model) {
+        case 'post':
+          yield put(getPostsAdminRequest());
+          break;
+        case 'category':
+          yield put(getCategoriesAdminRequest());
+          break;
+        case 'customer':
+          yield put(getCategoriesAdminRequest());
+          break;
+        case 'comment':
+          yield put(getCategoriesAdminRequest());
+          break;
+        case 'admin':
+          yield put(getCategoriesAdminRequest());
+          break;
+        default:
+          put(setErrorGlobal("Có lỗi xảy ra khi thay đổi trạng thái!"))
+          break;
+      }
       yield put(setNotifyGlobal("Cập nhật trạng thái thành công"));
     }
   } catch (error) {
