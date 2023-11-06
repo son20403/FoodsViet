@@ -37,7 +37,6 @@ class AdminController extends BaseController {
       cloudinary.uploader.destroy(oldCustomer.id_image);
     }
   };
-
   deleteCustomer = async (req, res) => {
     const id = req.query.id;
     try {
@@ -165,6 +164,7 @@ class AdminController extends BaseController {
       });
     }
   };
+
   updateStatus = async (req, res) => {
     const id = req.query?.id;
     const admin = req.customer?.admin;
@@ -184,6 +184,9 @@ class AdminController extends BaseController {
         break;
       case "category":
         model = this.categoryModel;
+        break;
+      case "customer":
+        model = this.customerModel;
         break;
       default:
         return res.status(400).json({ message: "Model không hợp lệ" });
@@ -259,7 +262,6 @@ class AdminController extends BaseController {
     const id = req.query.id;
     const formData = req.body;
     const fileData = req.file;
-
     try {
       const hasCustomer = await this.customerModel.findOne({ _id: id });
       if (!hasCustomer) {

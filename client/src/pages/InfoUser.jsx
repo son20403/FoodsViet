@@ -101,7 +101,7 @@ const InfoUser = () => {
 
 export default InfoUser;
 
-const WrapInfo = ({ children }) => {
+export const WrapInfo = ({ children }) => {
     return (
         <div className='flex items-center gap-x-4 py-4 border-b last:border-0 break-words w-full'>
             {children}

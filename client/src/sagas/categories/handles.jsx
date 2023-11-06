@@ -64,6 +64,7 @@ export function* handleUpdateCategoryAdmin({ payload }) {
     if (response) {
       yield put(addCategoriesAdminSuccess());
       yield put(getCategoriesAdminRequest());
+      yield put(setNotifyGlobal(response?.data?.message));
     }
   } catch (error) {
     yield handleCommonError(error);

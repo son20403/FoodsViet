@@ -13,31 +13,34 @@ import { Label } from "../../../components/label";
 import { Button } from "../../../components/button";
 import LayoutAdminModel from "../LayoutAdminModel";
 import { updateCategoriesAdminRequest } from "../../../sagas/admin/adminSlice";
+import { closeDetailCategory, closeUpdateCategory } from "../../../sagas/global/globalSlice";
 
 const schemaValidate = Yup.object({
   title: Yup.string().required("Vui lòng nhập tiêu đề!"),
   image: Yup.mixed(),
 });
 
-const CategoryEditAdmin = ({ data, show, onClick = () => {} }) => {
+const CategoryEditAdmin = () => {
   const dispatch = useDispatch();
-  const {
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    control,
+  const { handleSubmit, setValue, formState: { errors }, control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
+  const { showUpdateCategory } = useSelector((state) => state.global);
+  const { categoryDetail } = useSelector((state) => state.admin);
+  const handleClose = () => {
+    dispatch(closeUpdateCategory())
+  }
   const handleSubmits = (value) => {
     try {
       const category = { ...value };
       dispatch(
         updateCategoriesAdminRequest({
-          id: data._id,
+          id: categoryDetail._id,
           category,
-          slug: data.slug,
+          slug: categoryDetail.slug,
         })
       );
-      onClick();
+      handleClose();
+      dispatch(closeDetailCategory())
       resetImageField();
     } catch (error) {
       console.error("Có lỗi xảy ra:", error);
@@ -48,24 +51,28 @@ const CategoryEditAdmin = ({ data, show, onClick = () => {} }) => {
     setValue("image", "");
   };
   useEffect(() => {
+    if (categoryDetail) {
+      setValue("title", categoryDetail.title);
+    }
+  }, [categoryDetail, setValue]);
+  useEffect(() => {
     dispatch(categoriesRequest());
   }, []);
   return (
-    <ModalBase onClose={onClick} visible={show}>
-      <LayoutAdminModel onClick={onClick}>
+    <ModalBase onClose={handleClose} visible={showUpdateCategory}>
+      <LayoutAdminModel onClick={handleClose}>
         <div className="p-10 bg-white">
           <Heading isHeading>Thêm loại</Heading>
           <form
             onSubmit={handleSubmit(handleSubmits)}
             className="flex flex-col mb-10 text-center gap-y-10 "
           >
-            {/* <div className="grid grid-cols-1 gap-10 pt-10 mb-10 md:grid-cols-2 lg:grid-cols-2"> */}
             <Field>
               <Input
                 control={control}
                 errors={errors}
                 name="title"
-                value={data?.title}
+                value={categoryDetail?.title}
                 placeholder="Nhập tiêu đề loại"
                 type="text"
               >
@@ -75,14 +82,13 @@ const CategoryEditAdmin = ({ data, show, onClick = () => {} }) => {
             <div className="col-span-1 mb-10 md:col-span-2">
               <Label htmlFor={"image"}>Hình ảnh</Label>
               <FileInput
-                oldImage={data?.image}
+                oldImage={categoryDetail?.image}
                 control={control}
                 name={"image"}
                 errors={errors}
                 lable={"Hình ảnh"}
               />
             </div>
-            {/* </div> */}
             <Button type="submit" className="mx-auto ">
               Thêm bài viết
             </Button>

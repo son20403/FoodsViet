@@ -6,6 +6,7 @@ import middlewareAuth from '../middlewares/auth'
 
 // router.post('/create', middlewareAuth.verifyToken, uploadCloud.single("image"), CustomerController.create)
 router.get('/getAll', customerController.getAll)
+router.get('/getAllByAdmin', middlewareAuth.verifyTokenAdmin, customerController.getAllByAdmin)
 router.get('/detailBySlug?:slug', customerController.detailBySlug)
 router.get('/detail?:id', customerController.detail)
 // router.get('/detail', middlewareAuth.verifyToken, customerController.detail)

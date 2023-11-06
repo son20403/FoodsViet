@@ -8,9 +8,9 @@ import {
     Typography,
 } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNavbar } from "../../sagas/global/globalSlice";
+import { closeSidebar, toggleNavbar } from "../../sagas/global/globalSlice";
 
-export function Sidenav({ brandImg, brandName, routes }) {
+export function Sidebar({ brandImg, brandName, routes }) {
     const { infoAdmin } = useSelector((state) => state.admin)
     const dispatch = useDispatch()
     const sidenavTypes = {
@@ -18,16 +18,16 @@ export function Sidenav({ brandImg, brandName, routes }) {
         white: "bg-primary shadow-lg",
         transparent: "bg-transparent",
     };
-    const { showNavbar: openSidenav } = useSelector((state) => state.global)
+    const { showSidebar } = useSelector((state) => state.global)
     const setOpenSidenav = () => {
-        dispatch(toggleNavbar())
+        dispatch(closeSidebar())
     }
     const sidenavType = 'dark'
     const sidenavColor = 'white'
 
     return (
         <aside
-            className={`${sidenavTypes['white']} ${openSidenav ? "translate-x-0" : "-translate-x-80"
+            className={`${sidenavTypes['white']} ${showSidebar ? "translate-x-0" : "-translate-x-80"
                 } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0`}
         >
             <div
@@ -103,12 +103,12 @@ export function Sidenav({ brandImg, brandName, routes }) {
     );
 }
 
-Sidenav.defaultProps = {
+Sidebar.defaultProps = {
     brandImg: "../src/assets/image/user.png",
     brandName: "FOODSVIET",
 };
 
-Sidenav.propTypes = {
+Sidebar.propTypes = {
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
     routes: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -116,4 +116,4 @@ Sidenav.propTypes = {
 
 // Sidenav.displayName = "/src/widgets/layout/sidnave.jsx";
 
-export default Sidenav;
+export default Sidebar;

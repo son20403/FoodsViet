@@ -15,6 +15,7 @@ import { Textarea } from "../../../components/textarea";
 import { Button } from "../../../components/button";
 import LayoutAdminModel from "../LayoutAdminModel";
 import { updatePostAdminRequest } from "../../../sagas/admin/adminSlice";
+import { closeDetailPost, closeUpdatePost } from "../../../sagas/global/globalSlice";
 
 const schemaValidate = Yup.object({
   title: Yup.string().required("Vui lòng nhập tiêu đề!"),
@@ -22,20 +23,26 @@ const schemaValidate = Yup.object({
   image: Yup.mixed(),
 });
 
-const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
+const PostEditAdmin = () => {
   const dispatch = useDispatch();
   const {
     handleSubmit,
     setValue,
     formState: { errors },
     control,
+
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
-  const { categories } = useSelector((state) => state.categories);
+  const { postDetail, categories } = useSelector((state) => state.admin);
+  const { showUpdatePost } = useSelector((state) => state.global);
+  const handleClose = () => {
+    dispatch(closeUpdatePost())
+  }
   const handleSubmits = (value) => {
     try {
       const post = { ...value };
-      dispatch(updatePostAdminRequest({ id: data._id, post, slug: data.slug }));
-      onClick();
+      dispatch(updatePostAdminRequest({ id: postDetail._id, post, slug: postDetail.slug }));
+      handleClose();
+      dispatch(closeDetailPost())
       resetImageField();
     } catch (error) {
       console.error("Có lỗi xảy ra:", error);
@@ -46,11 +53,15 @@ const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
     setValue("image", "");
   };
   useEffect(() => {
-    dispatch(categoriesRequest());
-  }, []);
+    if (postDetail) {
+      setValue("title", postDetail.title);
+      setValue("category", postDetail.category);
+      setValue("content", postDetail.content);
+    }
+  }, [postDetail, setValue]);
   return (
-    <ModalBase onClose={onClick} visible={show}>
-      <LayoutAdminModel onClick={onClick}>
+    <ModalBase onClose={handleClose} visible={showUpdatePost}>
+      <LayoutAdminModel onClick={handleClose}>
         <div className="p-2 md:p-5">
           <form
             onSubmit={handleSubmit(handleSubmits)}
@@ -62,7 +73,7 @@ const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
                 <Input
                   control={control}
                   errors={errors}
-                  value={data?.title}
+                  value={postDetail?.title}
                   name="title"
                   placeholder="Nhập tiêu đề bài viết"
                   type="text"
@@ -72,7 +83,7 @@ const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
               </Field>
               <Field>
                 <Select
-                  value={data?.category}
+                  value={postDetail?.category}
                   data={categories}
                   control={control}
                   name={"category"}
@@ -81,7 +92,7 @@ const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
               <Field className=" col-span-1 mb-10">
                 <Label htmlFor={"image"}>Hình ảnh</Label>
                 <FileInput
-                  oldImage={data?.image}
+                  oldImage={postDetail?.image}
                   control={control}
                   name={"image"}
                   errors={errors}
@@ -91,7 +102,7 @@ const PostEditAdmin = ({ data, show, onClick = () => {} }) => {
               <Field>
                 <Label htmlFor={"content"}>Nội dung</Label>
                 <Textarea
-                  value={data?.content}
+                  value={postDetail?.content}
                   control={control}
                   errors={errors}
                   name={"content"}

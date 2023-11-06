@@ -1,28 +1,23 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { Avatar, Chip, Typography } from "@material-tailwind/react";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { icon } from "../../../ADMIN/routes";
-import useToggle from "../../../hooks/useToggle";
 import useTimeSince from "../../../hooks/useTimeSince";
-import DetailCategoriesAdmin from "./DetailCategoriesAdmin";
+import { detailCategoriesAdminSuccess } from "../../../sagas/admin/adminSlice";
+import { toggleDetailCategory } from "../../../sagas/global/globalSlice";
 
-const CategoriesItemAdmin = ({ data }) => {
+const CategoryItemAdmin = ({ data }) => {
   const className = "px-5 py-3";
   const { admin } = useSelector((state) => state.admin);
   const timeSince = useTimeSince();
+  const dispatch = useDispatch()
   const dataAdmin = admin.filter((ad) => ad._id === data?.id_author)[0];
-  const { categories } = useSelector((state) => state.categories);
-  const { customers } = useSelector((state) => state.customers);
-  const dataCategory = categories.filter(
-    (cate) => cate._id === data?.category
-  )[0];
-  const dataCustomer = customers.filter(
-    (cus) => cus._id === data?.id_customer
-  )[0];
 
-  const authorType = data?.authorType;
-  const { handleToggle, toggle } = useToggle(false);
+  const handleShowCategoryDetail = () => {
+    dispatch(toggleDetailCategory())
+    dispatch(detailCategoriesAdminSuccess({ ...data }))
+  }
   return (
     <>
       <tr className="border-b border-blue-gray-50 last:border-b-0">
@@ -48,22 +43,22 @@ const CategoriesItemAdmin = ({ data }) => {
             {dataAdmin?.user_name || ""}
           </Typography>
         </td>
-        <td className={`${className} text-center`}>
+        <td className={`${className}`}>
           <Chip
             variant="gradient"
             color={
               data?.status === "approved"
                 ? "green"
                 : data?.status === "pending"
-                ? "yellow"
-                : "red"
+                  ? "yellow"
+                  : "red"
             }
             value={
               data?.status === "approved"
                 ? "Đã duyệt"
                 : data?.status === "pending"
-                ? "Chờ duyệt"
-                : "vô hiệu hóa"
+                  ? "Chờ duyệt"
+                  : "vô hiệu hóa"
             }
             className="py-0.5 px-2 text-[11px] font-medium inline-block"
           />
@@ -80,19 +75,12 @@ const CategoriesItemAdmin = ({ data }) => {
           className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}
         >
           <Typography className="text-xs font-semibold cursor-pointer text-blue-gray-600">
-            <EyeIcon {...icon} onClick={handleToggle}></EyeIcon>
+            <EyeIcon {...icon} onClick={handleShowCategoryDetail}></EyeIcon>
           </Typography>
         </td>
       </tr>
-      <DetailCategoriesAdmin
-        data={data}
-        customers={dataCustomer}
-        categories={dataCategory}
-        show={toggle}
-        onClick={handleToggle}
-      ></DetailCategoriesAdmin>
     </>
   );
 };
 
-export default CategoriesItemAdmin;
+export default CategoryItemAdmin;

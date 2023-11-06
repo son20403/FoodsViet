@@ -4,6 +4,7 @@ import {
   addPostAdminRequest,
   getAllAdminRequest,
   getCategoriesAdminRequest,
+  getCustomersAdminRequest,
   getPostsAdminRequest,
   loginAdminRequest,
   logoutAdmin,
@@ -15,6 +16,7 @@ import {
 import {
   handleCreatePostsAdmin,
   handleGetAllAdmin,
+  handleGetAllCustomersByAdmin,
   handleGetAllPostsAdmin,
   handleLoginAdmin,
   handleLogoutAdmin,
@@ -37,4 +39,5 @@ export default function* adminSagas() {
   yield takeLatest(addCategoriesAdminRequest.type, handleCreateCategoryAdmin);
   yield takeLatest(updateStatusRequest.type, handleUpdateStatus);
   yield takeLatest(updateCategoriesAdminRequest.type, handleUpdateCategoryAdmin);
+  yield takeLatest(getCustomersAdminRequest.type, handleGetAllCustomersByAdmin);
 }
