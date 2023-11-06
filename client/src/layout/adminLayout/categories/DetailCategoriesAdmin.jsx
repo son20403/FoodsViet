@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import ModalBase from "../../modal/ModalBase";
 import LayoutAdminModel from "../LayoutAdminModel";
-import { Heading } from "../../../components/heading";
 import {
   IconButton,
   SpeedDial,
@@ -14,11 +13,6 @@ import {
   CardFooter,
   Avatar,
   Typography,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Switch,
-  Tooltip,
   Button,
 } from "@material-tailwind/react";
 import {
@@ -27,17 +21,13 @@ import {
   ClockIcon,
   PencilSquareIcon,
   PlusIcon,
-  HomeIcon,
-  ChatBubbleLeftEllipsisIcon,
-  Cog6ToothIcon,
-  PencilIcon,
 } from "@heroicons/react/24/outline";
 import { icon } from "../../../ADMIN/routes";
 
 import { useDispatch, useSelector } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
 import { updateStatusRequest } from "../../../sagas/admin/adminSlice";
-import { getPostsByCategoryRequest } from "../../../sagas/posts/postsSlice";
+import CategoryEditAdmin from "./CategoryEditAdmin";
 
 const DetailCategoriesAdmin = ({
   onClick,
@@ -57,10 +47,6 @@ const DetailCategoriesAdmin = ({
 
   const dataPostsByCategory = posts.filter(
     (post) => post.category === data?._id
-  );
-  console.log(
-    "🚀 ~ file: DetailCategoriesAdmin.jsx:60 ~ dataPostsByCategory:",
-    dataPostsByCategory
   );
 
   const handleUpdateStatus = (status) => {
@@ -86,14 +72,14 @@ const DetailCategoriesAdmin = ({
       <ModalBase onClose={onClick} visible={show}>
         <LayoutAdminModel onClick={onClick}>
           <div
-            className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-cover	bg-center"
+            className="relative w-full mt-8 overflow-hidden bg-center bg-cover h-72 rounded-xl"
             style={{ backgroundImage: `url(${data?.image})` }}
           >
-            <div className="absolute inset-0 h-full w-full bg-gray-500/50" />
+            <div className="absolute inset-0 w-full h-full bg-gray-500/50" />
           </div>
-          <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
+          <Card className="mx-3 mb-6 -mt-16 lg:mx-4">
             <CardBody className="p-4">
-              <div className="mb-10 flex items-center justify-between gap-6">
+              <div className="flex items-center justify-between gap-6 mb-10">
                 <div className="flex items-center gap-6">
                   <Avatar
                     src={data?.image}
@@ -117,7 +103,7 @@ const DetailCategoriesAdmin = ({
                   <Tabs value="app">
                     <TabsHeader>
                       <Tab value="app">
-                        <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
+                        <HomeIcon className="inline-block w-5 h-5 mr-2 -mt-1" />
                         App
                       </Tab>
                       <Tab value="message">
@@ -125,7 +111,7 @@ const DetailCategoriesAdmin = ({
                         Message
                       </Tab>
                       <Tab value="settings">
-                        <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
+                        <Cog6ToothIcon className="inline-block w-5 h-5 mr-2 -mt-1" />
                         Settings
                       </Tab>
                     </TabsHeader>
@@ -143,21 +129,21 @@ const DetailCategoriesAdmin = ({
                 >
                   Architects design houses
                 </Typography>
-                <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-12 mt-6 md:grid-cols-2 xl:grid-cols-4">
                   {dataPostsByCategory.map(({ image, title, _id, content }) => (
                     <Card key={_id} color="transparent" shadow={false}>
                       <CardHeader
                         floated={false}
                         color="gray"
-                        className="mx-0 mt-0 mb-4 h-64 xl:h-40"
+                        className="h-64 mx-0 mt-0 mb-4 xl:h-40"
                       >
                         <img
                           src={image}
                           alt={title}
-                          className="h-full w-full object-cover"
+                          className="object-cover w-full h-full"
                         />
                       </CardHeader>
-                      <CardBody className="py-0 px-1">
+                      <CardBody className="px-1 py-0">
                         {/* <Typography
                             variant="small"
                             className="font-normal text-blue-gray-500"
@@ -182,7 +168,7 @@ const DetailCategoriesAdmin = ({
                           />
                         </Typography>
                       </CardBody>
-                      <CardFooter className="mt-auto flex items-center justify-between py-0 px-1 ">
+                      <CardFooter className="flex items-center justify-between px-1 py-0 mt-auto ">
                         <div className="mt-10">
                           <Button variant="outlined" size="sm">
                             view category
@@ -195,8 +181,8 @@ const DetailCategoriesAdmin = ({
               </div>
             </CardBody>
           </Card>
-          <div className="py-5 w-full flex items-center justify-end pr-5 sticky bottom-0">
-            <div className="flex gap-5 items-center">
+          <div className="sticky bottom-0 flex items-center justify-end w-full py-5 pr-5">
+            <div className="flex items-center gap-5">
               {/* <div className='pr-5 border-r-2 border-primary'>
                             <Button size='sm' className='bg-primary' onClick={handleEditPost}>
                                 <PencilSquareIcon {...icon} /></Button>
@@ -208,15 +194,12 @@ const DetailCategoriesAdmin = ({
                 <SpeedDialHandler>
                   <IconButton
                     size="lg"
-                    className="rounded-full border-white border"
+                    className="border border-white rounded-full"
                   >
-                    <PlusIcon className="h-5 w-5 transition-transform group-hover:rotate-45" />
+                    <PlusIcon className="w-5 h-5 transition-transform group-hover:rotate-45" />
                   </IconButton>
                 </SpeedDialHandler>
-                <SpeedDialContent
-                  className="rounded-full border  border-blue-gray-50 bg-white 
-                            shadow-xl shadow-black/10"
-                >
+                <SpeedDialContent className="bg-white border rounded-full shadow-xl border-blue-gray-50 shadow-black/10">
                   <SpeedDialAction
                     onClick={() => handleUpdateStatus("destroy")}
                     className={`bg-red-500 text-white ${
@@ -242,7 +225,7 @@ const DetailCategoriesAdmin = ({
                     <ArrowUpTrayIcon {...icon} />
                   </SpeedDialAction>
                   <SpeedDialAction
-                    className="bg-primary text-white"
+                    className="text-white bg-primary"
                     onClick={handleEditPost}
                   >
                     <PencilSquareIcon {...icon} />
@@ -253,11 +236,11 @@ const DetailCategoriesAdmin = ({
           </div>
         </LayoutAdminModel>
       </ModalBase>
-      {/* <PostEditAdmin
-    data={data}
-    show={toggle}
-    onClick={handleToggle}
-  ></PostEditAdmin> */}
+      <CategoryEditAdmin
+        data={data}
+        show={toggle}
+        onClick={handleToggle}
+      ></CategoryEditAdmin>
     </>
   );
 };
