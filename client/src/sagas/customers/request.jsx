@@ -10,8 +10,8 @@ export function getAllCustomers() {
 export function getAllCustomersByAdmin() {
     return admin.get(`/${COLLECTION_NAME}/getAllByAdmin`)
 }
-export function updateCustomer(entity) {
-    return axios.put(`/${COLLECTION_NAME}/updateCustomer`, entity, {
+export function updateCustomer(id, entity) {
+    return axios.put(`/${COLLECTION_NAME}/updateCustomer?id=${id}`, entity, {
         headers: {
             "Content-Type": "multipart/form-data",
         },

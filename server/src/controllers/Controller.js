@@ -2,6 +2,7 @@ const cloudinary = require("cloudinary").v2;
 import argon2 from "argon2";
 import { generateAccessToken, generateRefreshToken } from "../jwt";
 import Post from '../models/Post'
+import Customer from '../models/Customer'
 class BaseController {
     constructor(model) {
         this.model = model;
@@ -206,6 +207,60 @@ class BaseController {
                 });
             }
             const { id_image, updatedAt, createdAt, ...others } = updatedPost._doc;
+            return res.status(200).json({ ...others, message: "Cập nhật thành công" });
+        } catch (error) {
+            if (fileData) cloudinary.uploader.destroy(fileData.filename);
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Lỗi Server",
+            });
+        }
+    };
+    updateCustomer = async (req, res) => {
+        const id = req.query.id;
+        const formData = req.body;
+        const fileData = req.file;
+        const id_customer = req.customer?.id
+        const id_admin = req.customer.id
+        try {
+            const hasCustomer = await Customer.findOne({ _id: id });
+            if (!hasCustomer) {
+                if (fileData) cloudinary.uploader.destroy(fileData.filename);
+                return res.status(400).json({
+                    message: "Không tồn tại người dùng này",
+                });
+            }
+            const isValid = hasCustomer._id == id_customer
+            if (!isValid)
+                return res.status(400).json({
+                    message: "Bạn không có quyền để sửa người dùng này",
+                });
+            let newImage = hasCustomer.image;
+            let newIdImage = hasCustomer.id_image;
+
+            if (fileData) {
+                cloudinary.uploader.destroy(hasCustomer.id_image);
+                newImage = fileData.path;
+                newIdImage = fileData.filename;
+            }
+
+            const updatedData = {
+                ...formData,
+                image: newImage,
+                id_image: newIdImage,
+                id_admin
+            }
+
+            const updatedCustomer = await Customer.findByIdAndUpdate(id, updatedData, {
+                new: true,
+            });
+            if (!updatedCustomer) {
+                if (fileData) cloudinary.uploader.destroy(fileData.filename);
+                return res.status(400).json({
+                    message: "Có lỗi xảy ra, không thể update",
+                });
+            }
+            const { id_image, updatedAt, createdAt, ...others } = updatedCustomer._doc;
             return res.status(200).json({ ...others, message: "Cập nhật thành công" });
         } catch (error) {
             if (fileData) cloudinary.uploader.destroy(fileData.filename);

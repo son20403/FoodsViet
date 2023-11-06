@@ -14,6 +14,7 @@ import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { icon } from "../../ADMIN/routes";
 import CustomerItemAdmin from "../../layout/adminLayout/customers/CustomerItemAdmin";
 import CustomerDetailAdmin from "../../layout/adminLayout/customers/CustomerDetailAdmin";
+import CustomerEditAdmin from "../../layout/adminLayout/customers/CustomerEditAdmin";
 
 const CustomersPageAdmin = () => {
     const { loading, customers } = useSelector(
@@ -73,6 +74,7 @@ const CustomersPageAdmin = () => {
                 </Card>
             </div>
             <CustomerDetailAdmin></CustomerDetailAdmin>
+            <CustomerEditAdmin></CustomerEditAdmin>
         </div>
     );
 };

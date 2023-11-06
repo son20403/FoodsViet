@@ -6,6 +6,7 @@ import {
   loginAdmin,
   logoutAdmin,
   registerAdmin,
+  updateCustomerAdmin,
   updatePostAdmin,
   updateStatus,
 } from "./request";
@@ -23,6 +24,7 @@ import {
   registerAdminSuccess,
   requestAdminFailure,
   setInfoAdmin,
+  updateCustomerAdminSuccess,
   updatePostAdminSuccess,
   updateStatusSuccess,
 } from "./adminSlice";
@@ -154,6 +156,21 @@ export function* handleUpdatePostAdmin({ payload }) {
       yield put(updatePostAdminSuccess());
       // yield put(postDetailRequest({ slug: payload?.slug }));
       yield put(getPostsAdminRequest());
+      yield put(setNotifyGlobal(response.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleUpdateCustomerAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(updateCustomerAdmin, payload?.id, payload?.customer);
+    if (response?.data) {
+      yield put(updateCustomerAdminSuccess());
+      // yield put(postDetailRequest({ slug: payload?.slug }));
+      yield put(getCustomersAdminRequest());
       yield put(setNotifyGlobal(response.data?.message));
     }
   } catch (error) {
