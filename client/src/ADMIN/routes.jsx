@@ -5,6 +5,7 @@ import {
   UserPlusIcon,
   NewspaperIcon,
   Square3Stack3DIcon,
+  UserIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
   className: "w-5 h-5 text-inherit",
@@ -29,9 +30,9 @@ const routes = [
         path: "/categories",
       },
       {
-        icon: <BellIcon {...icon} />,
-        name: "notifactions",
-        path: "/notifactions",
+        icon: <UserIcon  {...icon} />,
+        name: "Người dùng",
+        path: "/customers",
       },
     ],
   },

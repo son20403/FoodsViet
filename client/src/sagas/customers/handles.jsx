@@ -29,6 +29,7 @@ export function* handleGetAllCustomers({ payload }) {
     }
 }
 
+
 export function* handleUpdateCustomers({ payload }) {
     try {
         yield put(setNotifyGlobal(''))

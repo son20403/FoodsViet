@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import Sidenav from "../layout/adminLayout/SideBarAdmin";
+import Sidebar from "../layout/adminLayout/SideBarAdmin";
 import DashboardNavbar from "../layout/adminLayout/NavBarAdmin";
 import routes from "./routes";
 import FooterAdmin from "../layout/adminLayout/FooterAdmin";
@@ -18,12 +18,13 @@ import {
   UserPlusIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
 import useToggle from "../hooks/useToggle";
 import { handleCreatePosts } from "../sagas/posts/handles";
-import AddCategotiesAdmin from "../layout/adminLayout/categories/AddCategotiesAdmin";
+import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
+import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
 export function Dashboard() {
   const navLink = [
     {
@@ -46,13 +47,13 @@ export function Dashboard() {
       id: 3,
       title: "Thêm người dùng",
       icon: <UserPlusIcon className="w-5 h-5" />,
-      onclick: () => {},
+      onclick: () => { },
     },
     {
       id: 4,
       title: "Thêm nhân viên",
       icon: <UserCircleIcon className="w-5 h-5" />,
-      onclick: () => {},
+      onclick: () => { },
     },
   ];
   const labelProps = {
@@ -67,12 +68,19 @@ export function Dashboard() {
   const { handleToggle: handleToggleCategories, toggle: showCategories } =
     useToggle(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getPostsAdminRequest())
+    dispatch(getCategoriesAdminRequest())
+    dispatch(getCustomersAdminRequest())
+    dispatch(getAllAdminRequest())
+  }, []);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");
   }, [tokenAdmin]);
   return (
     <div className="min-h-screen bg-blue-gray-50/50 max-w-[1600px] mx-auto !relative">
-      <Sidenav routes={routes} />
+      <Sidebar routes={routes} />
       <div className="flex flex-col min-h-screen p-4 xl:ml-80">
         <DashboardNavbar />
         <Outlet></Outlet>
@@ -105,10 +113,10 @@ export function Dashboard() {
         onClick={handleToggleAddPost}
         show={showAddPost}
       ></AddPostAdmin>
-      <AddCategotiesAdmin
+      <AddCategoryAdmin
         onClick={handleToggleCategories}
         show={showCategories}
-      ></AddCategotiesAdmin>
+      ></AddCategoryAdmin>
     </div>
   );
 }

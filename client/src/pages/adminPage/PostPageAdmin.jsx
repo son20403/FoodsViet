@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Card,
     CardHeader,
@@ -7,25 +7,17 @@ import {
 } from "@material-tailwind/react";
 import PostItemAdmin from '../../layout/adminLayout/posts/PostItemAdmin';
 import { useDispatch, useSelector } from 'react-redux';
-import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
-import { customersRequest } from '../../sagas/customers/customersSlice';
 import LoadingRequest from '../../layout/loading/LoadingRequest';
-import { getAllAdminRequest, getPostsAdminRequest } from '../../sagas/admin/adminSlice';
+import { getPostsAdminRequest } from '../../sagas/admin/adminSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { icon } from '../../ADMIN/routes';
+import PostDetailAdmin from '../../layout/adminLayout/posts/PostDetailAdmin';
+import { toggleDetaiPost } from '../../sagas/global/globalSlice';
+import PostEditAdmin from '../../layout/adminLayout/posts/PostEditAdmin';
 
 const PostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
     const dispatch = useDispatch()
-
-    const { tokenAdmin } = useSelector((state) => state.admin);
-    const tokenLocal = localStorage.getItem('adminToken')
-    useEffect(() => {
-        dispatch(getPostsAdminRequest())
-        dispatch(categoriesRequest())
-        dispatch(customersRequest())
-        dispatch(getAllAdminRequest())
-    }, [tokenAdmin, dispatch, tokenLocal]);
     const handLoad = () => {
         dispatch(getPostsAdminRequest())
     }
@@ -72,107 +64,11 @@ const PostPageAdmin = () => {
                     </CardBody>
                 </Card>
             </div>
+            <PostDetailAdmin></PostDetailAdmin>
+            <PostEditAdmin></PostEditAdmin>
         </div>
     );
 };
 
 export default PostPageAdmin;
 
-const authorsTableData = [
-    {
-        img: "../src/assets/image/user.png",
-        name: "John Michael",
-        email: "john@creative-tim.com",
-        job: ["Manager", "Organization"],
-        online: true,
-        date: "23/04/18",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Alexa Liras",
-        email: "alexa@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: false,
-        date: "11/01/19",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Laurent Perrier",
-        email: "laurent@creative-tim.com",
-        job: ["Executive", "Projects"],
-        online: true,
-        date: "19/09/17",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Michael Levi",
-        email: "michael@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: true,
-        date: "24/12/08",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Bruce Mars",
-        email: "bruce@creative-tim.com",
-        job: ["Manager", "Executive"],
-        online: false,
-        date: "04/10/21",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Alexander",
-        email: "alexander@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: false,
-        date: "14/09/20",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "John Michael",
-        email: "john@creative-tim.com",
-        job: ["Manager", "Organization"],
-        online: true,
-        date: "23/04/18",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Alexa Liras",
-        email: "alexa@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: false,
-        date: "11/01/19",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Laurent Perrier",
-        email: "laurent@creative-tim.com",
-        job: ["Executive", "Projects"],
-        online: true,
-        date: "19/09/17",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Michael Levi",
-        email: "michael@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: true,
-        date: "24/12/08",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Bruce Mars",
-        email: "bruce@creative-tim.com",
-        job: ["Manager", "Executive"],
-        online: false,
-        date: "04/10/21",
-    },
-    {
-        img: "../src/assets/image/user.png",
-        name: "Alexander",
-        email: "alexander@creative-tim.com",
-        job: ["Programator", "Developer"],
-        online: false,
-        date: "14/09/20",
-    },
-];

@@ -9,7 +9,7 @@ class CustomerController extends BaseController {
         super(model)
         this.model = model
     }
-    getAll = async (req, res) => {
+    getAllByAdmin = async (req, res) => {
         try {
             const data = await this.model.find({});
             if (!data) {

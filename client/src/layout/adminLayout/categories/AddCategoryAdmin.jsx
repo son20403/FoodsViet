@@ -1,6 +1,5 @@
 import React from "react";
 import ModalBase from "../../modal/ModalBase";
-import LoadingRequest from "../../loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { Heading } from "../../../components/heading";
 import LayoutAdminModel from "../LayoutAdminModel";
@@ -18,12 +17,11 @@ import { addCategoriesAdminRequest } from "../../../sagas/admin/adminSlice";
 const schemaValidate = Yup.object({
   title: Yup.string().required("Vui lòng nhập tiêu đề!"),
   image: Yup.mixed().required("Vui lòng nhập ảnh!"),
-  // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 });
-const AddCategotiesAdmin = ({ onClick = () => {}, show }) => {
+const AddCategoryAdmin = ({ onClick = () => { }, show }) => {
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors },
     control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
   const dispatch = useDispatch();
@@ -85,4 +83,4 @@ const AddCategotiesAdmin = ({ onClick = () => {}, show }) => {
   );
 };
 
-export default AddCategotiesAdmin;
+export default AddCategoryAdmin;

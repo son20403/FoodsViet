@@ -12,8 +12,11 @@ import {
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
   addCategoriesAdminSuccess,
+  getAllAdminRequest,
   getAllAdminSuccess,
   getCategoriesAdminRequest,
+  getCustomersAdminRequest,
+  getCustomersAdminSuccess,
   getPostsAdminRequest,
   getPostsAdminSuccess,
   loginAdminSuccess,
@@ -23,6 +26,7 @@ import {
   updatePostAdminSuccess,
   updateStatusSuccess,
 } from "./adminSlice";
+import { getAllCustomersByAdmin } from "../customers/request";
 
 export function* handleLoginAdmin({ payload }) {
   try {
@@ -95,6 +99,18 @@ export function* handleGetAllAdmin({ payload }) {
     yield handleCommonError(error);
   }
 }
+export function* handleGetAllCustomersByAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(''))
+    yield put(setErrorGlobal(''))
+    const response = yield call(getAllCustomersByAdmin, payload);
+    if (response) {
+      yield put(getCustomersAdminSuccess(response.data?.reverse()))
+    }
+  } catch (error) {
+    yield handleCommonError(error)
+  }
+}
 export function* handleUpdateStatus({ payload }) {
   const { id, model, status } = payload;
   try {
@@ -111,13 +127,13 @@ export function* handleUpdateStatus({ payload }) {
           yield put(getCategoriesAdminRequest());
           break;
         case 'customer':
-          yield put(getCategoriesAdminRequest());
+          yield put(getCustomersAdminRequest());
           break;
         case 'comment':
           yield put(getCategoriesAdminRequest());
           break;
         case 'admin':
-          yield put(getCategoriesAdminRequest());
+          yield put(getAllAdminRequest());
           break;
         default:
           put(setErrorGlobal("Có lỗi xảy ra khi thay đổi trạng thái!"))

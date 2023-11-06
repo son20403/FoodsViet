@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LoadingRequest from "../../layout/loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getAllAdminRequest,
   getCategoriesAdminRequest,
-  getPostsAdminRequest,
 } from "../../sagas/admin/adminSlice";
 import {
   Card,
@@ -12,23 +10,20 @@ import {
   CardBody,
   Typography,
 } from "@material-tailwind/react";
-import PostItemAdmin from "../../layout/adminLayout/posts/PostItemAdmin";
-import { categoriesRequest } from "../../sagas/categories/categoriesSlice";
-import { customersRequest } from "../../sagas/customers/customersSlice";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { icon } from "../../ADMIN/routes";
-import CategoriesItemAdmin from "../../layout/adminLayout/categories/CategoriesItemAdmin";
+import CategoryItemAdmin from "../../layout/adminLayout/categories/CategoryItemAdmin";
+import useToggle from "../../hooks/useToggle";
+import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDetailAdmin";
+import { toggleDetailCategory } from "../../sagas/global/globalSlice";
+import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
 
-const CategoriPageAdmin = () => {
-  const { posts, loading, tokenAdmin, categories } = useSelector(
+const CategoryPageAdmin = () => {
+  const { loading, categories } = useSelector(
     (state) => state.admin
   );
+  // const { handleToggle, toggle } = useToggle(false)
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getPostsAdminRequest());
-    dispatch(getCategoriesAdminRequest());
-    dispatch(getAllAdminRequest());
-  }, [tokenAdmin, dispatch]);
   const handLoad = () => {
     dispatch(getCategoriesAdminRequest());
   };
@@ -72,16 +67,18 @@ const CategoriPageAdmin = () => {
               <tbody>
                 {categories &&
                   categories?.length > 0 &&
-                  categories?.map((data, key) => (
-                    <CategoriesItemAdmin key={data?._id} data={data} />
+                  categories?.map((data) => (
+                    <CategoryItemAdmin key={data?._id} data={data} />
                   ))}
               </tbody>
             </table>
           </CardBody>
         </Card>
       </div>
+      <CategoryDetailAdmin></CategoryDetailAdmin>
+      <CategoryEditAdmin></CategoryEditAdmin>
     </div>
   );
 };
 
-export default CategoriPageAdmin;
+export default CategoryPageAdmin;
