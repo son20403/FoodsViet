@@ -34,7 +34,7 @@ export function* handleUpdateCustomers({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(updateCustomer, payload?.info)
+        const response = yield call(updateCustomer, payload?.id, payload?.info)
         if (response?.data) {
             yield put(updateCustomerSuccess())
             yield put(customersRequest());

@@ -31,7 +31,8 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
         try {
             dispatch(setLoadingCustomer(true))
             const info = { ...value };
-            dispatch(updateCustomerRequest({ info, slug }));
+            const id = data?._id
+            dispatch(updateCustomerRequest({ id, info, slug }));
             onClick()
             resetImageField()
         } catch (error) {
