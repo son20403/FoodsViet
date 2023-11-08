@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
       { path: "/add-post", element: <AddNewPosts /> },
       { path: "/about", element: <AboutPage /> },
       { path: "/contact", element: <ContactPage /> },
-      { path: "/message", element: <MessagePage /> },
+      { path: "/message/:id", element: <MessagePage /> },
     ],
   },
   //   {

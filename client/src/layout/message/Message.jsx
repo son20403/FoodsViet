@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { format } from "timeago.js";
 
 const Message = ({ own, message }) => {
   const { customers } = useSelector((state) => state.customers);
@@ -10,7 +11,7 @@ const Message = ({ own, message }) => {
         className={`flex ${own ? "flex-row-reverse" : ""} items-center gap-x-3`}
       >
         <img
-          src={user.image}
+          src={user?.image}
           className="object-cover w-8 h-8 rounded-full"
           alt=""
         />
@@ -22,7 +23,9 @@ const Message = ({ own, message }) => {
           {message?.text}
         </p>
       </div>
-      <div className="text-xs my-2.5 text-black">1 hour ago</div>
+      <div className="text-xs my-2.5 text-black">
+        {format(message.createdAt)}
+      </div>
     </div>
   );
 };

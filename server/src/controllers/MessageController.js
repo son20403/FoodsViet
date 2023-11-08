@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Message from '../models/Message';
 
 class MessageController {
@@ -7,7 +8,12 @@ class MessageController {
 
     addMessage = async (req,res)=>{
         const newMessage = new Message(req.body);
-        try {
+  try {
+    const conversation = await mongoose.model('Conversation').findOne({ _id: req.body.conversationId });
+    if (conversation) {
+      conversation.timestamp = new Date();
+      await conversation.save();
+    }
     const savedMessage = await newMessage.save();
     res.status(200).json(savedMessage);
   } catch (err) {
