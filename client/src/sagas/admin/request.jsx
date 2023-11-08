@@ -28,6 +28,14 @@ export function updatePostAdmin(id, entity) {
     },
   });
 }
+export function updateCustomerAdmin(id, entity) {
+  return axios.put(`/${COLLECTION_NAME}/updateCustomer?id=${id}`, entity, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+}
+
 export function createPostAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/createPost`, entity, {
     headers: {

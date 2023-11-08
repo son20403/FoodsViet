@@ -11,7 +11,7 @@ import {
   Bars3Icon,
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNavbar } from "../../sagas/global/globalSlice";
+import { toggleSideBar } from "../../sagas/global/globalSlice";
 
 
 export function DashboardNavbar() {
@@ -21,7 +21,7 @@ export function DashboardNavbar() {
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
   const { infoAdmin } = useSelector((state) => state.admin)
   const setOpenSidenav = () => {
-    dispatch(toggleNavbar())
+    dispatch(toggleSideBar())
   }
   return (
     <Navbar

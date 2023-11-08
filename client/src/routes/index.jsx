@@ -7,8 +7,9 @@ import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
-const CategoriPageAdmin = lazy(() =>
-  import("../pages/adminPage/CategoriPageAdmin")
+const CustomersPageAdmin = lazy(() => import("../pages/adminPage/CustomerPageAdmin"));
+const CategoryPageAdmin = lazy(() =>
+  import("../pages/adminPage/CategoryPageAdmin")
 );
 
 const SignInPageAdmin = lazy(() =>
@@ -63,7 +64,8 @@ export const router = createBrowserRouter([
       { path: "", element: <>Home</> },
       { path: "home", element: <>Home</> },
       { path: "posts", element: <PostPageAdmin /> },
-      { path: "categories", element: <CategoriPageAdmin /> },
+      { path: "categories", element: <CategoryPageAdmin /> },
+      { path: "customers", element: <CustomersPageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },

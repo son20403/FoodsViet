@@ -37,7 +37,6 @@ class AdminController extends BaseController {
       cloudinary.uploader.destroy(oldCustomer.id_image);
     }
   };
-
   deleteCustomer = async (req, res) => {
     const id = req.query.id;
     try {
@@ -165,6 +164,7 @@ class AdminController extends BaseController {
       });
     }
   };
+
   updateStatus = async (req, res) => {
     const id = req.query?.id;
     const admin = req.customer?.admin;
@@ -185,14 +185,17 @@ class AdminController extends BaseController {
       case "category":
         model = this.categoryModel;
         break;
+      case "customer":
+        model = this.customerModel;
+        break;
       default:
         return res.status(400).json({ message: "Model không hợp lệ" });
     }
     try {
-      const dataPost = await model.findOne({ _id: id });
-      if (!dataPost) {
+      const dataModel = await model.findOne({ _id: id });
+      if (!dataModel) {
         return res.status(400).json({
-          message: "Không tồn tại sản phẩm này",
+          message: "Không tồn tại nội dung này",
         });
       }
       if (!admin) {
@@ -200,23 +203,20 @@ class AdminController extends BaseController {
           message: "Bạn không phải là Admin",
         });
       }
-      const dataPostStatus = await model.findByIdAndUpdate(
-        dataPost._id,
+      const dataModelStatus = await model.findByIdAndUpdate(
+        dataModel._id,
         { status, id_admin },
         {
           new: true,
         }
       );
-      if (!dataPostStatus) {
+      if (!dataModelStatus) {
         return res.status(400).json({
           message: "Có lỗi xảy ra",
         });
       }
       return res.status(200).json({
-        message: `${dataPostStatus.status === "pending"
-          ? "Bạn đã không duyệt bài này"
-          : "Duyệt bài thành công"
-          }`,
+        message: `Cập nhật thành công`,
       });
     } catch (error) {
       console.log("err", error);
@@ -258,59 +258,6 @@ class AdminController extends BaseController {
     }
   };
 
-  updateCustomer = async (req, res) => {
-    const id = req.query.id;
-    const formData = req.body;
-    const fileData = req.file;
-
-    try {
-      const hasCustomer = await this.customerModel.findOne({ _id: id });
-      if (!hasCustomer) {
-        if (fileData) cloudinary.uploader.destroy(fileData.filename);
-        return res.status(400).json({
-          message: "Không tồn tại người dùng này",
-        });
-      }
-      let newImage = hasCustomer.image;
-      let newIdImage = hasCustomer.id_image;
-      if (fileData) {
-        cloudinary.uploader.destroy(hasCustomer.id_image);
-        newImage = fileData.path;
-        newIdImage = fileData.filename;
-      }
-
-      const updatedData = {
-        ...formData,
-        image: newImage,
-        id_image: newIdImage,
-      };
-
-      const updatedCustomer = await this.customerModel.findByIdAndUpdate(
-        id,
-        updatedData,
-        {
-          new: true,
-        }
-      );
-      if (!updatedCustomer) {
-        if (fileData) cloudinary.uploader.destroy(fileData.filename);
-        return res.status(400).json({
-          message: "Có lỗi xảy ra, không thể update",
-        });
-      }
-
-      const { password, id_image, updatedAt, createdAt, ...others } =
-        updatedCustomer._doc;
-
-      return res.status(200).json({ others, message: "Cập nhật thành công" });
-    } catch (error) {
-      if (fileData) cloudinary.uploader.destroy(fileData.filename);
-      console.log("err", error);
-      return res.status(500).json({
-        message: "Lỗi Server",
-      });
-    }
-  };
   createCustomer = async (req, res) => {
     const { user_name, password, ...info } = req.body;
     const fileData = req.file;

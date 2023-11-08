@@ -1,59 +1,48 @@
 import { EyeIcon } from '@heroicons/react/24/outline';
 import { Avatar, Chip, Typography } from '@material-tailwind/react';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { icon } from '../../../ADMIN/routes';
-import PostDetailAdmin from './PostDetailAdmin';
 import useToggle from '../../../hooks/useToggle';
 import useTimeSince from '../../../hooks/useTimeSince';
-import { customerDetailAdminSuccess, detailCategoriesAdminSuccess, postDetailAdminSuccess } from '../../../sagas/admin/adminSlice';
-import { toggleDetaiPost } from '../../../sagas/global/globalSlice';
+import CustomerDetailAdmin from './CustomerDetailAdmin';
+import { useDispatch } from 'react-redux';
+import { customerDetailAdminSuccess } from '../../../sagas/admin/adminSlice';
+import { toggleDetailCustomer } from '../../../sagas/global/globalSlice';
 
-const PostItemAdmin = ({ data }) => {
+const CustomerItemAdmin = ({ data }) => {
     const className = 'py-3 px-5';
-    const { admin, customers, categories } = useSelector((state) => state.admin);
     const timeSince = useTimeSince()
     const dispatch = useDispatch()
-    const dataCategory = categories.filter((cate) => cate._id === data?.category)[0]
-    const dataCustomer = customers.filter((cus) => cus._id === data?.id_customer)[0]
-    const dataAdmin = admin.filter((ad) => ad._id === data?.id_customer)[0]
-    const authorType = data?.authorType
-    const dataAuthor = dataCustomer || dataAdmin
-
-    function handleShowPostDetail() {
-        dispatch(toggleDetaiPost())
-        dispatch(postDetailAdminSuccess({ ...data }))
-        dispatch(customerDetailAdminSuccess({ ...dataAuthor }))
-        dispatch(detailCategoriesAdminSuccess({ ...dataCategory }))
+    const handleShowCustomerDetail = () => {
+        dispatch(toggleDetailCustomer())
+        dispatch(customerDetailAdminSuccess({ ...data }))
     }
     return (
         <>
             <tr className='border-b border-blue-gray-50 last:border-b-0'>
                 <td className={`${className} max-w-[500px]`}>
                     <div className="flex items-center gap-4">
-                        <Avatar src={data?.image} alt={data?.title} size="lg" />
+                        <Avatar src={data?.image} alt={data?.full_name} size="lg" />
                         <div className='flex-1'>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                                {dataCategory?.title || ''}
+                                {data?.user_name || ''}
                             </Typography>
                             <Typography
                                 variant="small"
                                 color="blue-gray"
                                 className="font-semibold"
                             >
-                                {data?.title}
+                                {data?.full_name || ''}
                             </Typography>
                         </div>
                     </div>
                 </td>
                 <td className={className}>
                     <Typography className="text-xs font-semibold text-blue-gray-600">
-                        {(authorType === 'customer' ? dataCustomer?.full_name
-                            : authorType === 'admin' ? dataAdmin?.full_name : '') || ''}
+                        {data?.email || ''}
                     </Typography>
                     <Typography className="text-xs font-normal text-blue-gray-500">
-                        {(authorType === 'customer' ? dataCustomer?.user_name
-                            : authorType === 'admin' ? `${dataAdmin?.user_name} (${authorType})` : '') || ''}
+                        {data?.address || '(chưa có)'}
                     </Typography>
                 </td>
                 <td className={`${className} `}>
@@ -70,16 +59,34 @@ const PostItemAdmin = ({ data }) => {
                         <span className='font-normal text-gray-500'>({timeSince(data?.timestamps || Date.now())})</span>
                     </Typography>
                 </td>
+                <td className={`${className} `}>
+                    <ChipOnline status={data?.online} ></ChipOnline>
+                </td>
                 <td className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}>
                     <Typography
                         className="text-xs font-semibold  text-blue-gray-600 cursor-pointer"
                     >
-                        <EyeIcon {...icon} onClick={handleShowPostDetail}></EyeIcon>
+                        <EyeIcon {...icon} onClick={handleShowCustomerDetail}></EyeIcon>
                     </Typography>
                 </td>
             </tr>
         </>
     );
 };
+const ChipOnline = ({ status = false }) => {
+    return (
+        <Chip
+            className='inline-block'
+            variant="ghost"
+            color={status ? "green" : "red"}
+            size="sm"
+            value={status ? "Online" : "Offline"}
+            icon={
+                <span className={`mx-auto mt-1 block h-2 w-2 rounded-full content-[''] 
+                ${status ? 'bg-green-900' : 'bg-red-900'}`} />
+            }
+        />
+    )
+}
 
-export default PostItemAdmin;
+export default CustomerItemAdmin;

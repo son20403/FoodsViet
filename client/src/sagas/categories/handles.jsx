@@ -56,10 +56,15 @@ export function* handleUpdateCategoryAdmin({ payload }) {
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(updateCategoryAdmin, payload?.id, payload?.category);
+    const response = yield call(
+      updateCategoryAdmin,
+      payload?.id,
+      payload?.category
+    );
     if (response) {
       yield put(addCategoriesAdminSuccess());
       yield put(getCategoriesAdminRequest());
+      yield put(setNotifyGlobal(response?.data?.message));
     }
   } catch (error) {
     yield handleCommonError(error);

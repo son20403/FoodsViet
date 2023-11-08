@@ -140,6 +140,7 @@ const InfoUser = () => {
 
 export default InfoUser;
 
+<<<<<<< HEAD
 const WrapInfo = ({ children }) => {
   return (
     <div className="flex items-center w-full py-4 break-words border-b gap-x-4 last:border-0">
@@ -147,3 +148,12 @@ const WrapInfo = ({ children }) => {
     </div>
   );
 };
+=======
+export const WrapInfo = ({ children }) => {
+    return (
+        <div className='flex items-center gap-x-4 py-4 border-b last:border-0 break-words w-full'>
+            {children}
+        </div>
+    )
+}
+>>>>>>> 8877995bf70b669b137a22c9ac3f46063eb9b350
