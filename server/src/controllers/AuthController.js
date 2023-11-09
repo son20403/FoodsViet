@@ -24,16 +24,7 @@ class AuthController extends BaseController {
             });
         }
     }
-    logout = (req, res) => {
-        res.cookie('refreshToken', '', {
-            expires: new Date(0),
-            httpOnly: true,
-            secure: false,
-            path: '/',
-            sameSite: 'strict'
-        });
-        res.status(200).json({ message: 'Đăng xuất thành công' });
-    }
+
 
 }
 

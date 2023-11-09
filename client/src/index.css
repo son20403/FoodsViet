@@ -18,9 +18,11 @@
     padding: 0;
 }
 
+
 @layer base {
     html {
-        @apply font-content !font-medium
+        @apply font-content !font-medium;
+        scroll-behavior: smooth;
         /* 
         font-family: 'Mr Dafoe', cursive;
         font-family: 'Poppins', sans-serif;

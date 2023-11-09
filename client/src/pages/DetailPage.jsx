@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
 import { CommentIcon, EditIcon, HeartIcon, TrashIcon } from '../components/Icon';
@@ -24,6 +24,9 @@ import useToggle from '../hooks/useToggle';
 import IconWrap from '../components/Icon/IconWrap';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { PopoverDrop } from '../layout/Popover';
+import { addNotificationRequest } from '../sagas/notification/notificationSlice';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
+
 
 const schemaValidate = Yup.object({
     content: Yup.string().required("Vui lòng nhập nội dung!"),
@@ -37,6 +40,8 @@ const DetailPage = () => {
     const { token, infoAuth } = useSelector((state) => state.auth);
     const { customers } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
+    const { socket } = useSelector((state) => state.global);
+
     const { comments, commentsPost } = useSelector((state) => state.comments);
     const { handleToggle, toggle } = useToggle(false);
 
@@ -45,22 +50,7 @@ const DetailPage = () => {
     const handleResetForm = () => {
         reset()
     }
-    const handleComment = (value) => {
-        if (isValid) {
-            const date = getDate()
-            const timestamps = getTimestamp()
-            const comment = {
-                ...value,
-                id_post: detail_post._id,
-                date,
-                timestamps
-            }
-            dispatch(createCommentsRequest({ comment, id_post }))
-            handleResetForm()
-        } else {
-            toast.error('Nhập nội dung trước khi bình luận')
-        }
-    }
+
 
 
     const dataCategory = categories?.filter((cate) => cate._id === detail_post?.category)[0]
@@ -79,12 +69,45 @@ const DetailPage = () => {
     const getReplies = (commentId) => {
         return commentsPost?.filter(commentByPost => commentByPost?.parent_comment_id === commentId)
     }
+
     const handleLikePost = () => {
         if (isLiked) return toast.warning("Bạn đã thích bài viết này!")
         if (!token) return toast.warning("Bạn chưa đăng nhập!")
         dispatch(likePostRequest({ id: id_post, slug }))
+        if (socket) {
+            const id_receiver = detail_post?.id_customer;
+            socket.emit('receiverNotify', { id_receiver });
+        }
+        if (infoAuth?._id !== id_customer) {
+            dispatch(addNotificationRequest({ id_post, id_customer, typeNotify: 'like' }))
+        }
     }
-
+    const handleComment = (value) => {
+        if (isValid) {
+            const date = getDate()
+            const timestamps = getTimestamp()
+            const id_receiver = detail_post?.id_customer;
+            const id_sender = infoAuth?._id
+            const comment = {
+                ...value,
+                id_post: detail_post._id,
+                date,
+                timestamps
+            }
+            dispatch(createCommentsRequest({ comment, id_post, id_receiver, id_sender, typeNotify: 'comment' }))
+            if (infoAuth?._id !== id_customer && socket) {
+                socket.emit('receiverNotify', { id_receiver })
+            } else {
+                socket.emit('update')
+            }
+            handleResetForm()
+        } else {
+            toast.error('Nhập nội dung trước khi bình luận')
+        }
+    }
+    const handleReloadComment = () => {
+        dispatch(getcommentsByPostRequest({ id_post }))
+    }
     useEffect(() => {
         dispatch(postDetailRequest({ slug }))
         dispatch(commentsRequest())
@@ -98,10 +121,38 @@ const DetailPage = () => {
     useEffect(() => {
         dispatch(getPostsByCustomerRequest({ id_customer }))
     }, [id_customer]);
+    useEffect(() => {
+        if (socket && id_post) {
+            socket.on('update', () => {
+                dispatch(getcommentsByPostRequest({ id_post }))
+            })
+        }
+    }, [socket, id_post]);
+    const hash = window.location.hash.substring(1);
+    useEffect(() => {
+        const scrollToCenter = () => {
+            if (hash) {
+                const element = document.getElementById(hash);
+                if (element) {
+                    const elementRect = element.getBoundingClientRect();
+                    const absoluteElementTop = elementRect.top + window.scrollY;
+                    const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+                    window.scrollTo({ top: middle, behavior: 'smooth' });
+                    element.className = 'bg-blue-200/20 transition-all rounded-lg'
+                    setTimeout(() => {
+                        element.className = 'relative'
+                    }, 1500);
+                }
+            }
+        };
+        if (hash) {
+            setTimeout(scrollToCenter, 1200);
+        }
+    }, [hash]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
-            <div className='w-full lg:max-h-[700px] min-h-[200px] py-52 lg:py-72 bg-fixed bg-cover bg-center h-auto overflow-hidden relative  md:min-h-[300px] lg:min-h-[500px]'
+            <div className='w-full lg:max-h-[700px] min-h-[200px] py-52 lg:py-72 bg-fixed bg-cover bg-center h-auto overflow-hidden relative  md:min-h-[300px] lg:min-h-[500px] '
                 style={{ backgroundImage: `url(${detail_post?.image})` }}>
                 <div className='absolute inset-0 bg-black bg-opacity-70'>
                     <div className='page-content px-5 mt-3 lg:px-10 flex flex-col h-full text-white flex-1 
@@ -173,11 +224,14 @@ const DetailPage = () => {
                         </div>
                     </div>
                     <div className='mt-10 '>
-                        <div className='pb-5 flex items-end gap-x-5'>
+                        <div className='pb-5 flex items-center gap-x-5'>
                             <Heading isHeading className='ml-0'>
                                 Bình luận
                             </Heading>
                             <span>({commentsPost?.length})</span>
+                            <div className='cursor-pointer' onClick={handleReloadComment}>
+                                <ArrowPathIcon className="h-6 w-6 text-gray-500"></ArrowPathIcon>
+                            </div>
                         </div>
                         {token && <div className='mt-5 lg:mb-10 w-full bg-white border py-3 px-2'>
                             <form onSubmit={handleSubmit(handleComment)} autoComplete='off'
@@ -194,7 +248,7 @@ const DetailPage = () => {
                         <div className='my-5'>
                             {rootComment?.length > 0 && rootComment.map(comment => (
                                 <CommentItem key={comment._id} comment={comment} replies={getReplies}
-                                    id_post={detail_post._id}></CommentItem>
+                                    id_post={detail_post._id} id_customer_post={detail_post?.id_customer}></CommentItem>
                             ))}
                             {rootComment?.length < 1 && (<p className='text-sm text-center'>Chưa có bình luận nào!</p>)}
                         </div>

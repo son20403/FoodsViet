@@ -10,7 +10,6 @@ export function* authenticateCustomer({ payload }) {
         const response = yield call(loginAuth, payload);
         if (response) {
             const { message, accessToken, ...info } = response.data
-            console.log("🚀 ~ file: handles.jsx:12 ~ function*authenticateCustomer ~ accessToken:", accessToken)
             yield put(setNotifyGlobal(message))
             yield put(loginSuccess(accessToken))
             yield put(setInfoAuth(info))
@@ -38,7 +37,7 @@ export function* logoutCustomer({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(logoutAuth, payload);
+        const response = yield call(logoutAuth, payload?.id);
         if (response) {
             yield put(setErrorGlobal(''));
             yield put(setNotifyGlobal(response.data?.message))

@@ -20,10 +20,11 @@ import { PopoverDrop } from "../Popover";
 const schemaValidateReply = Yup.object({
     content: Yup.string().required("Vui lòng nhập bình luận!")
 })
-const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
+const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_customer_post }) => {
     const dispatch = useDispatch()
     const timeSince = useTimeSince()
     const { customers } = useSelector((state) => state.customers);
+    const { socket } = useSelector((state) => state.global);
     const customerByComment = customers.filter((cus) => cus._id === comment.id_customer)[0]
     const { infoAuth } = useSelector((state) => state.auth);
     const isAuth = customerByComment?._id === infoAuth?._id
@@ -41,6 +42,8 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
     const handleReplyComment = (value) => {
         const date = getDate()
         const timestamps = getTimestamp()
+        const id_receiver = comment?.id_customer;
+        const id_sender = infoAuth?._id
         const comments = {
             ...value,
             id_post,
@@ -48,7 +51,13 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
             timestamps,
             parent_comment_id: comment._id
         }
-        dispatch(createCommentsRequest({ comment: comments, id_post }))
+        dispatch(createCommentsRequest({ comment: comments, id_post, id_receiver, id_sender, typeNotify: 'reply', id_customer_post }))
+        if (infoAuth?._id !== id_receiver && socket) {
+            socket.emit('receiverNotify', { id_receiver })
+        }
+        if (infoAuth?._id !== id_customer_post && socket) {
+            socket.emit('receiverNotify', { id_receiver: id_customer_post })
+        }
         setShowReply(false)
     }
 
@@ -74,7 +83,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
         setShowReply(false)
     }
     return (
-        <div className='relative'>
+        <div className='relative' id={comment?._id}>
             <DiaLog open={toggle} handleOpen={handleToggle} header='Bạn có muốn xóa bình luận không!' title='Bình luận đã xóa sẽ không thể khôi phục' onClick={handleDeleteComment}></DiaLog>
             <div className='flex gap-x-3 lg:gap-x-5 items-start mt-5' >
                 <Avatar className='!h-8 !w-8 lg:!h-10 lg:!w-10' image={customerByComment?.image}></Avatar>
@@ -147,13 +156,13 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post }) => {
                     {/* LIST COMMENT REPLY 1 lần */}
                     {listReplies?.length > 0 && countReply < 3 && listReplies.map(reply => (
                         <CommentItem key={reply._id} comment={reply} replies={replies}
-                            countR={countReply} id_post={id_post}></CommentItem>
+                            countR={countReply} id_post={id_post} id_customer_post={id_customer_post}></CommentItem>
                     ))}
                 </div>
             </div>
             {/* LIST COMMENT REPLY lần 2 trở lên */}
             {listReplies?.length > 0 && countReply > 2 && listReplies.map(reply => (
-                <CommentItem key={reply._id} comment={reply} replies={replies} countR={countReply} id_post={id_post}></CommentItem>
+                <CommentItem key={reply._id} comment={reply} replies={replies} countR={countReply} id_post={id_post} id_customer_post={id_customer_post}></CommentItem>
             ))}
         </div>
     );

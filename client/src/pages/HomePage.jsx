@@ -11,8 +11,9 @@ import LoadingRequest from '../layout/loading/LoadingRequest';
 import { postsRequest } from '../sagas/posts/postsSlice';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';
 import { customersRequest } from '../sagas/customers/customersSlice';
+import { Link } from 'react-router-dom';
 
-const HomePage = () => {
+const HomePage = () => {// Gửi dữ liệu đến server
     const { posts, loading } = useSelector((state) => state.posts)
     const { categories } = useSelector((state) => state.categories);
     const { customers } = useSelector((state) => state.customers);
@@ -26,6 +27,7 @@ const HomePage = () => {
         dispatch(categoriesRequest())
         dispatch(customersRequest())
     }, [token, dispatch, tokenLocal]);
+
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>

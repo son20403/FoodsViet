@@ -5,6 +5,7 @@ import commetsSagas from "./comments/commentsSagas";
 import customersSagas from "./customers/customersSagas";
 import categoriesSagas from "./categories/categoriesSagas";
 import adminSagas from "./admin/adminSagas";
+import notificationSagas from "./notification/notificationSagas";
 
 
 export default function* rootSaga() {
@@ -14,6 +15,7 @@ export default function* rootSaga() {
         fork(commetsSagas),
         fork(customersSagas),
         fork(categoriesSagas),
-        fork(adminSagas)
+        fork(adminSagas),
+        fork(notificationSagas)
     ])
 }

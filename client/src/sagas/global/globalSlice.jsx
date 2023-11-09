@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    socket: null,
     showNavbar: false,
     showSetting: false,
     showSidebar: false,
+    showNotification: false,
     showSearch: false,
     isRequest: false,
     errorGlobal: '',
@@ -18,6 +20,11 @@ const initialState = {
     showUpdateCustomer: false,
     showUpdateAdmin: false,
     showUpdateComment: false,
+    showAddPost: false,
+    showAddCategory: false,
+    showAddCustomer: false,
+    showAddAdmin: false,
+    showAddComment: false,
 }
 export const globalSlice = createSlice({
     name: "global",
@@ -27,6 +34,12 @@ export const globalSlice = createSlice({
             return {
                 ...state,
                 showNavbar: !state.showNavbar
+            }
+        },
+        toggleNotification: (state) => {
+            return {
+                ...state,
+                showNotification: !state.showNotification
             }
         },
         toggleSetting: (state) => {
@@ -95,6 +108,31 @@ export const globalSlice = createSlice({
                 showUpdatePost: !state.showUpdatePost
             }
         },
+        toggleAddAdmin: (state) => {
+            return {
+                ...state,
+                showAddAdmin: !state.showAddAdmin
+            }
+        },
+        toggleAddCustomer: (state) => {
+            return {
+                ...state,
+                showAddCustomer: !state.showAddCustomer
+            }
+        },
+        toggleAddCategory: (state) => {
+            return {
+                ...state,
+                showAddCategory: !state.showAddCategory
+            }
+        },
+        toggleAddPost: (state) => {
+            return {
+                ...state,
+                showAddPost: !state.showAddPost
+            }
+        },
+
 
         closeNavbar: (state) => {
             return {
@@ -156,6 +194,30 @@ export const globalSlice = createSlice({
                 showUpdateCategory: false
             }
         },
+        closeAddPost: (state) => {
+            return {
+                ...state,
+                showAddPost: false
+            }
+        },
+        closeAddAdmin: (state) => {
+            return {
+                ...state,
+                showAddAdmin: false
+            }
+        },
+        closeAddCustomer: (state) => {
+            return {
+                ...state,
+                showAddCustomer: false
+            }
+        },
+        closeAddCategory: (state) => {
+            return {
+                ...state,
+                showAddCategory: false
+            }
+        },
         closeSetting: (state) => {
             return {
                 ...state,
@@ -166,6 +228,12 @@ export const globalSlice = createSlice({
             return {
                 ...state,
                 showSearch: false
+            }
+        },
+        closeNotification: (state) => {
+            return {
+                ...state,
+                showNotification: false
             }
         },
         setErrorGlobal: (state, action) => {
@@ -185,9 +253,15 @@ export const globalSlice = createSlice({
                 ...state,
                 isRequest: action.payload
             }
+        },
+        setSocket: (state, action) => {
+            return {
+                ...state,
+                socket: action.payload
+            }
         }
     }
 })
 
-export const { toggleNavbar, toggleSearch, toggleSetting, closeNavbar, closeSearch, closeSetting, setErrorGlobal, setNotifyGlobal, setRequest, closeDetailAdmin, closeDetailCategory, closeDetailCustomer, closeDetailPost, closeSidebar, toggleDetaiPost, toggleDetailAdmin, toggleDetailCategory, toggleDetailCustomer, toggleSideBar, closeUpdateAdmin, closeUpdateCategory, closeUpdateCustomer, closeUpdatePost, toggleUpdateAdmin, toggleUpdateCategory, toggleUpdateCustomer, toggleUpdatePost } = globalSlice.actions;
+export const { toggleNavbar, toggleSearch, toggleSetting, closeNavbar, closeSearch, closeSetting, setErrorGlobal, setNotifyGlobal, setRequest, closeDetailAdmin, closeDetailCategory, closeDetailCustomer, closeDetailPost, closeSidebar, toggleDetaiPost, toggleDetailAdmin, toggleDetailCategory, toggleDetailCustomer, toggleSideBar, closeUpdateAdmin, closeUpdateCategory, closeUpdateCustomer, closeUpdatePost, toggleUpdateAdmin, toggleUpdateCategory, toggleUpdateCustomer, toggleUpdatePost, closeAddAdmin, closeAddCategory, closeAddCustomer, closeAddPost, toggleAddAdmin, toggleAddCategory, toggleAddCustomer, toggleAddPost, setSocket, closeNotification, toggleNotification } = globalSlice.actions;
 export default globalSlice.reducer

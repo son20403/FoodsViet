@@ -14,6 +14,7 @@ const Customer = new Schema(
         },
         full_name: { type: String, require },
         id_image: { type: String, default: "" },
+        id_admin: { type: String, default: "" },
         address: { type: String, default: "" },
         status: { type: String, default: 'approved' },
         online: { type: Boolean, default: false },

@@ -10,12 +10,17 @@ import _ from 'lodash'
 import { Link, useLocation } from 'react-router-dom';
 import { searchPostsRequest } from '../sagas/posts/postsSlice';
 import Loading from './loading/Loading';
+import { closeSearch } from '../sagas/global/globalSlice';
 
-const Search = ({ showSearch = false, handleShowSearch = () => { } }) => {
+const Search = () => {
     const dispatch = useDispatch()
     const location = useLocation();
 
     const { search_posts, loading } = useSelector((state) => state.posts)
+    const { showSearch } = useSelector((state) => state.global)
+    const handleClose = () => {
+        dispatch(closeSearch())
+    }
     const [query, setQuery] = useState(null);
     const handleOnChange = _.debounce((e) => {
         setQuery(e.target.value)
@@ -28,13 +33,13 @@ const Search = ({ showSearch = false, handleShowSearch = () => { } }) => {
     }, [location.pathname]);
     return (
         <>
-            <Overlay show={showSearch} onClick={handleShowSearch}></Overlay>
+            <Overlay show={showSearch} onClick={handleClose}></Overlay>
             <div className={`flex-1 absolute bg-white-cream bg-opacity-90 flex w-full justify-center gap-5 
             transition-all backdrop-blur text-black
                 left-0 flex-col px-5 py-5 text-sm z-[12] shadow-soft border-t border-primary bad
                 ${showSearch ? 'top-0' : 'invisible -top-[500px]'}`}
             >
-                <div className='absolute top-2 right-2 text-2xl text-primary cursor-pointer' onClick={handleShowSearch}>
+                <div className='absolute top-2 right-2 text-2xl text-primary cursor-pointer' onClick={handleClose}>
                     <FontAwesomeIcon icon={faXmark} />
                 </div>
                 <div className='page-content'>
