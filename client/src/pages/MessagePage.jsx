@@ -11,6 +11,7 @@ import {
   useParams,
   Navigate,
   Link,
+  NavLink,
 } from "react-router-dom";
 import {
   InformationCircleIcon,
@@ -21,12 +22,11 @@ const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customers);
   const [conversations, setConversations] = useState([]);
-  // console.log("🚀 --> MessagePage --> conversations:", conversations);
   const [currentChat, setCurrentChat] = useState([]);
-  console.log("🚀 --> MessagePage --> currentChat:", currentChat);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
+  console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const socket = useRef();
   const scrollRef = useRef();
@@ -60,7 +60,7 @@ const MessagePage = () => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
-  }, [arrivalMessage, currentChat]);
+  }, [arrivalMessage, currentChat._id]);
 
   useEffect(() => {
     socket.current.emit("addUser", infoAuth._id);
@@ -85,7 +85,7 @@ const MessagePage = () => {
       }
     };
     getConversations();
-  }, [currentChat._id]);
+  }, [newMessage, arrivalMessage]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -107,7 +107,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id]);
+  }, [currentChat._id, newMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -174,13 +174,12 @@ const MessagePage = () => {
           />
           <div className="overflow-y-auto h-[550px]">
             {conversations.map((c, index) => (
-              <div onClick={() => setCurrentChat(c)} key={index}>
-                <Conversation
-                  conversation={c}
-                  online={true}
-                  messages={messages}
-                />
-              </div>
+              <Conversation
+                key={index}
+                conversation={c}
+                online={true}
+                messages={messages}
+              />
             ))}
           </div>
         </div>
