@@ -5,14 +5,7 @@ import Message from "../layout/message/Message";
 import axios from "axios";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  Navigate,
-  Link,
-  NavLink,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
@@ -107,7 +100,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id, newMessage]);
+  }, [currentChat._id, newMessage, arrivalMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -243,9 +236,8 @@ const MessagePage = () => {
           <textarea
             name=""
             placeholder="nhập tin nhắn..."
-            className="p-3 text-black border outline-none rounded-3xl"
+            className="p-3 text-black border outline-none md:w-full rounded-3xl"
             id=""
-            cols="85"
             onChange={(e) => setNewMessage(e.target.value)}
             value={newMessage}
             rows="1"
@@ -258,7 +250,7 @@ const MessagePage = () => {
           </button>
         </div>
       </div>
-      <div className="md:w-3/12 onlien">
+      <div className="hidden md:w-3/12 onlien md:block">
         <div className="chatonlienwrapper p-2.5  h-full">
           <ChatOnline />
           <ChatOnline />

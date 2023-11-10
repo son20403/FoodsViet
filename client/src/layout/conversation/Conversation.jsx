@@ -39,11 +39,11 @@ const Conversation = ({ conversation, messages, online, children, unRead }) => {
           className="w-10 h-10 rounded-[50%] mr-5"
         />
         <div className="relative flex flex-col w-full">
-          <span className="font-bold">{friend?.full_name}</span>
+          <span className="font-bold ">{friend?.full_name}</span>
           {children && <p className="line-clamp-1">{children}</p>}
           {!children && (
-            <p className="line-clamp-1">
-              {lastestMessage?.sender === infoAuth?._id ? "Bạn: " : ""}
+            <p className="line-clamp-1 ">
+              {lastestMessage?.sender === infoAuth?._id ? "Bạn: " : null}
               {lastestMessage?.text}
             </p>
           )}
@@ -73,10 +73,12 @@ const Conversation = ({ conversation, messages, online, children, unRead }) => {
         className="w-10 h-10 rounded-[50%] mr-5"
       />
       <div className="relative flex flex-col w-full">
-        <span className="font-bold">{friend?.full_name}</span>
+        <span className="hidden font-bold sm:block whitespace-nowrap">
+          {friend?.full_name}
+        </span>
         {children && <p className="line-clamp-1">{children}</p>}
         {!children && (
-          <p className="line-clamp-1">
+          <p className="hidden md:line-clamp-1 md:block">
             {lastestMessage?.sender === infoAuth?._id ? "Bạn: " : ""}
             {lastestMessage?.text}
           </p>

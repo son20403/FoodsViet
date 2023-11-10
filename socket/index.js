@@ -6,7 +6,7 @@ const io = require("socket.io")(8900,{
 })
 let users =[];
 const addUser = (userId,socketId)=>{
-    !users.some(user=>user.userId===userId)&&users.push({userId,socketId, unreadMessages: []})
+    !users.some(user=>user.userId===userId)&&users.push({userId,socketId})
 }
 const removeUser = (socketId)=>{
     users = users.filter(user=>user.socketId !== socketId)
@@ -15,18 +15,7 @@ const removeUser = (socketId)=>{
 const getUser = (userId) =>{
     return users.find(user=>user.userId === userId)
 }
-// mark read
-const markMessageAsRead = (userId, messageId) => {
-  const user = users.find((user) => user.userId === userId);
-  if (user) {
-      user.unreadMessages = user.unreadMessages.filter((msg) => msg !== messageId);
-  }
-}
-// check
-const isMessageRead = (userId, messageId) => {
-  const user = users.find((user) => user.userId === userId);
-  return user && !user.unreadMessages.includes(messageId);
-}
+
 
 io.on("connection",(socket) =>{
     console.log("a user connected");
