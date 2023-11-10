@@ -71,8 +71,10 @@ const DetailPage = () => {
     }
 
     const handleLikePost = () => {
-        if (isLiked) return toast.warning("Bạn đã thích bài viết này!")
         if (!token) return toast.warning("Bạn chưa đăng nhập!")
+        if (isLiked) {
+            return dispatch(likePostRequest({ id: id_post, slug }))
+        }
         dispatch(likePostRequest({ id: id_post, slug }))
         if (socket) {
             const id_receiver = detail_post?.id_customer;

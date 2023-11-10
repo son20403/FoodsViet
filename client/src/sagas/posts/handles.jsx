@@ -97,7 +97,6 @@ export function* handleLikePost({ payload }) {
         if (response?.data) {
             yield put(likePostSuccess())
             yield put(postDetailRequest({ slug: payload?.slug }));
-            yield put(setNotifyGlobal(response.data?.message));
         }
     } catch (error) {
         yield handleCommonError(error)

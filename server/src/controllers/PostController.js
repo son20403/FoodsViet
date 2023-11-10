@@ -13,22 +13,40 @@ class PostController extends BaseController {
             if (!dataPostDetail) return res.status(400).json({
                 message: "Bài viết này không tồn tại",
             });
-            const isLiked = await dataPostDetail.likes?.find((idcus) => idcus === id)
-            if (isLiked) return res.status(400).json({
-                message: "Bạn đã thích bài viết này",
-            });
-            const status = await this.model.updateOne(
-                { _id: id_post },
-                { $addToSet: { likes: id } }
-            );
-            if (status) {
-                return res.status(200).json({
-                    message: 'Cảm ơn bạn!',
-                });
+            const isLiked = dataPostDetail.likes?.includes(id);
+
+            if (isLiked) {
+                // User has already liked the post, so unlike it
+                const statusUnlike = await this.model.updateOne(
+                    { _id: id_post },
+                    { $pull: { likes: id } }
+                );
+
+                if (statusUnlike) {
+                    return res.status(200).json({
+                        message: 'Bạn đã hủy thích bài viết',
+                    });
+                } else {
+                    return res.status(400).json({
+                        message: 'Có lỗi xảy ra khi hủy thích'
+                    });
+                }
             } else {
-                res.status(400).json({
-                    message: 'Có lỗi xảy ra'
-                });
+                // User hasn't liked the post, so like it
+                const statusLike = await this.model.updateOne(
+                    { _id: id_post },
+                    { $addToSet: { likes: id } }
+                );
+
+                if (statusLike) {
+                    return res.status(200).json({
+                        message: 'Cảm ơn bạn đã thích bài viết!',
+                    });
+                } else {
+                    return res.status(400).json({
+                        message: 'Có lỗi xảy ra khi thích'
+                    });
+                }
             }
         } catch (err) {
             console.log(err);
