@@ -10,6 +10,8 @@ const api = axios.create({
     baseURL: BASE_URL,
 });
 
+const infoAuth = getObjectFromLocalStorage('infoAuth')
+
 api.interceptors.request.use(config => {
     config.withCredentials = true;
     config.headers['token'] = `Bearer ${getObjectFromLocalStorage('authToken')}`;
@@ -29,7 +31,7 @@ api.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     if (error.response && error.response.data.status === 'notAuth') {
-        store.dispatch(logout());
+        store.dispatch(logout({ id: infoAuth?._id }));
         store.dispatch(setErrorGlobal('Phiên bản đăng nhập đã hết hạn!'))
     }
     return Promise.reject(error);

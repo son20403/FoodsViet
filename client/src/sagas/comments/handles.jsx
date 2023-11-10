@@ -2,6 +2,7 @@ import { call, put } from "redux-saga/effects";
 import { createComments, deleteComment, getAllComments, getAllCommentsByPost, updateComments } from "./request";
 import { commentsRequest, createCommentsSuccess, deleteCommentSuccess, getCommentsSuccess, getcommentsByPostRequest, getcommentsByPostSuccess, requestFailure, updateCommentSuccess } from "./commentsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
+import { addNotificationRequest } from "../notification/notificationSlice";
 
 export function* handleGetAllComments({ payload }) {
     try {
@@ -29,15 +30,23 @@ export function* handleGetAllCommentsByPost({ payload }) {
     }
 }
 export function* handleCreateComments({ payload }) {
+    const { comment, id_post, id_receiver, id_sender, typeNotify, id_customer_post } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(createComments, payload?.comment);
+        const response = yield call(createComments, comment);
         if (response) {
             yield put(createCommentsSuccess(response.data.message))
-            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
+            yield put(getcommentsByPostRequest({ id_post }))
+            if (typeNotify === 'reply' && id_sender !== id_customer_post && id_receiver !== id_customer_post) {
+                yield put(addNotificationRequest(
+                    { id_post, id_comment: response.data._id, id_customer: id_customer_post, typeNotify: 'comment' }))
+            }
+            if (id_sender !== id_receiver) {
+                yield put(addNotificationRequest(
+                    { id_post, id_comment: response.data._id, id_customer: id_receiver, typeNotify }))
+            }
             yield put(commentsRequest())
-            yield put(setNotifyGlobal(response.data?.message))
         }
     } catch (error) {
         yield handleCommonError(error)

@@ -21,10 +21,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
-import useToggle from "../hooks/useToggle";
-import { handleCreatePosts } from "../sagas/posts/handles";
 import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
 import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
+import { toggleAddCategory, toggleAddCustomer, toggleAddPost } from "../sagas/global/globalSlice";
+import AddCustomerAdmin from "../layout/adminLayout/customers/AddCustomerAdmin";
 export function Dashboard() {
   const navLink = [
     {
@@ -40,14 +40,14 @@ export function Dashboard() {
       title: "Thêm loại",
       icon: <FolderPlusIcon className="w-5 h-5" />,
       onclick: () => {
-        handleToggleCategories();
+        handleToggleCategory();
       },
     },
     {
       id: 3,
       title: "Thêm người dùng",
       icon: <UserPlusIcon className="w-5 h-5" />,
-      onclick: () => { },
+      onclick: () => { handleToggleCustomer() },
     },
     {
       id: 4,
@@ -63,12 +63,18 @@ export function Dashboard() {
              -translate-y-2/4 -translate-x-3/4 font-normal  `,
   };
   const { tokenAdmin } = useSelector((state) => state.admin);
-  const { handleToggle: handleToggleAddPost, toggle: showAddPost } =
-    useToggle(false);
-  const { handleToggle: handleToggleCategories, toggle: showCategories } =
-    useToggle(false);
-  const navigate = useNavigate();
+
   const dispatch = useDispatch()
+  const handleToggleAddPost = () => {
+    dispatch(toggleAddPost())
+  }
+  const handleToggleCategory = () => {
+    dispatch(toggleAddCategory())
+  }
+  const handleToggleCustomer = () => {
+    dispatch(toggleAddCustomer())
+  }
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(getPostsAdminRequest())
     dispatch(getCategoriesAdminRequest())
@@ -109,14 +115,9 @@ export function Dashboard() {
           </SpeedDialContent>
         </SpeedDial>
       </div>
-      <AddPostAdmin
-        onClick={handleToggleAddPost}
-        show={showAddPost}
-      ></AddPostAdmin>
-      <AddCategoryAdmin
-        onClick={handleToggleCategories}
-        show={showCategories}
-      ></AddCategoryAdmin>
+      <AddPostAdmin />
+      <AddCategoryAdmin />
+      <AddCustomerAdmin />
     </div>
   );
 }

@@ -76,6 +76,7 @@ class BaseController {
                     sameSite: 'strict'
                 })
                 const { password, id_image, updatedAt, createdAt, ...others } = user._doc;
+                await this.model.findByIdAndUpdate(user._id, { online: true });
                 return res.status(200).json({ ...others, accessToken, message: 'Đăng nhập thành công' });
             }
         } catch (error) {
@@ -85,6 +86,19 @@ class BaseController {
             });
         }
     };
+    logout = async (req, res) => {
+        const id_customer = req.query?.id
+        const timeOnlined = Date.now()
+        await this.model.findByIdAndUpdate(id_customer, { online: false, timeOnlined });
+        res.cookie('refreshToken', '', {
+            expires: new Date(0),
+            httpOnly: true,
+            secure: false,
+            path: '/',
+            sameSite: 'strict'
+        });
+        res.status(200).json({ message: 'Đăng xuất thành công' });
+    }
     getAll = async (req, res) => {
         try {
             const data = await this.model.find({ status: 'approved' });

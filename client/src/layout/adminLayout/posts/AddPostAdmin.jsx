@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { getDate, getTimestamp } from "../../../hooks/useGetTime";
 import { useEffect } from "react";
 import LoadingRequest from "../../loading/LoadingRequest";
-import PageWrap from "../../common/PageWrap";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
 import { FileInput, Input } from "../../../components/input";
@@ -20,23 +19,27 @@ import {
   addPostAdminRequest,
   getCategoriesAdminRequest,
 } from "../../../sagas/admin/adminSlice";
+import { closeAddPost } from "../../../sagas/global/globalSlice";
 const schemaValidate = Yup.object({
   title: Yup.string().required("Vui lòng nhập tiêu đề!"),
   content: Yup.string().required("Vui lòng nhập nội dung!"),
+  category: Yup.string().required("Vui lòng chọn loại!"),
   image: Yup.mixed().required("Vui lòng nhập ảnh!"),
-  // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 });
-const AddPostAdmin = ({ onClick = () => {}, show }) => {
+const AddPostAdmin = () => {
   const dispatch = useDispatch();
   const { tokenAdmin, categories, loading } = useSelector(
     (state) => state.admin
   );
+  const handleClosePost = () => {
+    dispatch(closeAddPost())
+  }
+  const { showAddPost } = useSelector((state) => state.global);
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors },
     control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
-  //   const { categories, loading } = useSelector((state) => state.categories);
   const handleSubmits = (value) => {
     const date = getDate();
     const timestamps = getTimestamp();
@@ -46,15 +49,15 @@ const AddPostAdmin = ({ onClick = () => {}, show }) => {
       timestamps,
     };
     dispatch(addPostAdminRequest({ post }));
-    onClick();
+    handleClosePost();
   };
   useEffect(() => {
     dispatch(getCategoriesAdminRequest());
   }, [tokenAdmin]);
   return (
-    <ModalBase onClose={onClick} visible={show}>
+    <ModalBase onClose={handleClosePost} visible={showAddPost}>
       <LoadingRequest show={loading}></LoadingRequest>
-      <LayoutAdminModel onClick={onClick}>
+      <LayoutAdminModel onClick={handleClosePost}>
         <div className="p-10 bg-white">
           <Heading isHeading>Thêm bài viết </Heading>
           <form
@@ -75,7 +78,7 @@ const AddPostAdmin = ({ onClick = () => {}, show }) => {
                 </Input>
               </Field>
               <Field>
-                <Select data={categories} control={control} name={"category"} />
+                <Select data={categories} control={control} name={"category"} errors={errors} />
               </Field>
               <div className="col-span-1 mb-10  md:col-span-2">
                 <Label htmlFor={"image"}>Hình ảnh</Label>

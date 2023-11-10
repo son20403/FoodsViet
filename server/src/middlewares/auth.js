@@ -19,9 +19,9 @@ const middlewareAuth = {
         } else if (usertype === 'admin') {
           chosenRefreshToken = refreshTokenAdmin;
         }
-        if (!chosenRefreshToken) return res.status(401).json({ message: "Refresh token is missing", status: 'notAuth' });
+        if (!chosenRefreshToken) return res.status(401).json({ status: 'notAuth' });
         jwt.verify(chosenRefreshToken, process.env.JWT_REFRESH_KEY, (err, customer) => {
-          if (err) return res.status(403).json({ message: "Refresh token is not valid", status: 'notAuth' });
+          if (err) return res.status(403).json({ status: 'notAuth' });
           const dataCustomer = { _id: customer?.id, admin: customer?.admin, role: customer?.role }
           const newAccessToken = generateAccessToken(dataCustomer);
           if (newAccessToken) {
