@@ -6,6 +6,7 @@ import categoriesSlice from "./categories/categoriesSlice";
 import customersSlice from "./customers/customersSlice";
 import commentsSlice from "./comments/commentsSlice";
 import adminSlice from "./admin/adminSlice";
+import notificationSlice from "./notification/notificationSlice";
 
 const reducer = combineReducers({
     global: globalSlice,
@@ -14,7 +15,8 @@ const reducer = combineReducers({
     customers: customersSlice,
     comments: commentsSlice,
     auth: authSlice,
-    admin: adminSlice
+    admin: adminSlice,
+    notification: notificationSlice,
 })
 
 export default reducer

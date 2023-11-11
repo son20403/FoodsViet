@@ -90,14 +90,12 @@ export function* handleCreatePosts({ payload }) {
 
 }
 export function* handleLikePost({ payload }) {
-    console.log('')
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
         const response = yield call(likePost, payload?.id);
         if (response?.data) {
             yield put(likePostSuccess())
-            yield put(setNotifyGlobal(response.data?.message));
             yield put(postDetailRequest({ slug: payload?.slug }));
         }
     } catch (error) {

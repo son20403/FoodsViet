@@ -13,9 +13,7 @@ import {
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { icon } from "../../ADMIN/routes";
 import CategoryItemAdmin from "../../layout/adminLayout/categories/CategoryItemAdmin";
-import useToggle from "../../hooks/useToggle";
 import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDetailAdmin";
-import { toggleDetailCategory } from "../../sagas/global/globalSlice";
 import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
 
 const CategoryPageAdmin = () => {
@@ -39,15 +37,16 @@ const CategoryPageAdmin = () => {
             <Typography variant="h6" color="white">
               Danh sách bài viết
             </Typography>
-            <span onClick={handLoad} className="text-white cursor-pointer">
+            <div onClick={handLoad}
+              className="text-white cursor-pointer">
               <ArrowPathIcon {...icon} />
-            </span>
+            </div>
           </CardHeader>
           <CardBody className="px-0 pt-0 pb-2 mt-0 overflow-x-scroll">
             <table className="w-full min-w-[840px] table-auto">
               <thead>
                 <tr>
-                  {["Bài viết", "tác giả", "tình trạng", "thời gian", ""].map(
+                  {["Danh mục", "tác giả", "tình trạng", "thời gian", ""].map(
                     (el, index) => (
                       <th
                         key={index}

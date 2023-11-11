@@ -16,8 +16,10 @@ class CommentController extends BaseController {
                     id_customer
                 };
                 const dataComment = await this.model(modelComment).save();
+                const { updatedAt, createdAt, ...others } = dataComment._doc;
                 if (dataComment) {
                     return res.status(200).json({
+                        ...others,
                         message: "Cảm ơn bạn đã bình luận!",
                     });
                 } else {

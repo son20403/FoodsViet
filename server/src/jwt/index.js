@@ -22,7 +22,7 @@ const generateRefreshToken = (customer) => {
         },
         process.env.JWT_REFRESH_KEY,
         {
-            expiresIn: "1d",
+            expiresIn: "10h",
         }
     );
 };

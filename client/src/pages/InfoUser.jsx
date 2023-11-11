@@ -71,7 +71,7 @@ const InfoUser = () => {
                 <span>@{customer_detail?.user_name}</span>
               </div>
               <div className="flex items-center gap-x-5">
-                {!isAuth && (
+                {!isAuth && token && (
                   <Link
                     className="flex items-center justify-center p-2 text-2xl text-white border-2 rounded-md cursor-pointer bg-primary border-primary"
                     to={"/message/" + id_customer}

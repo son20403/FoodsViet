@@ -4,14 +4,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../sagas/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeSetting } from '../sagas/global/globalSlice';
+import { setNotification } from '../sagas/notification/notificationSlice';
 
-const Setting = ({ show, onClick }) => {
+const Setting = () => {
     const navigate = useNavigate();
     const { token, infoAuth } = useSelector((state) => state.auth)
+    const { socket, showSetting } = useSelector((state) => state.global);
     const dispatch = useDispatch()
+    const handleClose = () => {
+        dispatch(closeSetting())
+    }
     const handleLogout = () => {
+        const id = infoAuth?._id
         startTransition(() => {
-            dispatch(logout());
+            socket.disconnect()
+            dispatch(setNotification())
+            dispatch(logout({ id }));
             dispatch(closeSetting());
             navigate('/');
         });
@@ -23,12 +31,12 @@ const Setting = ({ show, onClick }) => {
     }
     return (
         <>
-            <Overlay show={show} onClick={onClick}></Overlay>
+            <Overlay show={showSetting} onClick={handleClose}></Overlay>
             <div className={`flex-1 absolute text-black bg-white-cream flex top-full w-full justify-center gap-5 
             transition-all
                 flex-col px-5 py-5 text-sm z-[10] right-0 shadow-soft border-t border-primary 
                 md:max-w-[200px] lg:text-center
-                ${show ? 'top-full' : 'invisible opacity-0'}`}>
+                ${showSetting ? 'top-full' : 'invisible opacity-0'}`}>
                 {token ? <>
                     <Link to={`/info/${infoAuth?.slug}`}>Thông tin người dùng</Link>
                     <Link to={'/add-post'}>Thêm bài viết</Link>

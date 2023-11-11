@@ -16,9 +16,8 @@ const Message = ({ own, message }) => {
           alt=""
         />
         <p
-          className={`p-2.5 rounded-2xl text-white md:max-w-[350px] max-w-[300px] ${
-            own ? "bg-[#1877f2]" : "bg-gray-500"
-          }`}
+          className={`p-2.5 rounded-2xl text-white md:max-w-[350px] max-w-[300px] ${own ? "bg-[#1877f2]" : "bg-gray-500"
+            }`}
         >
           {message?.text}
         </p>

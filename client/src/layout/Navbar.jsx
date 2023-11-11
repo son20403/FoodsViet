@@ -3,6 +3,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import Overlay from './common/Overlay';
 import { Heading } from '../components/heading';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeNavbar } from '../sagas/global/globalSlice';
 
 const listLink = [
     {
@@ -32,10 +34,15 @@ const listLink = [
     },
 ]
 
-const Navbar = ({ showNavbar, handleShowNavbar }) => {
+const Navbar = () => {
+    const { showNavbar } = useSelector((state) => state.global)
+    const dispatch = useDispatch()
+    const handleClose = () => {
+        dispatch(closeNavbar())
+    }
     return (
         <>
-            <Overlay show={showNavbar} onClick={handleShowNavbar}></Overlay>
+            <Overlay show={showNavbar} onClick={handleClose}></Overlay>
             <div className={`flex-1 absolute  bg-white-cream flex top-full w-full justify-center gap-5 transition-all
                 flex-col px-5 py-5 text-sm z-[10] shadow-soft border-t border-primary
                 ${showNavbar ? 'left-0' : '-left-full'}

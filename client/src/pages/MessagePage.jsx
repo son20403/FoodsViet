@@ -10,18 +10,22 @@ import {
   InformationCircleIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
+import BASE_URL from "../connect";
+import { Heading } from "../components/heading";
+import Logo from "../components/logo/Logo";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customers);
+  const { socket } = useSelector((state) => state.global);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
+  // console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const socket = useRef();
+  // const socket = useRef();
   const scrollRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
@@ -33,14 +37,15 @@ const MessagePage = () => {
     chatted = conversations?.filter((conversation) =>
       conversation.members.find((m) => m === id)
     );
-    console.log("🚀 --> useEffect --> chatted:", chatted);
+    // console.log("🚀 --> useEffect --> chatted:", chatted);
     if (chatted.length > 0) {
       setCurrentChat(chatted[0]);
     }
   }, [id, conversations]);
   useEffect(() => {
-    socket.current = io("http://localhost:8900");
-    socket.current.on("getMessage", (data) => {
+    // socket = io('http://localhost:8900');
+    socket?.on("getMessage", (data) => {
+      console.log(data)
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -56,8 +61,8 @@ const MessagePage = () => {
   }, [arrivalMessage, currentChat._id]);
 
   useEffect(() => {
-    socket.current.emit("addUser", infoAuth._id);
-    socket.current.on("getUsers", (users) => {
+    socket?.emit("addUser", infoAuth._id);
+    socket?.on("getUsers", (users) => {
       // setOnlineUsers(
       //   infoAuth.followings.filter((f) => users.some((u) => u.userId === f))
       // );
@@ -117,7 +122,7 @@ const MessagePage = () => {
         (member) => member !== infoAuth._id
       );
 
-      socket.current.emit("sendMessage", {
+      socket?.emit("sendMessage", {
         senderId: infoAuth._id,
         receiverId,
         text: newMessage,
@@ -153,13 +158,12 @@ const MessagePage = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   return (
-    <div className="min-h-screen mt-[56px] flex">
+    <div className="flex h-full ">
       <div className="md:w-3/12 menu p-2.5 border-r">
-        <div className="h-16">
-          <h1 className="text-2xl font-bold">Chat</h1>
+        <div className="">
+          <h1 className="text-2xl font-bold"><Logo>FOOSVIET</Logo></h1>
         </div>
-
-        <div className="h-full chatmenuwrap">
+        <div className="">
           <input
             type="text"
             placeholder="search ..."
@@ -177,7 +181,7 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <div className="md:w-7/12 box">
+      <div className="md:w-9/12 box">
         {currentChat._id ? (
           <div className="boxwrapper p-2.5 text-white">
             <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
@@ -232,25 +236,26 @@ const MessagePage = () => {
             )}
           </div>
         )}
-        <div className="flex items-center mt-5 chatBottom gap-x-3 p-2.5">
-          <textarea
+        <form onSubmit={handleSubmit} className="flex items-center mt-5 chatBottom gap-x-3 p-2.5">
+          <input
             name=""
             placeholder="nhập tin nhắn..."
-            className="p-3 text-black border outline-none md:w-full rounded-3xl"
+            className="p-3 text-black border outline-none rounded-3xl"
             id=""
             onChange={(e) => setNewMessage(e.target.value)}
             value={newMessage}
             rows="1"
-          ></textarea>
+          ></input>
           <button
             className="px-3 py-2 bg-blue-600 rounded-lg"
-            onClick={handleSubmit}
+            // onClick={handleSubmit}
+            type="submit"
           >
             <PaperAirplaneIcon className="w-6 h-6 text-white" />
           </button>
         </div>
       </div>
-      <div className="hidden md:w-3/12 onlien md:block">
+      <div className="md:w-3/12 onlien">
         <div className="chatonlienwrapper p-2.5  h-full">
           <ChatOnline />
           <ChatOnline />
