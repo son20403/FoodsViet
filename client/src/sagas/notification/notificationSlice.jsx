@@ -55,6 +55,20 @@ const notificationSlice = createSlice({
                 error: '',
             }
         },
+        deleteAllNotificationRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        deleteAllNotificationSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: '',
+            }
+        },
         addNotificationRequest: (state) => {
             return {
                 ...state,
@@ -113,5 +127,5 @@ const notificationSlice = createSlice({
     }
 })
 
-export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification } = notificationSlice.actions
+export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification, deleteAllNotificationRequest, deleteAllNotificationSuccess } = notificationSlice.actions
 export default notificationSlice.reducer

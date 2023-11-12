@@ -28,7 +28,7 @@ const ListPost = ({ data = [], className = '', message = '' }) => {
                     <PostItem key={item._id} data={item} isSingle ></PostItem>
                 ))
                 : data.length < 1 && message
-                    ? message
+                    ? <div className='text-center pb-10'>{message}</div>
                     : arr.map((_item, index) => (
                         <PostItemSketeton key={index}></PostItemSketeton>
                     ))
