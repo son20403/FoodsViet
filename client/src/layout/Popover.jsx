@@ -6,7 +6,7 @@ import {
 import { EllipsisIcon } from "../components/Icon";
 import { useEffect, useState } from "react";
 
-export function PopoverDrop({ children, x = 0 }) {
+export function PopoverDrop({ children, x = 0, icon = <></>, placement = 'right', x_sm = -80 }) {
     const [xValue, setXValue] = useState(x);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export function PopoverDrop({ children, x = 0 }) {
             if (window.innerWidth <= 640) {
                 setXValue(x);
             } else {
-                setXValue(-80);
+                setXValue(x_sm);
             }
         };
         window.addEventListener("resize", handleWindowResize);
@@ -29,14 +29,14 @@ export function PopoverDrop({ children, x = 0 }) {
                 mount: { scale: 1, x: 0 },
                 unmount: { scale: 0, x: xValue },
             }}
-            placement="right"
+            placement={placement}
         >
             <PopoverHandler>
-                <div className="cursor-pointe ">
-                    <EllipsisIcon />
+                <div className="cursor-pointer">
+                    {icon}
                 </div>
             </PopoverHandler>
-            <PopoverContent>
+            <PopoverContent className="z-[90]">
                 {children}
             </PopoverContent>
         </Popover>
