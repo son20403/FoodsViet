@@ -7,7 +7,9 @@ import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
-const CustomersPageAdmin = lazy(() => import("../pages/adminPage/CustomerPageAdmin"));
+const CustomersPageAdmin = lazy(() =>
+  import("../pages/adminPage/CustomerPageAdmin")
+);
 const CategoryPageAdmin = lazy(() =>
   import("../pages/adminPage/CategoryPageAdmin")
 );
@@ -43,7 +45,8 @@ export const router = createBrowserRouter([
       { path: "/contact", element: <ContactPage /> },
     ],
   },
-  { path: "/message/:id", element: <MessagePage /> },
+  { path: "/message/:id?", element: <MessagePage /> },
+  // { path: "/message/", element: <MessagePage /> },
   //   {
   //     path: "/message",
   //     element: <MainLayout />,
