@@ -258,46 +258,46 @@ class AdminController extends BaseController {
     }
   };
 
-  createCustomer = async (req, res) => {
-    const { user_name, password, ...info } = req.body;
-    const fileData = req.file;
-    const image = fileData?.path;
-    const id_image = fileData?.filename;
-    try {
-      const existingUser = await this.customerModel.findOne({ user_name });
-      if (existingUser) {
-        throw new Error("Tài khoản đã tồn tại");
-      }
-      const hashPass = await argon2.hash(password);
-      const userData = {
-        ...info,
-        image,
-        id_image,
-        user_name,
-        password: hashPass,
-      };
-      const newUser = await this.customerModel(userData).save();
-      if (!newUser) {
-        throw new Error("Có lỗi xảy ra");
-      }
-      return res.status(200).json({
-        message: "Tạo tài khoản thành công",
-      });
-    } catch (error) {
-      if (fileData) cloudinary.uploader.destroy(id_image);
-      console.log("error: ", error);
-      return res
-        .status(
-          error.message === "Tài khoản đã tồn tại" ||
-            error.message === "Có lỗi xảy ra"
-            ? 400
-            : 500
-        )
-        .json({
-          message: error.message || "Server is error",
-        });
-    }
-  };
+  // createCustomer = async (req, res) => {
+  //   const { user_name, password, ...info } = req.body;
+  //   const fileData = req.file;
+  //   const image = fileData?.path;
+  //   const id_image = fileData?.filename;
+  //   try {
+  //     const existingUser = await this.customerModel.findOne({ user_name });
+  //     if (existingUser) {
+  //       throw new Error("Tài khoản đã tồn tại");
+  //     }
+  //     const hashPass = await argon2.hash(password);
+  //     const userData = {
+  //       ...info,
+  //       image,
+  //       id_image,
+  //       user_name,
+  //       password: hashPass,
+  //     };
+  //     const newUser = await this.customerModel(userData).save();
+  //     if (!newUser) {
+  //       throw new Error("Có lỗi xảy ra");
+  //     }
+  //     return res.status(200).json({
+  //       message: "Tạo tài khoản thành công",
+  //     });
+  //   } catch (error) {
+  //     if (fileData) cloudinary.uploader.destroy(id_image);
+  //     console.log("error: ", error);
+  //     return res
+  //       .status(
+  //         error.message === "Tài khoản đã tồn tại" ||
+  //           error.message === "Có lỗi xảy ra"
+  //           ? 400
+  //           : 500
+  //       )
+  //       .json({
+  //         message: error.message || "Server is error",
+  //       });
+  //   }
+  // };
   getListAdmin = async (req, res) => {
     try {
       const data = await this.model.find({});

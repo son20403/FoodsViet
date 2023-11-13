@@ -11,5 +11,6 @@ router.get('/detailBySlug?:slug', customerController.detailBySlug)
 router.get('/detail?:id', customerController.detail)
 // router.get('/detail', middlewareAuth.verifyToken, customerController.detail)
 router.put('/updateCustomer', middlewareAuth.verifyToken, uploadCloud.single("image"), customerController.updateCustomer)
+router.post('/createCustomer', middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), customerController.register)
 
 module.exports = router;
