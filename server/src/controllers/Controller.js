@@ -9,15 +9,18 @@ class BaseController {
     }
     // Phương thức register dùng chung
     register = async (req, res) => {
-        const { user_name, password, ...info } = req.body;
+        const { user_name, password, re_password, ...info } = req.body;
         const fileData = req.file;
         const image = fileData?.path;
         const id_image = fileData?.filename;
-        const timeCreated = Date.now()
+        const id_admin = req.customer?.id || ''
         try {
             const existingUser = await this.model.findOne({ user_name });
             if (existingUser) {
                 throw new Error("Tài khoản đã tồn tại");
+            }
+            if (password !== re_password) {
+                throw new Error("Mật khẩu không trùng khớp!");
             }
             const hashPass = await argon2.hash(password);
             const userData = {
@@ -26,7 +29,7 @@ class BaseController {
                 id_image,
                 user_name,
                 password: hashPass,
-                timeCreated
+                id_admin
             };
             const newUser = await this.model(userData).save();
             if (!newUser) {
@@ -63,6 +66,16 @@ class BaseController {
             if (!passwordValid) {
                 return res.status(402).jsonp({
                     message: "Sai mật khẩu",
+                });
+            }
+            if (user.status === 'destroy') {
+                return res.status(402).jsonp({
+                    message: "Tài khoản của bạn đã bị vô hiệu hóa, vui lòng liên hệ với Quản trị viên để được giúp đỡ!",
+                });
+            }
+            if (user.status === 'pending') {
+                return res.status(402).jsonp({
+                    message: "Tài khoản của bạn đang trong trạng thái chờ duyệt!",
                 });
             }
             if (user && passwordValid) {
@@ -176,6 +189,7 @@ class BaseController {
             });
         }
     };
+
     updatePost = async (req, res) => {
         const id = req.query.id;
         const formData = req.body;

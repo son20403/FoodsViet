@@ -17,6 +17,13 @@ export function updateCustomer(id, entity) {
         },
     })
 }
+export function createCustomerAdmin(entity) {
+    return admin.post(`/${COLLECTION_NAME}/createCustomer`, entity, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
 
 // headers: {
 //     "Content-Type": "multipart/form-data",

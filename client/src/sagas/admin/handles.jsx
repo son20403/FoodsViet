@@ -13,6 +13,8 @@ import {
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
   addCategoriesAdminSuccess,
+  addCustomerAdminSuccess,
+  addPostAdminSuccess,
   getAllAdminRequest,
   getAllAdminSuccess,
   getCategoriesAdminRequest,
@@ -28,7 +30,7 @@ import {
   updatePostAdminSuccess,
   updateStatusSuccess,
 } from "./adminSlice";
-import { getAllCustomersByAdmin } from "../customers/request";
+import { createCustomerAdmin, getAllCustomersByAdmin } from "../customers/request";
 
 export function* handleLoginAdmin({ payload }) {
   try {
@@ -183,8 +185,22 @@ export function* handleCreatePostsAdmin({ payload }) {
     yield put(setErrorGlobal(""));
     const response = yield call(createPostAdmin, payload?.post);
     if (response?.data) {
-      yield put(addCategoriesAdminSuccess());
+      yield put(addPostAdminSuccess());
       yield put(getPostsAdminRequest());
+    }
+    yield put(setNotifyGlobal(response?.data?.message));
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleCreateCustomerAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(createCustomerAdmin, payload);
+    if (response?.data) {
+      yield put(addCustomerAdminSuccess());
+      yield put(getCustomersAdminRequest());
     }
     yield put(setNotifyGlobal(response?.data?.message));
   } catch (error) {
