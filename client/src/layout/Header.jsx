@@ -9,7 +9,7 @@ import Search from './Search';
 import Avatar from './customers/Avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleNavbar, toggleSearch, toggleSetting, closeNavbar, closeSearch, closeSetting, toggleNotification, closeNotification } from '../sagas/global/globalSlice';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { SearchIcon } from '../components/Icon';
 import { Badge } from '@material-tailwind/react';
 import { getNotificationByCustomerRequest } from '../sagas/notification/notificationSlice';
@@ -120,14 +120,14 @@ const Header = () => {
                                 <BellIcon className="h-6 w-6 " />
                             </div>}
                     </div>
-                    <div>
+                    <Link to={'/message/'} >
                         <Badge content={1} overlap="circular">
                             <div className={`pt-1 pr-1
                             ${isScroll ? ' !text-gray-600 ' : ' !text-white'}`}>
                                 <ChatBubbleOvalLeftIcon className="h-6 w-6 " />
                             </div>
                         </Badge>
-                    </div>
+                    </Link>
                     <Avatar onClick={handleShowSetting} image={dataAuth?.image}></Avatar>
                     <div className='lg:hidden cursor-pointer' onClick={handleShowNavbar}>
                         <FontAwesomeIcon className={` ${showNavbar ? 'text-2xl' : 'text-xl'} 

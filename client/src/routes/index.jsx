@@ -22,6 +22,7 @@ const InfoUser = lazy(() => import("../pages/InfoUser"));
 const DetailPage = lazy(() => import("../pages/DetailPage"));
 const SignInSignUp = lazy(() => import("../pages/SignInSignUp"));
 const PostPage = lazy(() => import("../pages/PostPage"));
+const ListPostsByCategory = lazy(() => import("../pages/ListPostsByCategory"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
@@ -36,6 +37,7 @@ export const router = createBrowserRouter([
       { path: "/categories", element: <CategoryPage /> },
       { path: "/info/:slug", element: <InfoUser /> },
       { path: "/detail/:slug", element: <DetailPage /> },
+      { path: "/category/:slug", element: <ListPostsByCategory /> },
       { path: "/info-user/:id", element: <InfoUser /> },
       { path: "/posts", element: <PostPage /> },
       { path: "/add-post", element: <AddNewPosts /> },
