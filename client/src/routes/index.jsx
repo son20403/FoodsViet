@@ -83,25 +83,17 @@ export const router = createBrowserRouter([
 ]);
 function AppCustomer() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <MainLayout />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <MainLayout />
+    </>
   );
 }
 function AppAdmin() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <Admin />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <Admin />
+    </>
   );
 }
