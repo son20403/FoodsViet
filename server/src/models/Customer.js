@@ -19,8 +19,9 @@ const Customer = new Schema(
         status: { type: String, default: 'approved' },
         online: { type: Boolean, default: false },
         favourites: { type: Array, default: [String] },
+        date: { type: String, default: '' },
+        timestamps: { type: Number },
         timeOnlined: { type: Number },
-        timeCreated: { type: Number },
         timeDestroy: { type: Number },
     },
     {

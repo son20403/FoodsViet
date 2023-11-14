@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { addNotification, deleteNotificationByCustomer, getAllNotification, getNotificationByCustomer, updateAllNotificationByCustomer, updateNotificationByCustomer } from "./request";
-import { addNotificationSuccess, deleteNotificationSuccess, getAllNotificationSuccess, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationSuccess, updateNotificationSuccess } from "./notificationSlice";
+import { addNotification, deleteAllNotificationByCustomer, deleteNotificationByCustomer, getAllNotification, getNotificationByCustomer, updateAllNotificationByCustomer, updateNotificationByCustomer } from "./request";
+import { addNotificationSuccess, deleteAllNotificationSuccess, deleteNotificationSuccess, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationSuccess, updateNotificationSuccess } from "./notificationSlice";
 
 
 export function* handleAddNotification({ payload }) {
@@ -50,6 +50,8 @@ export function* handleUpdateNotificationByCustomer({ payload }) {
         const response = yield call(updateNotificationByCustomer, payload);
         if (response) {
             yield put(updateNotificationSuccess())
+            yield put(getNotificationByCustomerRequest())
+
         }
     } catch (error) {
         yield handleCommonError(error)
@@ -62,18 +64,35 @@ export function* handleUpdateAllNotificationByCustomer({ payload }) {
         const response = yield call(updateAllNotificationByCustomer, payload);
         if (response) {
             yield put(updateAllNotificationSuccess())
+            yield put(getNotificationByCustomerRequest())
+
         }
     } catch (error) {
         yield handleCommonError(error)
     }
 }
-export function* handleDeteteNotificationByCustomer({ payload }) {
+export function* handleDeleteNotificationByCustomer({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(deleteNotificationByCustomer, payload?.id);
+        const response = yield call(deleteNotificationByCustomer, payload);
         if (response) {
             yield put(deleteNotificationSuccess())
+            yield put(getNotificationByCustomerRequest())
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleDeleteAllNotificationByCustomer({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(deleteAllNotificationByCustomer, payload);
+        if (response) {
+            yield put(deleteAllNotificationSuccess())
+            yield put(getNotificationByCustomerRequest())
+
         }
     } catch (error) {
         yield handleCommonError(error)

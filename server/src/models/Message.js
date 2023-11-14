@@ -10,6 +10,9 @@ const Message = new Schema(
       sender:{ type: String },
       text:{
         type:String
+      },
+      isRead: {
+        type: Boolean,default:false
       }
     },
     {

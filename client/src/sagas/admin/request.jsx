@@ -43,6 +43,13 @@ export function createPostAdmin(entity) {
     },
   });
 }
+export function createCustomerAdmin(entity) {
+  return axios.post(`/${COLLECTION_NAME}/createCustomer`, entity, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
 // headers: {
 //     "Content-Type": "multipart/form-data",
 //     token: `Bearer ${token}`,

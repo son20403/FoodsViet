@@ -1,24 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import ChatOnline from "../layout/chatOnline/ChatOnline";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import axios from "axios";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  Navigate,
-  Link,
-  NavLink,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
-import BASE_URL from "../connect";
-import { Heading } from "../components/heading";
 import Logo from "../components/logo/Logo";
 
 const MessagePage = () => {
@@ -30,10 +19,9 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-
   const [onlineUsers, setOnlineUsers] = useState([]);
-  // const socket = useRef();
+  const [notifications, setNotifications] = useState([]);
+  console.log("🚀 --> MessagePage --> notifications:", notifications);
   const scrollRef = useRef();
   const navigate = useNavigate();
   let { id } = useParams();
@@ -54,7 +42,6 @@ const MessagePage = () => {
   }, [id, conversations]);
   useEffect(() => {
     socket?.on("getMessage", (data) => {
-      console.log(data);
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -80,7 +67,7 @@ const MessagePage = () => {
 
   useEffect(() => {
     arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.sender) &&
+      currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat._id]);
 
@@ -100,13 +87,12 @@ const MessagePage = () => {
           "http://localhost:8989/conversations/" + infoAuth._id
         );
         setConversations(res.data);
-        console.log("object");
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
-  }, [newMessage, arrivalMessage, currentChat._id]);
+  }, [arrivalMessage, currentChat._id, newMessage]); //newMessage
 
   useEffect(() => {
     const getMessages = async () => {
@@ -128,7 +114,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id, newMessage, arrivalMessage]);
+  }, [currentChat._id, arrivalMessage, newMessage]); //newMessage,
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -209,7 +195,7 @@ const MessagePage = () => {
       <section className="relative w-10/12 md:w-9/12">
         {id ? (
           <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
-            <div className="">
+            <div className="flex-1">
               <Conversation
                 conversation={currentChat}
                 online={true}
@@ -272,7 +258,7 @@ const MessagePage = () => {
             ></input>
             <button
               className="px-3 py-2 bg-blue-600 rounded-lg"
-              // onClick={handleSubmit}
+              disabled={newMessage.length > 0 ? false : true}
               type="submit"
             >
               <PaperAirplaneIcon className="w-6 h-6 text-white" />

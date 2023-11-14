@@ -1,6 +1,7 @@
 import { takeLatest } from "redux-saga/effects";
 import {
   addCategoriesAdminRequest,
+  addCustomerAdminRequest,
   addPostAdminRequest,
   getAllAdminRequest,
   getCategoriesAdminRequest,
@@ -15,6 +16,7 @@ import {
   updateStatusRequest,
 } from "./adminSlice";
 import {
+  handleCreateCustomerAdmin,
   handleCreatePostsAdmin,
   handleGetAllAdmin,
   handleGetAllCustomersByAdmin,
@@ -43,4 +45,5 @@ export default function* adminSagas() {
   yield takeLatest(updateCategoriesAdminRequest.type, handleUpdateCategoryAdmin);
   yield takeLatest(updateCustomerAdminRequest.type, handleUpdateCustomerAdmin);
   yield takeLatest(getCustomersAdminRequest.type, handleGetAllCustomersByAdmin);
+  yield takeLatest(addCustomerAdminRequest.type, handleCreateCustomerAdmin);
 }

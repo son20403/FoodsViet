@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
-import { CommentIcon, EditIcon, HeartIcon, TrashIcon } from '../components/Icon';
+import { CommentIcon, EditIcon, EllipsisIcon, HeartIcon, TrashIcon } from '../components/Icon';
 import ListPostsSidebar from '../layout/posts/ListPostsSidebar';
 import SlideWrap from '../layout/slide/SlideWrap';
 import PostItem from '../layout/posts/PostItem';
@@ -140,7 +140,7 @@ const DetailPage = () => {
                     const absoluteElementTop = elementRect.top + window.scrollY;
                     const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
                     window.scrollTo({ top: middle, behavior: 'smooth' });
-                    element.className = 'bg-blue-200/20 transition-all rounded-lg'
+                    element.className = 'bg-primary/10 transition-all rounded-lg'
                     setTimeout(() => {
                         element.className = 'relative'
                     }, 1500);
@@ -163,7 +163,7 @@ const DetailPage = () => {
                         lg:leading-normal leading-normal'>
                             {detail_post?.title}
                         </Heading>
-                        <div className='text-white text-xs md:text-sm lg:text-base uppercase opacity-80  mt-10 flex '>
+                        <div className='text-white text-center md:text-start text-xs md:text-sm lg:text-base uppercase opacity-80  mt-10 flex '>
                             {typeAuthor === 'customer' ? <Link to={`/info/${customerByPosts?.slug}`}
                                 className='px-2 border-r last:border-none'>{customerByPosts?.full_name}</Link>
                                 : typeAuthor === 'admin'
@@ -183,8 +183,8 @@ const DetailPage = () => {
                             {typeAuthor === 'customer'
                                 ? (
                                     <Link to={`/info/${customerByPosts?.slug}`} className='flex gap-3 items-center'>
-                                        <Avatar image={customerByPosts?.image}></Avatar>
-                                        <h2 className='text-xs md:text-sm font-medium'>{customerByPosts?.full_name}</h2>
+                                        <Avatar image={customerByPosts?.image} ></Avatar>
+                                        <h2 className='text-xs md:text-sm font-medium flex-1'>{customerByPosts?.full_name}</h2>
                                     </Link>
                                 )
                                 : typeAuthor === 'admin'
@@ -196,7 +196,7 @@ const DetailPage = () => {
                             <div className=' flex gap-10 items-center'>
                                 <DataPost timestamps={detail_post?.timestamps}
                                     comments={commentsPost?.length} likes={listLikes}></DataPost>
-                                {isAuth && <PopoverDrop x={80}>
+                                {isAuth && <PopoverDrop x={80} icon={<EllipsisIcon />}>
                                     <div className='flex items-center gap-5'>
                                         <div onClick={handleToggle} className='flex items-center'>
                                             <IconWrap className='cursor-pointer'><EditIcon />

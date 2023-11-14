@@ -1,10 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import MainLayout from "../layout/MainLayout";
 import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
-import { ThemeProvider } from "@material-tailwind/react";
-import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 import MessagePage from "../pages/MessagePage";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
@@ -25,6 +23,7 @@ const InfoUser = lazy(() => import("../pages/InfoUser"));
 const DetailPage = lazy(() => import("../pages/DetailPage"));
 const SignInSignUp = lazy(() => import("../pages/SignInSignUp"));
 const PostPage = lazy(() => import("../pages/PostPage"));
+const ListPostsByCategory = lazy(() => import("../pages/ListPostsByCategory"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
@@ -39,6 +38,7 @@ export const router = createBrowserRouter([
       { path: "/categories", element: <CategoryPage /> },
       { path: "/info/:slug", element: <InfoUser /> },
       { path: "/detail/:slug", element: <DetailPage /> },
+      { path: "/category/:slug", element: <ListPostsByCategory /> },
       { path: "/info-user/:id", element: <InfoUser /> },
       { path: "/posts", element: <PostPage /> },
       { path: "/add-post", element: <AddNewPosts /> },
@@ -87,25 +87,17 @@ export const router = createBrowserRouter([
 ]);
 function AppCustomer() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <MainLayout />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <MainLayout />
+    </>
   );
 }
 function AppAdmin() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <Admin />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <Admin />
+    </>
   );
 }
