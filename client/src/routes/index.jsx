@@ -1,10 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import MainLayout from "../layout/MainLayout";
 import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
-import { ThemeProvider } from "@material-tailwind/react";
-import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() => import("../pages/adminPage/CustomerPageAdmin"));
