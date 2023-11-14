@@ -48,7 +48,7 @@ const Conversation = ({
           alt=""
           className="w-10 h-10 rounded-[50%] mr-5"
         />
-        <div className="relative flex flex-col w-full">
+        <div className="relative flex flex-col w-full flex-1">
           <span className="font-bold ">{friend?.full_name}</span>
           {children && <p className="line-clamp-1">{children}</p>}
           {!children && (

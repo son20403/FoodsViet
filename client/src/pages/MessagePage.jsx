@@ -1,24 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import ChatOnline from "../layout/chatOnline/ChatOnline";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import axios from "axios";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import {
-  useLocation,
   useNavigate,
   useParams,
-  Navigate,
-  Link,
-  NavLink,
 } from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
-import BASE_URL from "../connect";
-import { Heading } from "../components/heading";
 import Logo from "../components/logo/Logo";
 
 const MessagePage = () => {
@@ -32,7 +24,6 @@ const MessagePage = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   // console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  // const socket = useRef();
   const scrollRef = useRef();
   const navigate = useNavigate();
   let { id } = useParams();
@@ -40,6 +31,7 @@ const MessagePage = () => {
     id = "";
   }
 
+  console.log("🚀 ~ file: MessagePage.jsx:34 ~ MessagePage ~ conversations:", conversations[0])
   let chatted = {};
   const user = customers.find((c) => c._id === id);
 
@@ -53,14 +45,13 @@ const MessagePage = () => {
   }, [id, conversations]);
   useEffect(() => {
     socket?.on("getMessage", (data) => {
-      console.log(data);
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       });
     });
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     arrivalMessage &&
@@ -84,14 +75,14 @@ const MessagePage = () => {
           "http://localhost:8989/conversations/" + infoAuth._id
         );
         setConversations(res.data);
-        console.log("object");
+        // console.log("object");
         // setCurrentChat(res.data[0]);
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
-  }, [newMessage, arrivalMessage, currentChat._id]);
+  }, [arrivalMessage, currentChat._id]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -113,7 +104,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id, newMessage, arrivalMessage]);
+  }, [currentChat._id, arrivalMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -194,7 +185,7 @@ const MessagePage = () => {
       <section className="relative w-10/12 md:w-9/12">
         {id ? (
           <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
-            <div className="">
+            <div className="flex-1">
               <Conversation
                 conversation={currentChat}
                 online={true}
@@ -257,7 +248,7 @@ const MessagePage = () => {
             ></input>
             <button
               className="px-3 py-2 bg-blue-600 rounded-lg"
-              // onClick={handleSubmit}
+              disabled={newMessage.length > 0 ? false : true}
               type="submit"
             >
               <PaperAirplaneIcon className="w-6 h-6 text-white" />
