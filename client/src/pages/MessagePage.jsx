@@ -3,10 +3,7 @@ import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import {
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
@@ -22,8 +19,9 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  // console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  console.log("🚀 --> MessagePage --> notifications:", notifications);
   const scrollRef = useRef();
   const navigate = useNavigate();
   let { id } = useParams();
@@ -31,7 +29,6 @@ const MessagePage = () => {
     id = "";
   }
 
-  console.log("🚀 ~ file: MessagePage.jsx:34 ~ MessagePage ~ conversations:", conversations[0])
   let chatted = {};
   const user = customers.find((c) => c._id === id);
 
@@ -51,7 +48,22 @@ const MessagePage = () => {
         createdAt: Date.now(),
       });
     });
-  }, [socket]);
+    socket?.on("getNotification", (data) => {
+      const isChatOpen = currentChat?.members.some(
+        (id) => id === data.senderId
+      );
+      console.log(isChatOpen);
+      if (isChatOpen) {
+        setNotifications((prev) => [{ ...data, isRead: true }, ...prev]);
+      } else {
+        setNotifications((prev) => [data, ...prev]);
+      }
+    });
+    return () => {
+      socket.off("getMessage");
+      socket.off("getNotification");
+    };
+  }, [socket, currentChat]);
 
   useEffect(() => {
     arrivalMessage &&
@@ -82,7 +94,7 @@ const MessagePage = () => {
       }
     };
     getConversations();
-  }, [arrivalMessage, currentChat._id]);
+  }, [arrivalMessage, currentChat._id, newMessage]); //newMessage
 
   useEffect(() => {
     const getMessages = async () => {
@@ -104,7 +116,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id, arrivalMessage]);
+  }, [currentChat._id, arrivalMessage, newMessage]); //newMessage,
 
   const handleSubmit = async (e) => {
     e.preventDefault();
