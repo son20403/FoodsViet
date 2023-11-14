@@ -4,7 +4,7 @@ import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   useLocation,
   useNavigate,
@@ -20,29 +20,34 @@ import {
 import BASE_URL from "../connect";
 import { Heading } from "../components/heading";
 import Logo from "../components/logo/Logo";
+import {
+  conversationsRequest,
+  createConversationsRequest,
+  createMessagesRequest,
+  messagesRequest,
+} from "../sagas/messenger/messengerSlice";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customers);
   const { socket } = useSelector((state) => state.global);
-  const [conversations, setConversations] = useState([]);
+  const { conversations, messages } = useSelector((state) => state.messenger);
+  const dispatch = useDispatch();
+  const scrollRef = useRef();
   const [currentChat, setCurrentChat] = useState([]);
-  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [notifications, setNotifications] = useState([]);
 
-  const [onlineUsers, setOnlineUsers] = useState([]);
-  // const socket = useRef();
-  const scrollRef = useRef();
-  const navigate = useNavigate();
   let { id } = useParams();
+  const navigate = useNavigate();
+
   if (!id) {
     id = "";
   }
-
   let chatted = {};
   const user = customers.find((c) => c._id === id);
+  const userid = infoAuth?._id;
+  const conversationId = currentChat?._id;
 
   useEffect(() => {
     chatted = conversations?.filter((conversation) =>
@@ -52,6 +57,11 @@ const MessagePage = () => {
       setCurrentChat(chatted[0]);
     }
   }, [id, conversations]);
+
+  useEffect(() => {
+    dispatch(conversationsRequest({ userid }));
+  }, [newMessage, arrivalMessage, currentChat._id]);
+
   useEffect(() => {
     socket?.on("getMessage", (data) => {
       console.log(data);
@@ -61,27 +71,13 @@ const MessagePage = () => {
         createdAt: Date.now(),
       });
     });
-    socket?.on("getNotification", (data) => {
-      const isChatOpen = currentChat?.members.some(
-        (id) => id === data.senderId
-      );
-      console.log(isChatOpen);
-      if (isChatOpen) {
-        setNotifications((prev) => [{ ...data, isRead: true }, ...prev]);
-      } else {
-        setNotifications((prev) => [data, ...prev]);
-      }
-    });
-    return () => {
-      socket.off("getMessage");
-      socket.off("getNotification");
-    };
-  }, [socket, currentChat]);
+  }, []);
 
   useEffect(() => {
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+      // setMessages((prev) => [...prev, arrivalMessage]);
+      dispatch(messagesRequest((prev) => [...prev, arrivalMessage]));
   }, [arrivalMessage, currentChat._id]);
 
   useEffect(() => {
@@ -94,51 +90,25 @@ const MessagePage = () => {
   }, [infoAuth]);
 
   useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8989/conversations/" + infoAuth._id
-        );
-        setConversations(res.data);
-        console.log("object");
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getConversations();
-  }, [newMessage, arrivalMessage, currentChat._id]);
-
-  useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8989/messages/" + currentChat?._id
-        );
-        setMessages(res.data);
-
-        if (currentChat?._id) {
-          navigate(
-            `/message/${currentChat?.members?.find((c) => c !== infoAuth._id)}`
-          );
-        } else {
-          navigate(`/message/${id}`);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getMessages();
-  }, [currentChat._id, newMessage, arrivalMessage]);
+    dispatch(messagesRequest({ conversationId }));
+    if (currentChat?._id) {
+      navigate(
+        `/message/${currentChat?.members?.find((c) => c !== infoAuth._id)}`
+      );
+    } else {
+      navigate(`/message/${id}`);
+    }
+  }, [conversationId, newMessage, arrivalMessage]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     let message = {};
 
-    if (currentChat._id) {
+    if (conversationId) {
       message = {
         sender: infoAuth._id,
         text: newMessage,
-        conversationId: currentChat._id,
+        conversationId: conversationId,
       };
 
       const receiverId = currentChat.members.find(
@@ -155,31 +125,28 @@ const MessagePage = () => {
         senderId: infoAuth._id,
         receiverId: id,
       };
-      const res = await axios.post(
-        "http://localhost:8989/conversations/",
-        createConversation
-      );
-      // console.log("🚀 --> handleSubmit --> res:", res.data);
-      message = {
-        sender: infoAuth._id,
-        text: newMessage,
-        conversationId: res.data[0]._id,
-      };
-      // setCurrentChat(res.data[0]);
+      dispatch(createConversationsRequest(createConversation));
+
+      // message = {
+      //   sender: infoAuth._id,
+      //   text: newMessage,
+      //   conversationId: conversations[0],
+      // };
     }
 
     try {
-      const res = await axios.post("http://localhost:8989/messages", message);
-      setMessages([...messages, res.data]);
+      const res = dispatch(createMessagesRequest(message));
+      console.log(res);
+      // dispatch(messagesRequest([...messages, res.data]));
       setNewMessage("");
     } catch (err) {
       console.log(err);
     }
   };
-
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
   return (
     <div className="flex min-h-screen ">
       <div className="w-2/12 md:w-3/12 menu p-2.5 border-r">
@@ -283,5 +250,4 @@ const MessagePage = () => {
     </div>
   );
 };
-
 export default MessagePage;

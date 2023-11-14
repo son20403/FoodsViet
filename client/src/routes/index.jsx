@@ -6,6 +6,7 @@ import ScrollToTop from "../layout/common/ScrollToTop";
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
+import MessagePage from "../pages/MessagePage";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -27,7 +28,7 @@ const PostPage = lazy(() => import("../pages/PostPage"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
-const MessagePage = lazy(() => import("../pages/MessagePage"));
+// const MessagePage = lazy(() => import("../pages/MessagePage"));
 
 export const router = createBrowserRouter([
   {

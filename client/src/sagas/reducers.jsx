@@ -7,16 +7,18 @@ import customersSlice from "./customers/customersSlice";
 import commentsSlice from "./comments/commentsSlice";
 import adminSlice from "./admin/adminSlice";
 import notificationSlice from "./notification/notificationSlice";
+import messengerSlice from "./messenger/messengerSlice";
 
 const reducer = combineReducers({
-    global: globalSlice,
-    posts: postsSlice,
-    categories: categoriesSlice,
-    customers: customersSlice,
-    comments: commentsSlice,
-    auth: authSlice,
-    admin: adminSlice,
-    notification: notificationSlice,
-})
+  global: globalSlice,
+  posts: postsSlice,
+  categories: categoriesSlice,
+  customers: customersSlice,
+  comments: commentsSlice,
+  auth: authSlice,
+  admin: adminSlice,
+  notification: notificationSlice,
+  messenger: messengerSlice,
+});
 
-export default reducer
+export default reducer;
