@@ -66,9 +66,10 @@ const Header = () => {
     useEffect(() => {
         if (socket) {
             socket.on('sendNotify', () => {
+                console.log('ok');
                 setTimeout(() => {
                     handleGetNotification()
-                }, 200)
+                }, 500)
             })
         }
         if (notifications?.length > 0) {

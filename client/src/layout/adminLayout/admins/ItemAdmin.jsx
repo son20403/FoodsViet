@@ -14,6 +14,7 @@ const ItemAdmin = ({ data }) => {
     const dispatch = useDispatch()
     const { role, infoAdmin } = useSelector((state) => state.admin);
     const typeAdmin = role?.find(r => r._id === infoAdmin?.role)
+
     const typeRole = role.find((r) => r._id === data?.role)
     const handleShowCustomerDetail = () => {
         if (typeAdmin?.title === 'Admin') {

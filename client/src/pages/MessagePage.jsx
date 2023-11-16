@@ -41,13 +41,15 @@ const MessagePage = () => {
     }
   }, [id, conversations]);
   useEffect(() => {
-    socket?.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+    setTimeout(() => {
+      socket?.on("getMessage", (data) => {
+        setArrivalMessage({
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        });
       });
-    });
+    }, 500);
     socket?.on("getNotification", (data) => {
       const isChatOpen = currentChat?.members.some(
         (id) => id === data.senderId
@@ -72,13 +74,13 @@ const MessagePage = () => {
   }, [arrivalMessage, currentChat._id]);
 
   useEffect(() => {
-    socket?.emit("addUser", infoAuth._id);
+    // socket?.emit("addUser", infoAuth._id);
     socket?.on("getUsers", (users) => {
       // setOnlineUsers(
       //   infoAuth.followings.filter((f) => users.some((u) => u.userId === f))
       // );
     });
-  }, [infoAuth]);
+  }, [infoAuth, socket]);
 
   useEffect(() => {
     const getConversations = async () => {
