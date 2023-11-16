@@ -22,8 +22,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
 import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
-import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
-import { toggleAddCategory, toggleAddCustomer, toggleAddPost } from "../sagas/global/globalSlice";
+import {
+  getAllAdminRequest,
+  getCategoriesAdminRequest,
+  getCustomersAdminRequest,
+  getPostsAdminRequest,
+} from "../sagas/admin/adminSlice";
+import {
+  toggleAddCategory,
+  toggleAddCustomer,
+  toggleAddPost,
+} from "../sagas/global/globalSlice";
 import AddCustomerAdmin from "../layout/adminLayout/customers/AddCustomerAdmin";
 export function Dashboard() {
   const navLink = [
@@ -47,13 +56,15 @@ export function Dashboard() {
       id: 3,
       title: "Thêm người dùng",
       icon: <UserPlusIcon className="w-5 h-5" />,
-      onclick: () => { handleToggleCustomer() },
+      onclick: () => {
+        handleToggleCustomer();
+      },
     },
     {
       id: 4,
       title: "Thêm nhân viên",
       icon: <UserCircleIcon className="w-5 h-5" />,
-      onclick: () => { },
+      onclick: () => {},
     },
   ];
   const labelProps = {
@@ -64,22 +75,22 @@ export function Dashboard() {
   };
   const { tokenAdmin } = useSelector((state) => state.admin);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleToggleAddPost = () => {
-    dispatch(toggleAddPost())
-  }
+    dispatch(toggleAddPost());
+  };
   const handleToggleCategory = () => {
-    dispatch(toggleAddCategory())
-  }
+    dispatch(toggleAddCategory());
+  };
   const handleToggleCustomer = () => {
-    dispatch(toggleAddCustomer())
-  }
+    dispatch(toggleAddCustomer());
+  };
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(getPostsAdminRequest())
-    dispatch(getCategoriesAdminRequest())
-    dispatch(getCustomersAdminRequest())
-    dispatch(getAllAdminRequest())
+    dispatch(getPostsAdminRequest());
+    dispatch(getCategoriesAdminRequest());
+    dispatch(getCustomersAdminRequest());
+    dispatch(getAllAdminRequest());
   }, []);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");

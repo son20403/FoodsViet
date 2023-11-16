@@ -6,8 +6,11 @@ import ScrollToTop from "../layout/common/ScrollToTop";
 import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
+import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
-const CustomersPageAdmin = lazy(() => import("../pages/adminPage/CustomerPageAdmin"));
+const CustomersPageAdmin = lazy(() =>
+  import("../pages/adminPage/CustomerPageAdmin")
+);
 const CategoryPageAdmin = lazy(() =>
   import("../pages/adminPage/CategoryPageAdmin")
 );
@@ -66,6 +69,7 @@ export const router = createBrowserRouter([
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
+      { path: "feedBack", element: <FeedBackPageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },

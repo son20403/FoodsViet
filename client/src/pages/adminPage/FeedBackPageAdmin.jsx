@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingRequest from "../../layout/loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomersAdminRequest } from "../../sagas/admin/adminSlice";
 import {
   Card,
   CardHeader,
@@ -10,17 +9,24 @@ import {
 } from "@material-tailwind/react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { icon } from "../../ADMIN/routes";
-import CustomerItemAdmin from "../../layout/adminLayout/customers/CustomerItemAdmin";
-import CustomerDetailAdmin from "../../layout/adminLayout/customers/CustomerDetailAdmin";
-import CustomerEditAdmin from "../../layout/adminLayout/customers/CustomerEditAdmin";
+import FeedBackItemAdmin from "../../layout/adminLayout/feedBacks/FeedBackItemAdmin";
+import FeedBackDetail from "../../layout/adminLayout/feedBacks/FeedBackDetail";
+import { FeedbackRequest } from "../../sagas/feedbackMail/feedbacksSlice";
 
-const CustomersPageAdmin = () => {
-  const { loading, customers } = useSelector((state) => state.admin);
-
+const FeedBackPageAdmin = () => {
+  const { loading, feedback } = useSelector((state) => state.feedback);
+  console.log(
+    "🚀 ~ file: FeedBackPageAdmin.jsx:18 ~ FeedBackPageAdmin ~ feedback:",
+    feedback
+  );
   const dispatch = useDispatch();
   const handLoad = () => {
-    dispatch(getCustomersAdminRequest());
+    dispatch(FeedbackRequest());
   };
+  useEffect(() => {
+    dispatch(FeedbackRequest());
+  }, []);
+
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>
@@ -31,22 +37,22 @@ const CustomersPageAdmin = () => {
             className="z-10 flex items-center justify-between p-6 mb-8 bg-primary"
           >
             <Typography variant="h6" color="white">
-              Danh sách người dùng
+              Danh sách feedback
             </Typography>
-            <span onClick={handLoad} className="text-white cursor-pointer">
+            <div onClick={handLoad} className="text-white cursor-pointer">
               <ArrowPathIcon {...icon} />
-            </span>
+            </div>
           </CardHeader>
           <CardBody className="px-0 pt-0 pb-2 mt-0 overflow-x-scroll">
             <table className="w-full min-w-[840px] table-auto">
               <thead>
                 <tr>
                   {[
-                    "Người dùng",
-                    "Thông tin",
+                    "người dùng",
+                    "email",
+                    "số điện thoại",
+                    "thời gian",
                     "tình trạng",
-                    "Ngày kích hoạt",
-                    "trạng thái",
                     "",
                   ].map((el, index) => (
                     <th
@@ -64,20 +70,20 @@ const CustomersPageAdmin = () => {
                 </tr>
               </thead>
               <tbody>
-                {customers &&
-                  customers?.length > 0 &&
-                  customers?.map((data) => (
-                    <CustomerItemAdmin key={data?._id} data={data} />
+                {feedback &&
+                  feedback?.length > 0 &&
+                  feedback?.map((data) => (
+                    <FeedBackItemAdmin key={data?._id} data={data} />
                   ))}
               </tbody>
             </table>
           </CardBody>
         </Card>
       </div>
-      <CustomerDetailAdmin></CustomerDetailAdmin>
-      <CustomerEditAdmin></CustomerEditAdmin>
+      {/* <CategoryDetailAdmin></CategoryDetailAdmin> */}
+      <FeedBackDetail></FeedBackDetail>
     </div>
   );
 };
 
-export default CustomersPageAdmin;
+export default FeedBackPageAdmin;
