@@ -35,7 +35,6 @@ import {
   updatePostAdminSuccess,
   updateStatusSuccess,
 } from "./adminSlice";
-import { getAllCustomersByAdmin } from "../customers/request";
 import { FeedbackRequest } from "../feedbackMail/feedbacksSlice";
 import { createCustomerAdmin, getAllCustomersByAdmin } from "../customers/request";
 
@@ -158,9 +157,9 @@ export function* handleUpdateStatus({ payload }) {
         case 'admin':
           yield put(getAllAdminRequest());
           break;
-          case 'feedback':
-            yield put(FeedbackRequest());
-            break;
+        case 'feedback':
+          yield put(FeedbackRequest());
+          break;
         default:
           put(setErrorGlobal("Có lỗi xảy ra khi thay đổi trạng thái!"))
           break;

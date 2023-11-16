@@ -17,9 +17,9 @@ class AdminController extends BaseController {
     postModel,
     commentModel,
     categoryModel,
-    feedbackModel
-  ) {
-  constructor(model, customerModel, postModel, commentModel, categoryModel, roleModel) {
+    feedbackModel,
+    roleModel) {
+
     super(model);
     this.commentModel = commentModel;
     this.customerModel = customerModel;
@@ -404,7 +404,7 @@ const adminController = new AdminController(
   Post,
   Comment,
   Categories,
-  FeedBack
+  FeedBack,
   Role,
 );
 

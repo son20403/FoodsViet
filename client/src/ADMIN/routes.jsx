@@ -41,26 +41,10 @@ const routes = [
         name: "Feedback",
         path: "/feedBack",
       },
-      { 
+      {
         icon: <ShieldCheckIcon  {...icon} />,
         name: "Quản lý",
         path: "/manage",
-      },
-    ],
-  },
-  {
-    title: "auth pages",
-    layout: "auth",
-    pages: [
-      {
-        icon: <ArrowRightOnRectangleIcon {...icon} />,
-        name: "sign in",
-        path: "/sign-in",
-      },
-      {
-        icon: <UserPlusIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
       },
     ],
   },
