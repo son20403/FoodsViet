@@ -6,16 +6,17 @@ import customersSagas from "./customers/customersSagas";
 import categoriesSagas from "./categories/categoriesSagas";
 import adminSagas from "./admin/adminSagas";
 import notificationSagas from "./notification/notificationSagas";
-
+import feedSagas from "./feedbackMail/feedbacksSagas";
 
 export default function* rootSaga() {
-    yield all([
-        fork(authSagas),
-        fork(postsSagas),
-        fork(commetsSagas),
-        fork(customersSagas),
-        fork(categoriesSagas),
-        fork(adminSagas),
-        fork(notificationSagas)
-    ])
+  yield all([
+    fork(authSagas),
+    fork(postsSagas),
+    fork(commetsSagas),
+    fork(customersSagas),
+    fork(categoriesSagas),
+    fork(adminSagas),
+    fork(notificationSagas),
+    fork(feedSagas),
+  ]);
 }

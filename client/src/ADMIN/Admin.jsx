@@ -47,13 +47,15 @@ export function Dashboard() {
       id: 3,
       title: "Thêm người dùng",
       icon: <UserPlusIcon className="w-5 h-5" />,
-      onclick: () => { handleToggleCustomer() },
+      onclick: () => {
+        handleToggleCustomer();
+      },
     },
     {
       id: 4,
       title: "Thêm nhân viên",
       icon: <UserCircleIcon className="w-5 h-5" />,
-      onclick: () => { },
+      onclick: () => {},
     },
   ];
   const labelProps = {
@@ -64,16 +66,16 @@ export function Dashboard() {
   };
   const { tokenAdmin } = useSelector((state) => state.admin);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handleToggleAddPost = () => {
-    dispatch(toggleAddPost())
-  }
+    dispatch(toggleAddPost());
+  };
   const handleToggleCategory = () => {
-    dispatch(toggleAddCategory())
-  }
+    dispatch(toggleAddCategory());
+  };
   const handleToggleCustomer = () => {
-    dispatch(toggleAddCustomer())
-  }
+    dispatch(toggleAddCustomer());
+  };
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getPostsAdminRequest())

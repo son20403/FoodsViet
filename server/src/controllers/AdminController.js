@@ -6,16 +6,26 @@ import Categories from "../models/Category";
 import Role from "../models/Role";
 import BaseController from "./Controller";
 import argon2 from "argon2";
+import FeedBack from "../models/SendEmail";
 
 const cloudinary = require("cloudinary").v2;
 
 class AdminController extends BaseController {
+  constructor(
+    model,
+    customerModel,
+    postModel,
+    commentModel,
+    categoryModel,
+    feedbackModel
+  ) {
   constructor(model, customerModel, postModel, commentModel, categoryModel, roleModel) {
     super(model);
     this.commentModel = commentModel;
     this.customerModel = customerModel;
     this.postModel = postModel;
     this.categoryModel = categoryModel;
+    this.feedbackModel = feedbackModel;
     this.roleModel = roleModel;
   }
 
@@ -189,6 +199,9 @@ class AdminController extends BaseController {
         break;
       case "customer":
         model = this.customerModel;
+        break;
+      case "feedback":
+        model = this.feedbackModel;
         break;
       default:
         return res.status(400).json({ message: "Model không hợp lệ" });
@@ -391,6 +404,7 @@ const adminController = new AdminController(
   Post,
   Comment,
   Categories,
+  FeedBack
   Role,
 );
 

@@ -6,6 +6,7 @@ import {
   NewspaperIcon,
   Square3Stack3DIcon,
   UserIcon,
+  EnvelopeOpenIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
@@ -31,11 +32,16 @@ const routes = [
         path: "/categories",
       },
       {
-        icon: <UserIcon  {...icon} />,
+        icon: <UserIcon {...icon} />,
         name: "Người dùng",
         path: "/customers",
       },
       {
+        icon: <EnvelopeOpenIcon {...icon} />,
+        name: "Feedback",
+        path: "/feedBack",
+      },
+      { 
         icon: <ShieldCheckIcon  {...icon} />,
         name: "Quản lý",
         path: "/manage",

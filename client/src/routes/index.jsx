@@ -4,6 +4,7 @@ import MainLayout from "../layout/MainLayout";
 import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
 import Admin from "../ADMIN/Admin";
+import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -62,6 +63,7 @@ export const router = createBrowserRouter([
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
+      { path: "feedBack", element: <FeedBackPageAdmin /> },
       { path: "manage", element: <PageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
