@@ -10,6 +10,8 @@ import {
   loginAdminRequest,
   logoutAdmin,
   registerAdminRequest,
+  roleAdminRequest,
+  updateAdminRequest,
   updateCategoriesAdminRequest,
   updateCustomerAdminRequest,
   updatePostAdminRequest,
@@ -21,9 +23,11 @@ import {
   handleGetAllAdmin,
   handleGetAllCustomersByAdmin,
   handleGetAllPostsAdmin,
+  handleGetRole,
   handleLoginAdmin,
   handleLogoutAdmin,
   handleRegisterAdmin,
+  handleUpdateAdmin,
   handleUpdateCustomerAdmin,
   handleUpdatePostAdmin,
   handleUpdateStatus,
@@ -44,6 +48,8 @@ export default function* adminSagas() {
   yield takeLatest(updateStatusRequest.type, handleUpdateStatus);
   yield takeLatest(updateCategoriesAdminRequest.type, handleUpdateCategoryAdmin);
   yield takeLatest(updateCustomerAdminRequest.type, handleUpdateCustomerAdmin);
+  yield takeLatest(updateAdminRequest.type, handleUpdateAdmin);
   yield takeLatest(getCustomersAdminRequest.type, handleGetAllCustomersByAdmin);
   yield takeLatest(addCustomerAdminRequest.type, handleCreateCustomerAdmin);
+  yield takeLatest(roleAdminRequest.type, handleGetRole);
 }

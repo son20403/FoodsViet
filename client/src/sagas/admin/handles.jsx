@@ -3,9 +3,11 @@ import {
   createPostAdmin,
   getAllPostAdmin,
   getListAdmin,
+  getRole,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
+  updateAdmin,
   updateCustomerAdmin,
   updatePostAdmin,
   updateStatus,
@@ -25,7 +27,10 @@ import {
   loginAdminSuccess,
   registerAdminSuccess,
   requestAdminFailure,
+  roleAdminSuccess,
   setInfoAdmin,
+  setIsAdmin,
+  updateAdminSuccess,
   updateCustomerAdminSuccess,
   updatePostAdminSuccess,
   updateStatusSuccess,
@@ -39,8 +44,8 @@ export function* handleLoginAdmin({ payload }) {
     const response = yield call(loginAdmin, payload);
     if (response) {
       const { message, accessToken, ...info } = response.data;
-      yield put(setNotifyGlobal(message));
       yield put(loginAdminSuccess(accessToken));
+      yield put(setNotifyGlobal(message));
       yield put(setInfoAdmin(info));
     }
   } catch (error) {
@@ -84,6 +89,18 @@ export function* handleGetAllPostsAdmin({ payload }) {
       yield put(getPostsAdminSuccess(response.data?.reverse()));
     } else {
       yield put(getPostsAdminSuccess([]));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleGetRole({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getRole, payload);
+    if (response?.data) {
+      yield put(roleAdminSuccess(response.data?.reverse()));
     }
   } catch (error) {
     yield handleCommonError(error);
@@ -173,6 +190,22 @@ export function* handleUpdateCustomerAdmin({ payload }) {
       yield put(updateCustomerAdminSuccess());
       // yield put(postDetailRequest({ slug: payload?.slug }));
       yield put(getCustomersAdminRequest());
+      yield put(setNotifyGlobal(response.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleUpdateAdmin({ payload }) {
+  console.log("🚀 ~ file: handles.jsx:191 ~ function*handleUpdateAdmin ~ payload:", payload)
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(updateAdmin, payload?.id, payload?.admin);
+    if (response?.data) {
+      yield put(updateAdminSuccess());
+      // yield put(postDetailRequest({ slug: payload?.slug }));
+      yield put(getAllAdminRequest());
       yield put(setNotifyGlobal(response.data?.message));
     }
   } catch (error) {

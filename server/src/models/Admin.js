@@ -17,8 +17,12 @@ const Admin = new Schema(
         address: { type: String, default: "" },
         admin: { type: Boolean, default: true },
         role: { type: String, default: "staff" },
-        status: { type: Boolean, default: true },
+        date: { type: String, default: "" },
+        timestamps: { type: Number },
+        status: { type: String, default: 'pending' },
         online: { type: Boolean, default: false },
+        timeOnlined: { type: Number },
+        timeDestroy: { type: Number },
     },
     {
         timestamps: true,

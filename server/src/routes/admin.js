@@ -4,24 +4,25 @@ import adminController from "../controllers/AdminController";
 import uploadCloud from "../middlewares/uploader";
 import middlewareAuth from "../middlewares/auth";
 
-// router.post("/register", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.register);
-router.post("/createCustomer", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.register);
-router.post("/createAdmin", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.register);
-router.post("/createPost", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.createPost);
-router.post("/login", adminController.login); //middlewareAuth.verifyTokenAdmin
-router.delete("/deleteCustomer?:id", middlewareAuth.verifyTokenAdmin, adminController.deleteCustomer);
-router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenAdmin, adminController.deleteAdmin);
-router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenAdmin, adminController.deleteAdmin);
-router.delete("/deletePost?:id", middlewareAuth.verifyTokenAdmin, adminController.deletePost);
-router.delete("/deleteCategory?:id", middlewareAuth.verifyTokenAdmin, adminController.deleteCategory);
-router.delete("/deleteComment?:id", middlewareAuth.verifyTokenAdmin, adminController.deleteComment);
-router.put("/updateStatus", middlewareAuth.verifyTokenAdmin, adminController.updateStatus);
-router.put("/updateCustomer", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateCustomer);
-router.put("/updateAdmin", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateAdmin);
-router.put("/updatePost", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updatePost);
-router.get("/getListAdmin", middlewareAuth.verifyTokenAdmin, adminController.getListAdmin);
-router.get("/getAllPostByAdmin", middlewareAuth.verifyTokenAdmin, adminController.getAllPostByAdmin);
-router.get("/getDetailAdmin", middlewareAuth.verifyTokenAdmin, adminController.detail);
+// router.post("/register", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.register);
+router.post("/createCustomer", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.register);
+router.post("/createAdmin", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.register);
+router.post("/createPost", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.createPost);
+router.post("/login", adminController.login); //middlewareAuth.verifyTokenStaff
+router.delete("/deleteCustomer?:id", middlewareAuth.verifyTokenStaff, adminController.deleteCustomer);
+router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenStaff, adminController.deleteAdmin);
+router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenStaff, adminController.deleteAdmin);
+router.delete("/deletePost?:id", middlewareAuth.verifyTokenStaff, adminController.deletePost);
+router.delete("/deleteCategory?:id", middlewareAuth.verifyTokenStaff, adminController.deleteCategory);
+router.delete("/deleteComment?:id", middlewareAuth.verifyTokenStaff, adminController.deleteComment);
+router.put("/updateStatus", middlewareAuth.verifyTokenStaff, adminController.updateStatus);
+router.put("/updateCustomer", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updateCustomer);
+router.put("/updateAdmin", middlewareAuth.verifyTokenStaff, middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateAdmin);
+router.put("/updatePost", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updatePost);
+router.get("/getListAdmin", middlewareAuth.verifyTokenStaff, adminController.getListAdmin);
+router.get("/getAllPostByAdmin", middlewareAuth.verifyTokenStaff, adminController.getAllPostByAdmin);
+router.get("/getDetailAdmin", middlewareAuth.verifyTokenStaff, adminController.detail);
+router.get("/getRole", middlewareAuth.verifyTokenStaff, adminController.getRole);
 // router.get('/getDataCustomer', middlewareAuth.verifyToken, AdminAuthController.getDataCustomer)
 
 module.exports = router;

@@ -6,10 +6,10 @@ import uploadCloud from "../middlewares/uploader";
 
 
 router.post('/create', middlewareAuth.verifyToken, categoryController.create)
-router.post('/createCategory', middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), categoryController.createCategory)
-router.put("/updateCategory", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), categoryController.updateCategory);
+router.post('/createCategory', middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), categoryController.createCategory)
+router.put("/updateCategory", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), categoryController.updateCategory);
 router.get('/getAllCategories', categoryController.getAllCategories)
-router.get('/getAllCategoriesAdmin', middlewareAuth.verifyTokenAdmin, categoryController.getAllCategoriesAdmin)
+router.get('/getAllCategoriesAdmin', middlewareAuth.verifyTokenStaff, categoryController.getAllCategoriesAdmin)
 router.get('/detailBySlug?:slug', categoryController.detailBySlug)
 router.get('/detail?:id', categoryController.detail)
 
