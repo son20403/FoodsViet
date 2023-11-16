@@ -16,12 +16,11 @@ admin.interceptors.request.use(config => {
     config.headers['userType'] = 'admin';
     return config;
 }, error => {
-    console.log("🚀 ~ file: admin.jsx:18 ~ error:", error)
     return Promise.reject(error);
 });
 
 admin.interceptors.response.use((response) => {
-    const newAccessToken = response.headers['new-token'];
+    const newAccessToken = response.headers['new-token-admin'];
     if (newAccessToken) {
         admin.defaults.headers['token'] = `Bearer ${newAccessToken}`;  // Cập nhật headers
         store.dispatch(refreshAccessTokenAdminSuccess(newAccessToken));

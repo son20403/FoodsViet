@@ -36,7 +36,7 @@ const schemaValidate = Yup.object({
 })
 
 
-const AddCustomerAdmin = () => {
+const AddAdmin = () => {
     const dispatch = useDispatch();
     const { handleSubmit, setValue, formState: { errors }, control,
     } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
@@ -128,4 +128,4 @@ const AddCustomerAdmin = () => {
     );
 };
 
-export default AddCustomerAdmin;
+export default AddAdmin;

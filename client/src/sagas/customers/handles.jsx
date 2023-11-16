@@ -48,6 +48,7 @@ export function* handleUpdateCustomers({ payload }) {
     }
 }
 
+
 function* handleCommonError(error) {
     console.log("error:", error)
     if (error?.code === 'ERR_NETWORK') {

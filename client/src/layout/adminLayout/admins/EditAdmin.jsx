@@ -6,56 +6,38 @@ import { useEffect } from "react";
 import ModalBase from "../../modal/ModalBase";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
-import { FileInput, Input, InputPassword } from "../../../components/input";
+import { FileInput, Input } from "../../../components/input";
 import LayoutAdminModel from "../LayoutAdminModel";
-import { addCustomerAdminRequest, updateCustomerAdminRequest } from "../../../sagas/admin/adminSlice";
-import { closeAddCustomer, closeDetailCustomer, closeUpdateCustomer } from "../../../sagas/global/globalSlice";
+import { updateAdminRequest, updateCustomerAdminRequest } from "../../../sagas/admin/adminSlice";
+import { closeDetailAdmin, closeDetailCustomer, closeUpdateAdmin, closeUpdateCustomer } from "../../../sagas/global/globalSlice";
 import { AtSymbolIcon, EnvelopeIcon, MapIcon, UserIcon } from "@heroicons/react/24/outline";
 import { icon } from "../../../ADMIN/routes";
 import { Button } from "@material-tailwind/react";
-import { getDate, getTimestamp } from "../../../hooks/useGetTime";
 
 const schemaValidate = Yup.object({
-    user_name: Yup.string().required("Vui lòng nhập tên đăng nhập!")
-        .max(20, "Tên tài khoản không được dài quá 20 ký tự")
-        .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
-    full_name: Yup.string().required("Vui lòng nhập họ và tên nhập!")
-        .max(22, "Tên không dài quá 23 ký tự")
-        .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
-    password: Yup.string()
-        .required("Vui lòng nhập mật khẩu!")
-        .min(6, 'Mật khẩu có ít nhất 8 ký tự!')
-        .max(20, "Mật khẩu không được dài quá 20 ký tự")
-        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-            'Mật khẩu cần có ít nhất 1 ký tự in hoa, 1 ký tự thường, 1 số và 1 ký tự đặt biệt!'),
-    re_password: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp vui lòng nhập lại!'),
-    email: Yup.string().required("Vui lòng nhập email!").email("Vui lòng nhập đúng định dạng email!"),
     address: Yup.string().required("Vui lòng nhập địa chỉ!"),
+    user_name: Yup.string(),
     image: Yup.mixed(),
+    full_name: Yup.string().required("Vui lòng nhập họ và tên!"),
+    email: Yup.string().required("Vui lòng nhập email!"),
 })
 
 
-const AddCustomerAdmin = () => {
+const EditAdmin = () => {
     const dispatch = useDispatch();
     const { handleSubmit, setValue, formState: { errors }, control,
     } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
-
+    const { adminDetail } = useSelector((state) => state.admin);
+    const { showUpdateAdmin } = useSelector((state) => state.global);
     const handleClose = () => {
-        dispatch(closeAddCustomer())
+        dispatch(closeUpdateAdmin())
     }
-    const { showAddCustomer } = useSelector((state) => state.global)
-    const handleAddUser = (value) => {
+    const handleEditUser = (value) => {
         try {
-            const date = getDate();
-            const timestamps = getTimestamp();
-            const customer = {
-                ...value,
-                date, timestamps
-            };
-            dispatch(addCustomerAdminRequest(customer));
+            const admin = { ...value };
+            dispatch(updateAdminRequest({ id: adminDetail._id, admin, slug: adminDetail.slug }));
             handleClose();
-            dispatch(closeDetailCustomer())
+            dispatch(closeDetailAdmin())
             resetImageField();
         } catch (error) {
             console.error("Có lỗi xảy ra:", error);
@@ -65,27 +47,35 @@ const AddCustomerAdmin = () => {
     const resetImageField = () => {
         setValue("image", "");
     };
+    useEffect(() => {
+        if (adminDetail) {
+            setValue("full_name", adminDetail.full_name);
+            setValue("user_name", adminDetail.user_name);
+            setValue("email", adminDetail.email);
+            setValue("address", adminDetail.address);
+        }
+    }, [adminDetail, setValue]);
     return (
-        <ModalBase onClose={handleClose} visible={showAddCustomer}>
+        <ModalBase onClose={handleClose} visible={showUpdateAdmin}>
             <LayoutAdminModel onClick={handleClose}>
                 <div className="p-2 md:p-5 bg-white w-full lg:h-[90%] rounded-xl mt-7  ">
-                    <form onSubmit={handleSubmit(handleAddUser)} className=' px-2'>
+                    <form onSubmit={handleSubmit(handleEditUser)} className=' px-2'>
                         <div className=' flex justify-between items-center border-b border-primary pb-5'>
-                            <Heading isHeading className=''>Thêm người dùng</Heading>
+                            <Heading isHeading className=''>Chỉnh sửa thông tin</Heading>
                         </div>
                         <div className='flex gap-x-5 items-center my-10'>
                         </div>
                         <div className='grid grid-cols-1 gap-y-10 md:grid-cols-2 lg:grid-cols-3 gap-x-10'>
-                            <div className='flex items-center justify-center md:row-span-3 '>
+                            <div className='flex items-center justify-center row-span-2 '>
                                 <div className='relative  rounded-full 
                             !h-52 !w-52 md:!h-40 md:!w-40'>
-                                    <FileInput errors={errors}
+                                    <FileInput errors={errors} oldImage={adminDetail?.image}
                                         isAvatar control={control} name={'image'} ></FileInput>
                                 </div>
                             </div>
                             <Field>
-                                <Input control={control} errors={errors}
-                                    placeholder='Tài khoản' type='text' name='user_name' value={''} >
+                                <Input control={control} disable value={adminDetail?.user_name} errors={errors}
+                                    placeholder='Tài khoản' type='text' name='user_name' >
                                     <AtSymbolIcon {...icon}></AtSymbolIcon>
                                 </Input>
                             </Field>
@@ -93,27 +83,23 @@ const AddCustomerAdmin = () => {
                                 <Input
                                     control={control}
                                     errors={errors}
+                                    value={adminDetail?.full_name}
                                     name='full_name'
                                     placeholder='Họ và tên'
                                     type='text'
-                                    value={''}
                                 >
                                     <UserIcon></UserIcon>
                                 </Input>
                             </Field>
-                            <InputPassword control={control} name={'password'} errors={errors} placeholder='Mật khẩu'
-                                value='' ><UserIcon /></InputPassword>
-                            <InputPassword control={control} name={'re_password'} errors={errors} placeholder='Nhập lại mật khẩu'
-                                value='' ><UserIcon /></InputPassword>
                             <Field>
-                                <Input control={control} errors={errors}
-                                    placeholder='Email' type='email' name='email' value={''}  >
+                                <Input control={control} errors={errors} value={adminDetail?.email}
+                                    placeholder='Email' type='email' name='email' >
                                     <EnvelopeIcon {...icon}></EnvelopeIcon>
                                 </Input>
                             </Field>
                             <Field>
-                                <Input control={control} errors={errors}
-                                    placeholder='Địa chỉ' type='text' name='address' value={''} >
+                                <Input control={control} errors={errors} value={adminDetail?.address}
+                                    placeholder='Địa chỉ' type='text' name='address' >
                                     <MapIcon {...icon}></MapIcon>
                                 </Input>
                             </Field>
@@ -128,4 +114,4 @@ const AddCustomerAdmin = () => {
     );
 };
 
-export default AddCustomerAdmin;
+export default EditAdmin;

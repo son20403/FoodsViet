@@ -40,7 +40,7 @@ const PostItem = ({ data = {}, isSingle }) => {
             <div className={` flex justify-center w-full md:h-full 
                 ${isSingle
                     ? ''
-                    : ' group-even:bg-blue-500 group-odd:bg-primary !bg-opacity-80 '} `}>
+                    : '  bg-primary !bg-opacity-80 '} `}>
 
                 <div className={`flex flex-col  w-full gap-y-3   
                     ${isSingle

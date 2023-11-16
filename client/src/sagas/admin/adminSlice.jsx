@@ -6,6 +6,8 @@ const initialState = {
     infoAdmin: getObjectFromLocalStorage('infoAdmin') || null,
     isAuthenticatedAdmin: !!localStorage.getItem('adminToken'),
     admin: [],
+    role: {},
+    isAdmin: false,
     adminDetail: {},
     customers: [],
     customerDetail: {},
@@ -24,6 +26,12 @@ const adminSlice = createSlice({
     name: 'admin',
     initialState,
     reducers: {
+        setIsAdmin: (state, action) => {
+            return {
+                ...state,
+                isAdmin: action.payload,
+            }
+        },
         //login
         loginAdminRequest: (state) => {
             return {
@@ -75,6 +83,22 @@ const adminSlice = createSlice({
                 loading: false,
             }
         },
+        //role
+        roleAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            }
+        },
+        roleAdminSuccess: (state, action) => {
+            return {
+                ...state,
+                role: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
         //update status
         updateStatusRequest: (state) => {
             return {
@@ -101,7 +125,7 @@ const adminSlice = createSlice({
             saveObjectToLocalStorage('adminToken', action.payload)
             return {
                 ...state,
-                token: action.payload,
+                tokenAdmin: action.payload,
                 isAuthenticated: true,
                 loading: false,
                 error: null,
@@ -440,5 +464,5 @@ const adminSlice = createSlice({
     }
 })
 
-export const { loginAdminRequest, addCategoriesAdminRequest, addCategoriesAdminSuccess, addPostAdminRequest, addPostAdminSuccess, customerDetailAdminRequest, customerDetailAdminSuccess, deleteCommentAdminRequest, deleteCommentAdminSuccess, deleteCategoriesAdminRequest, deleteCategoriesAdminSuccess, deleteCustomerAdminRequest, deleteCustomerAdminSuccess, deletePostAdminRequest, deletePostAdminSuccess, getCategoriesAdminRequest, getCategoriesAdminSuccess, getCommentsAdminRequest, getCommentsAdminSuccess, getCustomersAdminRequest, getCustomersAdminSuccess, loginAdminSuccess, logoutAdmin, postDetailAdminRequest, postDetailAdminSuccess, refreshAccessTokenAdminRequest, refreshAccessTokenAdminSuccess, registerAdminRequest, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updateCategoriesAdminRequest, updateCategoriesAdminSuccess, updateCustomerAdminRequest, updateCustomerAdminSuccess, updatePostAdminRequest, updatePostAdminSuccess, addCustomerAdminRequest, addCustomerAdminSuccess, getPostsAdminRequest, getPostsAdminSuccess, updateStatusRequest, updateStatusSuccess, addAdminRequest, addAdminSuccess, detailAdminRequest, detailAdminSuccess, deleteAdminRequest, deleteAdminSuccess, getAllAdminRequest, getAllAdminSuccess, updateAdminRequest, updateAdminSuccess, detailCategoriesAdminRequest, detailCategoriesAdminSuccess } = adminSlice.actions
+export const { loginAdminRequest, addCategoriesAdminRequest, addCategoriesAdminSuccess, addPostAdminRequest, addPostAdminSuccess, customerDetailAdminRequest, customerDetailAdminSuccess, deleteCommentAdminRequest, deleteCommentAdminSuccess, deleteCategoriesAdminRequest, deleteCategoriesAdminSuccess, deleteCustomerAdminRequest, deleteCustomerAdminSuccess, deletePostAdminRequest, deletePostAdminSuccess, getCategoriesAdminRequest, getCategoriesAdminSuccess, getCommentsAdminRequest, getCommentsAdminSuccess, getCustomersAdminRequest, getCustomersAdminSuccess, loginAdminSuccess, logoutAdmin, postDetailAdminRequest, postDetailAdminSuccess, refreshAccessTokenAdminRequest, refreshAccessTokenAdminSuccess, registerAdminRequest, registerAdminSuccess, requestAdminFailure, setInfoAdmin, updateCategoriesAdminRequest, updateCategoriesAdminSuccess, updateCustomerAdminRequest, updateCustomerAdminSuccess, updatePostAdminRequest, updatePostAdminSuccess, addCustomerAdminRequest, addCustomerAdminSuccess, getPostsAdminRequest, getPostsAdminSuccess, updateStatusRequest, updateStatusSuccess, addAdminRequest, addAdminSuccess, detailAdminRequest, detailAdminSuccess, deleteAdminRequest, deleteAdminSuccess, getAllAdminRequest, getAllAdminSuccess, updateAdminRequest, updateAdminSuccess, detailCategoriesAdminRequest, detailCategoriesAdminSuccess, setIsAdmin, roleAdminRequest, roleAdminSuccess } = adminSlice.actions
 export default adminSlice.reducer

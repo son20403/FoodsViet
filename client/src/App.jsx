@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router-dom";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { router } from "./routes";
@@ -7,6 +7,8 @@ import { setSocket } from "./sagas/global/globalSlice";
 import socketIOClient from "socket.io-client";
 import BASE_URL from "./connect";
 import { customersRequest } from "./sagas/customers/customersSlice";
+import { ThemeProvider } from "@material-tailwind/react";
+import LoadingPage from "./layout/loading/LoadingPage";
 function App() {
   const { token, infoAuth } = useSelector((state) => state.auth);
   const { errorGlobal, notifyGlobal, socket } = useSelector((state) => state.global);
@@ -34,9 +36,11 @@ function App() {
     dispatch(customersRequest())
   }, []);
   return (
-    <>
-      <RouterProvider router={router} />
-    </>
+    <ThemeProvider>
+      <Suspense fallback={<LoadingPage />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ThemeProvider>
   );
 }
 

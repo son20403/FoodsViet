@@ -39,24 +39,22 @@ const SignUp = ({ onClick = () => { } }) => {
             onClick()
     }, [error]);
     return (
-        <>
-            <form onSubmit={handleSubmit(handleSignUp)} className="sign-up-form form_signin-signup ">
-                <h2 className="title">Đăng Ký</h2>
-                <div className='flex flex-col gap-4 w-full bg-white  p-5 rounded-lg' >
-                    <Input control={control} type='text' name={'user_name'} errors={errors} placeholder='Tài khoản'
-                        value='' ><UserIcon /></Input>
-                    <Input control={control} type='text' name={'full_name'} errors={errors} placeholder='Họ và tên'
-                        value='' ><UserIcon /></Input>
-                    <InputPassword control={control} name={'password'} errors={errors} placeholder='Mật khẩu'
-                        value='' ><UserIcon /></InputPassword>
-                    <InputPassword control={control} name={'re_password'} errors={errors} placeholder='Nhập lại mật khẩu'
-                        value='' ><UserIcon /></InputPassword>
-                    <Input control={control} type='email' name={'email'} errors={errors} placeholder='Email'
-                        value='' ><EmailIcon /></Input>
-                    <Button isLoading={isSubmitting} type='submit' >Đăng ký</Button>
-                </div>
-            </form>
-        </>
+        <form onSubmit={handleSubmit(handleSignUp)} className="sign-up-form form_signin-signup ">
+            <h2 className="title">Đăng Ký</h2>
+            <div className='flex flex-col gap-4 w-full bg-white  p-5 rounded-lg' >
+                <Input control={control} type='text' name={'user_name'} errors={errors} placeholder='Tài khoản'
+                    value='' ><UserIcon /></Input>
+                <Input control={control} type='text' name={'full_name'} errors={errors} placeholder='Họ và tên'
+                    value='' ><UserIcon /></Input>
+                <InputPassword control={control} name={'password'} errors={errors} placeholder='Mật khẩu'
+                    value='' ><UserIcon /></InputPassword>
+                <InputPassword control={control} name={'re_password'} errors={errors} placeholder='Nhập lại mật khẩu'
+                    value='' ><UserIcon /></InputPassword>
+                <Input control={control} type='email' name={'email'} errors={errors} placeholder='Email'
+                    value='' ><EmailIcon /></Input>
+                <Button isLoading={isSubmitting} type='submit' >Đăng ký</Button>
+            </div>
+        </form>
     );
 };
 export default SignUp;

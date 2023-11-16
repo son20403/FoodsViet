@@ -53,7 +53,7 @@ const AddCategoryAdmin = () => {
           <Heading isHeading>Thêm loại</Heading>
           <form
             onSubmit={handleSubmit(handleAddCategory)}
-            className="flex flex-col mb-10 text-center gap-y-10 "
+            className="flex flex-col mb-10 text-center gap-y-10 mt-10"
           >
             <Field>
               <Input

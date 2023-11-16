@@ -9,7 +9,7 @@ import {
 
 import ListPost from "../layout/posts/ListPost";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useToggle from "../hooks/useToggle";
 import {
@@ -24,7 +24,8 @@ import { getPostsByCustomerRequest } from "../sagas/posts/postsSlice";
 const InfoUser = () => {
   const { slug } = useParams();
   const dispatch = useDispatch();
-  const { loading, customer_detail } = useSelector((state) => state.customers);
+  const navigate = useNavigate();
+  const { loading, customer_detail, error } = useSelector((state) => state.customers);
   const { token } = useSelector((state) => state.auth);
   const { handleToggle, toggle } = useToggle(false);
   const { loading: loadingPost, postsCustomer } = useSelector(
@@ -42,6 +43,11 @@ const InfoUser = () => {
   useEffect(() => {
     dispatch(customerDetailRequest({ slug }));
   }, [slug]);
+  useEffect(() => {
+    if (!loading && error?.message) {
+      navigate('/not-found')
+    }
+  }, [loading, error]);
   return (
     <div className="relative bg-gray-50">
       <LoadingRequest show={loading}></LoadingRequest>

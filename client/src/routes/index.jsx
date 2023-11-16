@@ -1,10 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { lazy } from "react";
 import MainLayout from "../layout/MainLayout";
 import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
-import { ThemeProvider } from "@material-tailwind/react";
-import LoadingPage from "../layout/loading/LoadingPage";
 import Admin from "../ADMIN/Admin";
 import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
@@ -19,12 +17,17 @@ const SignInPageAdmin = lazy(() =>
   import("../pages/adminPage/SignInPageAdmin")
 );
 
+const PageAdmin = lazy(() =>
+  import("../pages/adminPage/PageAdmin")
+);
+
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
 const InfoUser = lazy(() => import("../pages/InfoUser"));
 const DetailPage = lazy(() => import("../pages/DetailPage"));
 const SignInSignUp = lazy(() => import("../pages/SignInSignUp"));
 const PostPage = lazy(() => import("../pages/PostPage"));
+const ListPostsByCategory = lazy(() => import("../pages/ListPostsByCategory"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
@@ -39,6 +42,7 @@ export const router = createBrowserRouter([
       { path: "/categories", element: <CategoryPage /> },
       { path: "/info/:slug", element: <InfoUser /> },
       { path: "/detail/:slug", element: <DetailPage /> },
+      { path: "/category/:slug", element: <ListPostsByCategory /> },
       { path: "/info-user/:id", element: <InfoUser /> },
       { path: "/posts", element: <PostPage /> },
       { path: "/add-post", element: <AddNewPosts /> },
@@ -46,17 +50,7 @@ export const router = createBrowserRouter([
       { path: "/contact", element: <ContactPage /> },
     ],
   },
-  { path: "/message/:id", element: <MessagePage /> },
-  //   {
-  //     path: "/message",
-  //     element: <MainLayout />,
-  //     children: [
-  //       {
-  //         path: "",
-  //         element: <MessagePage></MessagePage>,
-  //       },
-  //     ],
-  //   },
+  { path: "/message/:id?", element: <MessagePage /> },
   { path: "/signin", element: <SignInSignUp /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
@@ -70,6 +64,7 @@ export const router = createBrowserRouter([
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
       { path: "feedBack", element: <FeedBackPageAdmin /> },
+      { path: "manage", element: <PageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },
@@ -87,25 +82,17 @@ export const router = createBrowserRouter([
 ]);
 function AppCustomer() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <MainLayout />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <MainLayout />
+    </>
   );
 }
 function AppAdmin() {
   return (
-    <div>
+    <>
       <ScrollToTop />
-      <ThemeProvider>
-        <Suspense fallback={<LoadingPage></LoadingPage>}>
-          <Admin />
-        </Suspense>
-      </ThemeProvider>
-    </div>
+      <Admin />
+    </>
   );
 }

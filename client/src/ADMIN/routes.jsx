@@ -7,6 +7,7 @@ import {
   Square3Stack3DIcon,
   UserIcon,
   EnvelopeOpenIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
   className: "w-5 h-5 text-inherit",
@@ -39,6 +40,11 @@ const routes = [
         icon: <EnvelopeOpenIcon {...icon} />,
         name: "Feedback",
         path: "/feedBack",
+      },
+      { 
+        icon: <ShieldCheckIcon  {...icon} />,
+        name: "Quản lý",
+        path: "/manage",
       },
     ],
   },

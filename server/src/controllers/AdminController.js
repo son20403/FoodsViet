@@ -3,6 +3,7 @@ import Customer from "../models/Customer";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
 import Categories from "../models/Category";
+import Role from "../models/Role";
 import BaseController from "./Controller";
 import argon2 from "argon2";
 import FeedBack from "../models/SendEmail";
@@ -18,12 +19,14 @@ class AdminController extends BaseController {
     categoryModel,
     feedbackModel
   ) {
+  constructor(model, customerModel, postModel, commentModel, categoryModel, roleModel) {
     super(model);
     this.commentModel = commentModel;
     this.customerModel = customerModel;
     this.postModel = postModel;
     this.categoryModel = categoryModel;
     this.feedbackModel = feedbackModel;
+    this.roleModel = roleModel;
   }
 
   deleteRelatedData = async (id, userType) => {
@@ -270,46 +273,46 @@ class AdminController extends BaseController {
     }
   };
 
-  createCustomer = async (req, res) => {
-    const { user_name, password, ...info } = req.body;
-    const fileData = req.file;
-    const image = fileData?.path;
-    const id_image = fileData?.filename;
-    try {
-      const existingUser = await this.customerModel.findOne({ user_name });
-      if (existingUser) {
-        throw new Error("Tài khoản đã tồn tại");
-      }
-      const hashPass = await argon2.hash(password);
-      const userData = {
-        ...info,
-        image,
-        id_image,
-        user_name,
-        password: hashPass,
-      };
-      const newUser = await this.customerModel(userData).save();
-      if (!newUser) {
-        throw new Error("Có lỗi xảy ra");
-      }
-      return res.status(200).json({
-        message: "Tạo tài khoản thành công",
-      });
-    } catch (error) {
-      if (fileData) cloudinary.uploader.destroy(id_image);
-      console.log("error: ", error);
-      return res
-        .status(
-          error.message === "Tài khoản đã tồn tại" ||
-            error.message === "Có lỗi xảy ra"
-            ? 400
-            : 500
-        )
-        .json({
-          message: error.message || "Server is error",
-        });
-    }
-  };
+  // createCustomer = async (req, res) => {
+  //   const { user_name, password, ...info } = req.body;
+  //   const fileData = req.file;
+  //   const image = fileData?.path;
+  //   const id_image = fileData?.filename;
+  //   try {
+  //     const existingUser = await this.customerModel.findOne({ user_name });
+  //     if (existingUser) {
+  //       throw new Error("Tài khoản đã tồn tại");
+  //     }
+  //     const hashPass = await argon2.hash(password);
+  //     const userData = {
+  //       ...info,
+  //       image,
+  //       id_image,
+  //       user_name,
+  //       password: hashPass,
+  //     };
+  //     const newUser = await this.customerModel(userData).save();
+  //     if (!newUser) {
+  //       throw new Error("Có lỗi xảy ra");
+  //     }
+  //     return res.status(200).json({
+  //       message: "Tạo tài khoản thành công",
+  //     });
+  //   } catch (error) {
+  //     if (fileData) cloudinary.uploader.destroy(id_image);
+  //     console.log("error: ", error);
+  //     return res
+  //       .status(
+  //         error.message === "Tài khoản đã tồn tại" ||
+  //           error.message === "Có lỗi xảy ra"
+  //           ? 400
+  //           : 500
+  //       )
+  //       .json({
+  //         message: error.message || "Server is error",
+  //       });
+  //   }
+  // };
   getListAdmin = async (req, res) => {
     try {
       const data = await this.model.find({});
@@ -377,6 +380,22 @@ class AdminController extends BaseController {
       });
     }
   };
+  getRole = async (req, res) => {
+    try {
+      const data = await this.roleModel.find();
+      if (!data) {
+        return res.status(400).json({
+          message: "Có lỗi xảy ra",
+        });
+      }
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log('err', error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  }
 }
 
 const adminController = new AdminController(
@@ -386,6 +405,7 @@ const adminController = new AdminController(
   Comment,
   Categories,
   FeedBack
+  Role,
 );
 
 module.exports = adminController;

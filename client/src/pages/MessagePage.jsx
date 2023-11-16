@@ -1,24 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import ChatOnline from "../layout/chatOnline/ChatOnline";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import axios from "axios";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  Navigate,
-  Link,
-  NavLink,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
-import BASE_URL from "../connect";
-import { Heading } from "../components/heading";
 import Logo from "../components/logo/Logo";
 
 const MessagePage = () => {
@@ -30,13 +19,16 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  // console.log("🚀 --> MessagePage --> arrivalMessage:", arrivalMessage);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  // const socket = useRef();
+  const [notifications, setNotifications] = useState([]);
+  console.log("🚀 --> MessagePage --> notifications:", notifications);
   const scrollRef = useRef();
-  const location = useLocation();
   const navigate = useNavigate();
-  const { id } = useParams();
+  let { id } = useParams();
+  if (!id) {
+    id = "";
+  }
+
   let chatted = {};
   const user = customers.find((c) => c._id === id);
 
@@ -44,26 +36,38 @@ const MessagePage = () => {
     chatted = conversations?.filter((conversation) =>
       conversation.members.find((m) => m === id)
     );
-    // console.log("🚀 --> useEffect --> chatted:", chatted);
     if (chatted.length > 0) {
       setCurrentChat(chatted[0]);
     }
   }, [id, conversations]);
   useEffect(() => {
-    // socket = io('http://localhost:8900');
     socket?.on("getMessage", (data) => {
-      console.log(data)
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       });
     });
-  }, []);
+    socket?.on("getNotification", (data) => {
+      const isChatOpen = currentChat?.members.some(
+        (id) => id === data.senderId
+      );
+      console.log(isChatOpen);
+      if (isChatOpen) {
+        setNotifications((prev) => [{ ...data, isRead: true }, ...prev]);
+      } else {
+        setNotifications((prev) => [data, ...prev]);
+      }
+    });
+    return () => {
+      socket.off("getMessage");
+      socket.off("getNotification");
+    };
+  }, [socket, currentChat]);
 
   useEffect(() => {
     arrivalMessage &&
-      currentChat?.members.includes(arrivalMessage.sender) &&
+      currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat._id]);
 
@@ -83,14 +87,14 @@ const MessagePage = () => {
           "http://localhost:8989/conversations/" + infoAuth._id
         );
         setConversations(res.data);
-        console.log("object");
+        // console.log("object");
         // setCurrentChat(res.data[0]);
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
-  }, [newMessage, arrivalMessage]);
+  }, [arrivalMessage, currentChat._id, newMessage]); //newMessage
 
   useEffect(() => {
     const getMessages = async () => {
@@ -112,7 +116,7 @@ const MessagePage = () => {
       }
     };
     getMessages();
-  }, [currentChat._id, newMessage]);
+  }, [currentChat._id, arrivalMessage, newMessage]); //newMessage,
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,10 +169,12 @@ const MessagePage = () => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   return (
-    <div className=" flex h-full">
-      <div className="md:w-3/12 menu p-2.5 border-r">
+    <div className="flex min-h-screen ">
+      <div className="w-2/12 md:w-3/12 menu p-2.5 border-r">
         <div className="">
-          <h1 className="text-2xl font-bold"><Logo>FOOSVIET</Logo></h1>
+          <h1 className="text-2xl font-bold">
+            <Logo>FOOSVIET</Logo>
+          </h1>
         </div>
         <div className="">
           <input
@@ -188,50 +194,44 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <div className="md:w-9/12 box">
+      <section className="relative w-10/12 md:w-9/12">
+        {id ? (
+          <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
+            <div className="flex-1">
+              <Conversation
+                conversation={currentChat}
+                online={true}
+                userId={id}
+              >
+                Đang hoạt động
+              </Conversation>
+            </div>
+            <div className="p-2 rounded-full cursor-pointer hover:bg-blue-gray-200">
+              <InformationCircleIcon className="w-6 h-6 text-blue-700" />
+            </div>
+          </div>
+        ) : (
+          <div className="grid h-full place-content-center place-items-center">
+            <div className="h-[180px] w-[244px] bg-[length:248px_390px] bg-[url('https://static.xx.fbcdn.net/rsrc.php/v3/yI/r/rT65reXCYoG.png')]"></div>
+            <h1 className="text-2xl font-bold">Chưa chọn đoạn chat nào</h1>
+          </div>
+        )}
+
         {currentChat._id ? (
           <div className="boxwrapper p-2.5 text-white">
-            <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
-              <div className="">
-                <Conversation conversation={currentChat} online={true}>
-                  Đang hoạt động
-                </Conversation>
-              </div>
-              <div className="p-2 rounded-full cursor-pointer hover:bg-blue-gray-200">
-                <InformationCircleIcon className="w-6 h-6 text-blue-700" />
-              </div>
-            </div>
-            <div className="h-[506px] overflow-y-auto pr-2.5">
+            <div className="h-[530px] md:h-[550px] overflow-y-auto overflow-x-hidden pr-5">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />
                 </div>
               ))}
             </div>
-            {/* <div className="flex items-center mt-5 chatBottom gap-x-3">
-              <textarea
-                name=""
-                placeholder="nhập tin nhắn..."
-                className="text-black"
-                id=""
-                cols="90"
-                onChange={(e) => setNewMessage(e.target.value)}
-                value={newMessage}
-                // rows="10"
-              ></textarea>
-              <button
-                className="py-5 bg-blue-600 rounded-lg px-9"
-                onClick={handleSubmit}
-              >
-                Send
-              </button>
-            </div> */}
           </div>
         ) : (
           <div>
-            {chatted[0]?._id ? null : (
-              <div className="flex flex-col items-center justify-center text-center">
-                <div className="w-10 h-10 overflow-hidden rounded-full">
+            {chatted[0]?._id || !id ? null : (
+              <div className="flex flex-col items-center justify-center pt-10 text-center">
+                <div className="w-[60px] h-[60px] overflow-hidden rounded-full">
                   <img
                     src={user?.image}
                     alt=""
@@ -243,26 +243,31 @@ const MessagePage = () => {
             )}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="flex items-center mt-5 chatBottom gap-x-3 p-2.5">
-          <input
-            name=""
-            placeholder="nhập tin nhắn..."
-            className="p-3 text-black border outline-none rounded-3xl w-full"
-            id=""
-            cols="85"
-            onChange={(e) => setNewMessage(e.target.value)}
-            value={newMessage}
-            rows="1"
-          ></input>
-          <button
-            className="px-3 py-2 bg-blue-600 rounded-lg"
-            // onClick={handleSubmit}
-            type="submit"
+        {id ? (
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center mt-5 chatBottom gap-x-3 p-2.5 absolute bottom-0 w-full"
           >
-            <PaperAirplaneIcon className="w-6 h-6 text-white" />
-          </button>
-        </form>
-      </div>
+            <input
+              name=""
+              placeholder="nhập tin nhắn..."
+              className="w-full p-3 text-black border outline-none rounded-3xl"
+              id=""
+              cols="85"
+              onChange={(e) => setNewMessage(e.target.value)}
+              value={newMessage}
+              rows="1"
+            ></input>
+            <button
+              className="px-3 py-2 bg-blue-600 rounded-lg"
+              disabled={newMessage.length > 0 ? false : true}
+              type="submit"
+            >
+              <PaperAirplaneIcon className="w-6 h-6 text-white" />
+            </button>
+          </form>
+        ) : null}
+      </section>
     </div>
   );
 };
