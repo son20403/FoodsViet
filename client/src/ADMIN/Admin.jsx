@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
 import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
-import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
+import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest, roleAdminRequest } from "../sagas/admin/adminSlice";
 import { toggleAddCategory, toggleAddCustomer, toggleAddPost } from "../sagas/global/globalSlice";
 import AddCustomerAdmin from "../layout/adminLayout/customers/AddCustomerAdmin";
 export function Dashboard() {
@@ -80,6 +80,7 @@ export function Dashboard() {
     dispatch(getCategoriesAdminRequest())
     dispatch(getCustomersAdminRequest())
     dispatch(getAllAdminRequest())
+    dispatch(roleAdminRequest())
   }, []);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");

@@ -24,8 +24,14 @@ const middlewareAuth = {
           if (err) return res.status(403).json({ status: 'notAuth' });
           const dataCustomer = { _id: customer?.id, admin: customer?.admin, role: customer?.role }
           const newAccessToken = generateAccessToken(dataCustomer);
-          if (newAccessToken) {
-            res.setHeader('new-token', newAccessToken);
+          if (usertype === 'customer') {
+            if (newAccessToken) {
+              res.setHeader('new-token', newAccessToken);
+            }
+          } else if (usertype === 'admin') {
+            if (newAccessToken) {
+              res.setHeader('new-token-admin', newAccessToken);
+            }
           }
           req.customer = customer;
           next();
@@ -37,10 +43,20 @@ const middlewareAuth = {
     });
   },
 
-  verifyTokenAdmin: (req, res, next) => {
+  verifyTokenStaff: (req, res, next) => {
     middlewareAuth.verifyToken(req, res, () => {
       const customer = req.customer
       if (customer && customer.admin === true) {
+        next();
+      } else {
+        res.status(403).json({ message: `Bạn không phải là nhân viên!` });
+      }
+    });
+  },
+  verifyTokenAdmin: (req, res, next) => {
+    middlewareAuth.verifyTokenStaff(req, res, () => {
+      const customer = req.customer
+      if (customer && customer.role === 'admin') {
         next();
       } else {
         res.status(403).json({ message: `Bạn không phải là quản trị viên!` });
@@ -76,7 +92,7 @@ module.exports = middlewareAuth;
 //       }
 //     });
 //   },
-//   verifyTokenAdmin: (req, res, next) => {
+//   verifyTokenStaff: (req, res, next) => {
 //     middlewareAuth.verifyToken(req, res, () => {
 //       if (req.customer.admin && req.customer.role === 'admin') {
 //         next();

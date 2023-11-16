@@ -3,18 +3,20 @@ import Customer from "../models/Customer";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
 import Categories from "../models/Category";
+import Role from "../models/Role";
 import BaseController from "./Controller";
 import argon2 from "argon2";
 
 const cloudinary = require("cloudinary").v2;
 
 class AdminController extends BaseController {
-  constructor(model, customerModel, postModel, commentModel, categoryModel) {
+  constructor(model, customerModel, postModel, commentModel, categoryModel, roleModel) {
     super(model);
     this.commentModel = commentModel;
     this.customerModel = customerModel;
     this.postModel = postModel;
     this.categoryModel = categoryModel;
+    this.roleModel = roleModel;
   }
 
   deleteRelatedData = async (id, userType) => {
@@ -365,6 +367,22 @@ class AdminController extends BaseController {
       });
     }
   };
+  getRole = async (req, res) => {
+    try {
+      const data = await this.roleModel.find();
+      if (!data) {
+        return res.status(400).json({
+          message: "Có lỗi xảy ra",
+        });
+      }
+      return res.status(200).json(data);
+    } catch (error) {
+      console.log('err', error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  }
 }
 
 const adminController = new AdminController(
@@ -372,7 +390,8 @@ const adminController = new AdminController(
   Customer,
   Post,
   Comment,
-  Categories
+  Categories,
+  Role,
 );
 
 module.exports = adminController;

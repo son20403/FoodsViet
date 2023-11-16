@@ -28,8 +28,18 @@ export function updatePostAdmin(id, entity) {
     },
   });
 }
+export function getRole() {
+  return axios.get(`/${COLLECTION_NAME}/getRole`);
+}
 export function updateCustomerAdmin(id, entity) {
   return axios.put(`/${COLLECTION_NAME}/updateCustomer?id=${id}`, entity, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+}
+export function updateAdmin(id, entity) {
+  return axios.put(`/${COLLECTION_NAME}/updateAdmin?id=${id}`, entity, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

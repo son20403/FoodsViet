@@ -6,6 +6,7 @@ import {
   NewspaperIcon,
   Square3Stack3DIcon,
   UserIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
   className: "w-5 h-5 text-inherit",
@@ -33,6 +34,11 @@ const routes = [
         icon: <UserIcon  {...icon} />,
         name: "Người dùng",
         path: "/customers",
+      },
+      {
+        icon: <ShieldCheckIcon  {...icon} />,
+        name: "Quản lý",
+        path: "/manage",
       },
     ],
   },

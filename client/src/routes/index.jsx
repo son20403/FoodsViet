@@ -16,6 +16,10 @@ const SignInPageAdmin = lazy(() =>
   import("../pages/adminPage/SignInPageAdmin")
 );
 
+const PageAdmin = lazy(() =>
+  import("../pages/adminPage/PageAdmin")
+);
+
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
 const InfoUser = lazy(() => import("../pages/InfoUser"));
@@ -46,17 +50,6 @@ export const router = createBrowserRouter([
     ],
   },
   { path: "/message/:id?", element: <MessagePage /> },
-  // { path: "/message/", element: <MessagePage /> },
-  //   {
-  //     path: "/message",
-  //     element: <MainLayout />,
-  //     children: [
-  //       {
-  //         path: "",
-  //         element: <MessagePage></MessagePage>,
-  //       },
-  //     ],
-  //   },
   { path: "/signin", element: <SignInSignUp /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
@@ -69,6 +62,7 @@ export const router = createBrowserRouter([
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
+      { path: "manage", element: <PageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },
