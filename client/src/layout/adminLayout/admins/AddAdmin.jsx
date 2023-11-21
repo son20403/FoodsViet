@@ -119,7 +119,7 @@ const AddAdmin = () => {
                             </Field>
                         </div>
                         <div className="w-full flex justify-center items-center mt-10">
-                            <Button className='bg-primary w-full lg:w-auto' type='submit'>Lưu thông tin</Button>
+                            <Button className='bg-primary w-full lg:w-auto' type='submit'>Thêm quản trị viên</Button>
                         </div>
                     </form>
                 </div>

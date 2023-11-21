@@ -8,7 +8,7 @@ import { useEffect } from "react"
 const PostItem = ({ data = {}, isSingle }) => {
     const { comments } = useSelector((state) => state.comments);
     const { categories } = useSelector((state) => state.categories);
-    const dataCategory = categories.filter((cate) => cate._id === data?.category)
+    const dataCategory = categories.filter((cate) => cate._id === data?.category)[0]
     const commentByPosts = comments.filter((comment) => comment?.id_post === data?._id);
 
     useEffect(() => {
@@ -46,12 +46,12 @@ const PostItem = ({ data = {}, isSingle }) => {
                     ${isSingle
                         ? 'flex-1 h-full lg:p-2 '
                         : 'justify-center items-center py-5 lg:px-5 md:px-4  '}`}>
-                    <div className={`flex gap-x-2 text-primary font-medium 
+                    <Link to={`/categories/${dataCategory?.slug}`} className={`flex gap-x-2 text-primary font-medium 
                     ${isSingle
                             ? 'mb-auto'
                             : 'text-white '}`}><FileIcon />
-                        <p className="text-[11px] uppercase lg:text-sm ">{dataCategory[0]?.title}</p>
-                    </div>
+                        <p className="text-[11px] uppercase lg:text-sm ">{dataCategory?.title}</p>
+                    </Link>
                     <div className={`flex flex-col gap-y-2  lg:gap-y-5 ${isSingle ? 'h-full ' : ''}`}>
                         <Link className="" to={`/detail/${data.slug} `}>
                             <Heading className={`text-base leading-5 font-medium text-inherit 

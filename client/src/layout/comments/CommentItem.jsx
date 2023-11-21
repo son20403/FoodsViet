@@ -38,7 +38,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
     // REPLY :)
     const { handleSubmit: handleSubmitReply, formState: { errors: errorsReply,
         isSubmitting: isSubmittingReply, isValid: isValidReply }, control: controlReply } =
-        useForm({ resolver: yupResolver(schemaValidateReply), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidateReply), mode: 'onChange', })
 
     const handleReplyComment = (value) => {
         const date = getDate()
@@ -65,7 +65,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
     // EDIT COMMENT
     const { handleSubmit: handleSubmitEditComment, formState: { errors: errorsEditComment,
         isSubmitting: isSubmittingEditComment, isValid: isValidEditComment }, control: controlEditComment } =
-        useForm({ resolver: yupResolver(schemaValidateReply), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidateReply), mode: 'onChange', })
     const handleEditComment = (value) => {
         dispatch(updateCommentRequest({ id: comment._id, comment: value, id_post }))
         setShowEdit(false)
@@ -88,16 +88,19 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
     return (
         <div className='relative' id={comment?._id}>
             <DiaLog open={toggle} handleOpen={handleToggle} header='Bạn có muốn xóa bình luận không!' title='Bình luận đã xóa sẽ không thể khôi phục' onClick={handleDeleteComment}></DiaLog>
-            <div className='flex gap-x-3 lg:gap-x-5 items-start mt-5' >
+            <div className={`flex gap-x-3 lg:gap-x-5 items-start mt-12 ${countReply > 1 ? 'mt-7' : ''}`} >
                 <Link to={`/info/${customerByComment?.slug}`}>
                     <Avatar className='!h-8 !w-8 lg:!h-10 lg:!w-10' image={customerByComment?.image}></Avatar>
                 </Link>
-                <div className='mt-1 lg:mt-2 flex-1' >
+                <div className='mt-0 flex-1' >
                     <Link to={`/info/${customerByComment?.slug}`}>
                         <Heading className='text-sm md:text-base font-semibold'>{customerByComment?.full_name}
-                            <span className='font-normal text-gray-500 text-sm'> @{customerByComment?.user_name}</span>
+                            <span className='font-normal text-gray-500 text-sm'>
+                                {isAuth ? ' (bạn)' : comment?.id_customer === id_customer_post ? ' (người tạo)' : ''}
+                            </span>
                         </Heading>
                     </Link>
+                    <div className='font-normal text-gray-500 text-xs'> @{customerByComment?.user_name}</div>
                     <span className='text-[11px] text-text-gray font-medium '>
                         {timeSince(comment?.timestamps || Date.now())}</span>
                     <p className='text-xs md:text-sm my-2 mb-5  lg:my-4'>
@@ -131,7 +134,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
                                 }
                             </div>
                             {/* REPLY */}
-                            <div className={`mt-5 lg:mb-10 w-full bg-white border py-3 z-[0] px-2 transition-all
+                            <div className={`mt-5  w-full bg-white py-3 z-[0] px-2 transition-all
                                 ${showReply ? 'block opacity-100 visible translate-y-0' : 'absolute pointer-events-none invisible opacity-0 -translate-y-full'}`}>
                                 <form onSubmit={handleSubmitReply(handleReplyComment)} id='reply' autoComplete='off'
                                     className='flex items-center gap-x-4'>
@@ -145,7 +148,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
                                 </form>
                             </div>
                             {/* EDIT COMMENT */}
-                            <div className={`mt-5 lg:mb-10 w-full bg-white border py-3 px-2 transition-all
+                            <div className={`mt-5 w-full bg-white py-3 px-2 transition-all
                                 ${showEdit ? 'block opacity-100 visible translate-y-0' : 'absolute pointer-events-none invisible opacity-0 -translate-y-full'}`}>
                                 <form onSubmit={handleSubmitEditComment(handleEditComment)}
                                     id='edit_comment' autoComplete='off'

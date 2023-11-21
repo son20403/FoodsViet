@@ -18,6 +18,7 @@ import {
   FeedbackRequest,
   createFeedbacksRequest,
 } from "../sagas/feedbackMail/feedbacksSlice";
+import BannerCommon from "../layout/common/BannerCommon";
 
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập tên!"),
@@ -61,31 +62,7 @@ const ContactPage = () => {
   }, []);
   return (
     <div className="bg-white">
-      <div
-        className="w-full h-[400px] relative min-h-[100%] bg-cover mb-5"
-        style={{ backgroundImage: "url('../src/assets/image/bg-hero.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-80">
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="mb-3 font-bold text-white text-7xl">
-              Liên hệ với chúng tôi
-            </div>
-            <div className="flex flex-wrap p-0 text-white list-none ">
-              <div className="flex justify-center uppercase">
-                <div className="pr-2 font-semibold text-orange-500 cursor-pointer hover:opacity-70">
-                  Home
-                </div>
-                <div className="pr-2 font-semibold text-orange-500 cursor-pointer hover:opacity-70 before:content-['/'] before:pr-2 before:text-white before:opacity-70">
-                  Pages
-                </div>
-                <div className="font-semibold before:content-['/'] before:pr-2 before:opacity-70">
-                  Contact
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <BannerCommon image={'./src/assets/image/banner-post.jpg'} title='Liên hệ' />
       <div className="w-full pt-12 pb-4 mx-auto">
         <div className="text-center ">
           <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
@@ -208,7 +185,7 @@ const ContactPage = () => {
                     type="submit"
                     className="w-full py-4 text-lg font-semibold text-white rounded-sm bg-primary"
                   >
-                    Send Message
+                    Gửi phản hồi
                   </button>
                 </div>
               </form>

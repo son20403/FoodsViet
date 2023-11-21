@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
 
-const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '' }) => {
+const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '', isDetail = false }) => {
     const timeSince = useTimeSince()
     const { infoAuth } = useSelector((state) => state.auth)
     const countLikes = likes?.length || 0
@@ -24,7 +24,9 @@ const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '' }) 
         text-[12px] lg:text-base`}>
             <IconWrap><CalendarIcon /><p className="text-[11px] lg:text-xs">
                 {timeSince(timestamps || Date.now())}</p></IconWrap>
-            <IconWrap><CommentIcon /> <p className="text-[11px] lg:text-xs">{comments}</p></IconWrap>
+            {isDetail ? <a href="#commentPost">
+                <IconWrap><CommentIcon /> <p className="text-[11px] lg:text-xs">{comments}</p></IconWrap>
+            </a> : <IconWrap><CommentIcon /> <p className="text-[11px] lg:text-xs">{comments}</p></IconWrap>}
             <Popover
                 animate={{
                     mount: { scale: 1, x: 0 },

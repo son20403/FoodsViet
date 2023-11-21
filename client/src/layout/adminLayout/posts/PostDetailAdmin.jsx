@@ -111,7 +111,8 @@ const PostDetailAdmin = () => {
             </CardBody>
           </Card>
           <SpeedDialAdmin
-            detail={postDetail} handleEdit={handleEditPost} handleUpdateStatus={handleUpdateStatus} />
+            detail={postDetail} handleEdit={handleEditPost} handleUpdateStatus={handleUpdateStatus}
+            idEntity={postDetail?.id_customer} />
         </LayoutAdminModel>
       </ModalBase>
     </>

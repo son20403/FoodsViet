@@ -55,7 +55,8 @@ const InfoUser = () => {
       <div className="flex flex-col w-full h-auto gap-5 ">
         <BannerCommon
           className="bg-bottom "
-          image={"../src/assets/image/banner-user.jpg"}
+          title={'Thông tin cá nhân'}
+          image={customer_detail?.image}
         />
         <div
           className="page-content relative h-[240px] md:h-[120px] lg:h-[150px] flex justify-between bg-white

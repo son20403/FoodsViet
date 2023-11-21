@@ -7,7 +7,7 @@ import { categoriesRequest } from "../../../sagas/categories/categoriesSlice";
 import ModalBase from "../../modal/ModalBase";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
-import { FileInput, Input } from "../../../components/input";
+import { FileInput, Input, InputTextarea } from "../../../components/input";
 import { BookmarkIcon } from "../../../components/Icon";
 import { Select } from "../../../components/select";
 import { Label } from "../../../components/label";
@@ -70,7 +70,7 @@ const PostEditAdmin = () => {
             <Heading isHeading>Chỉnh sửa bài viết </Heading>
             <div className="grid grid-cols-1  gap-10 pt-10 mb-10">
               <Field>
-                <Input
+                <InputTextarea
                   control={control}
                   errors={errors}
                   value={postDetail?.title}
@@ -79,7 +79,7 @@ const PostEditAdmin = () => {
                   type="text"
                 >
                   <BookmarkIcon />
-                </Input>
+                </InputTextarea>
               </Field>
               <Field>
                 <Select

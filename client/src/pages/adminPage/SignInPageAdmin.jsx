@@ -30,7 +30,7 @@ const schemaValidate = Yup.object({
 export function SignInPageAdmin() {
     const dispatch = useDispatch()
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleSignInAdmin = (value) => {
         try {
             if (isValid) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from "react-redux";
 import {
     IconButton,
     SpeedDial,
@@ -14,7 +15,8 @@ import {
     PlusIcon,
 } from "@heroicons/react/24/outline";
 import { icon } from '../../ADMIN/routes';
-const SpeedDialAdmin = ({ handleUpdateStatus = () => { }, handleEdit = () => { }, detail = {} }) => {
+const SpeedDialAdmin = ({ handleUpdateStatus = () => { }, handleEdit = () => { }, detail = {}, idEntity = '' }) => {
+    const { infoAdmin } = useSelector((state) => state.admin);
     return (
         <>
             <div className="py-5 w-full flex items-center justify-end pr-5 sticky bottom-0">
@@ -53,12 +55,12 @@ const SpeedDialAdmin = ({ handleUpdateStatus = () => { }, handleEdit = () => { }
                             >
                                 <ArrowUpTrayIcon {...icon} />
                             </SpeedDialAction>
-                            <SpeedDialAction
+                            {idEntity === infoAdmin?._id && <SpeedDialAction
                                 className="bg-primary text-white"
                                 onClick={handleEdit}
                             >
                                 <PencilSquareIcon {...icon} />
-                            </SpeedDialAction>
+                            </SpeedDialAction>}
                         </SpeedDialContent>
                     </SpeedDial>
                 </div>

@@ -14,16 +14,18 @@ const PostPage = () => {
     const dispatch = useDispatch()
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search).get("query");
-    // Lấy tham số dựa trên tên
 
     const { search_posts, loading } = useSelector((state) => state.posts)
-    const [query, setQuery] = useState(searchParams || '');
+    const [query, setQuery] = useState('');
     const handleOnChange = _.debounce((e) => {
         setQuery(e.target.value)
     }, 1000)
     useEffect(() => {
         dispatch(searchPostsRequest({ query }))
     }, [query, searchParams]);
+    useEffect(() => {
+        setQuery(searchParams || '')
+    }, [searchParams]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>

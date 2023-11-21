@@ -1,28 +1,29 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "../components/Icon";
+import BannerCommon from "../layout/common/BannerCommon";
 const teamMembers = [
   {
     id: 1,
-    img: "",
+    img: "../src/assets/image/banner-post.jpg",
     name: "Nguyễn Trường Sơn",
     position: "Nhóm trưởng",
   },
   {
     id: 2,
-    img: "",
+    img: "../src/assets/image/banner-post.jpg",
     name: "Nguyễn Văn Chương",
     position: "Thành viên",
   },
   {
     id: 3,
-    img: "",
+    img: "../src/assets/image/banner-post.jpg",
     name: "Lê Minh Thư",
     position: "Thành viên",
   },
   {
     id: 1,
-    img: "",
+    img: "../src/assets/image/banner-post.jpg",
     name: "Nguyễn Văn Hoài",
     position: "Thành viên",
   },
@@ -30,31 +31,7 @@ const teamMembers = [
 const AboutPage = () => {
   return (
     <div className="bg-white ">
-      <div
-        className="w-full h-[400px] relative min-h-[100%] bg-cover mb-5"
-        style={{ backgroundImage: "url('../src/assets/image/bg-hero.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black bg-opacity-80">
-          <div className="flex flex-col items-center justify-center h-full">
-            <div className="mb-3 font-bold text-white text-7xl">
-              Về FoodsViet
-            </div>
-            <div className="flex flex-wrap p-0 text-white list-none ">
-              <div className="flex justify-center uppercase">
-                <div className="pr-2 font-semibold text-orange-500 cursor-pointer hover:opacity-70">
-                  Home
-                </div>
-                <div className="pr-2 font-semibold text-orange-500 cursor-pointer hover:opacity-70 before:content-['/'] before:pr-2 before:text-white before:opacity-70">
-                  Pages
-                </div>
-                <div className="font-semibold before:content-['/'] before:pr-2 before:opacity-70">
-                  About
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <BannerCommon image={'../src/assets/image/banner-post.jpg'} title='Về FOODSVIET' />
       <div className="py-5">
         <div className="grid h-full grid-cols-2 px-5">
           <div className="flex-1 col-span-2 lg:col-span-1">
@@ -65,7 +42,7 @@ const AboutPage = () => {
                 className="w-full rounded-lg"
               />
               <img
-                src="../src/assets/image/banner.jpg"
+                src="../src/assets/image/homemade-ramen-soup-with-half-egg-flat-lay.jpg"
                 alt=""
                 className="w-4/5 mt-auto rounded-lg"
               />
@@ -75,7 +52,7 @@ const AboutPage = () => {
                 className="w-5/6 ml-auto rounded-lg "
               />
               <img
-                src="../src/assets/image/banner2.jpg"
+                src="../src/assets/image/banner3.jpg"
                 alt=""
                 className="w-full rounded-lg"
               />
@@ -129,9 +106,6 @@ const AboutPage = () => {
                   </div>
                 </div>
               </div> */}
-              <button className="px-12 py-4 mt-2 text-lg font-medium text-white uppercase rounded bg-primary">
-                Read more
-              </button>
             </div>
           </div>
         </div>
@@ -154,7 +128,7 @@ const AboutPage = () => {
               <div className="flex flex-col items-center ">
                 <div className="w-64 h-64 m-6 overflow-hidden transition-all rounded-full">
                   <img
-                    src="../src/assets/image/team-1.jpg"
+                    src={item.img}
                     alt=""
                     className="object-cover w-full h-full transition-all rounded-full group-hover:scale-125 "
                   />

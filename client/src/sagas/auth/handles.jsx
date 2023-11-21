@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
 import { loginAuth, logoutAuth, registerAuth } from "./request";
 import { requestFailure, loginSuccess, registerSuccess, setInfoAuth } from "./authSlice";
-import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
+import { setErrorGlobal, setNotifyGlobal, toggleSignin } from "../global/globalSlice";
 
 export function* authenticateCustomer({ payload }) {
     try {
@@ -20,13 +20,16 @@ export function* authenticateCustomer({ payload }) {
 }
 
 export function* registerCustomer({ payload }) {
+    const { reset, ...info } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(registerAuth, payload);
+        const response = yield call(registerAuth, info);
         if (response) {
             yield put(registerSuccess())
             yield put(setNotifyGlobal(response.data?.message))
+            yield reset()
+            yield put(toggleSignin())
         }
 
     } catch (error) {

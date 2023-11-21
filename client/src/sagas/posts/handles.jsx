@@ -76,14 +76,16 @@ export function* handleGetSearchPosts({ payload }) {
 
 }
 export function* handleCreatePosts({ payload }) {
+    const { post, reset } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(createPost, payload?.post);
+        const response = yield call(createPost, post);
         if (response?.data) {
             yield put(createPostsSuccess())
+            yield put(setNotifyGlobal(response?.data?.message));
+            yield reset()
         }
-        yield put(setNotifyGlobal(response?.data?.message));
     } catch (error) {
         yield handleCommonError(error)
     }

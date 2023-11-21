@@ -5,7 +5,10 @@ import { logout } from '../sagas/auth/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeSetting } from '../sagas/global/globalSlice';
 import { setNotification } from '../sagas/notification/notificationSlice';
-
+import {
+    UserCircleIcon, DocumentPlusIcon, ArrowRightOnRectangleIcon
+} from "@heroicons/react/24/outline";
+import { icon } from '../ADMIN/routes';
 const Setting = () => {
     const navigate = useNavigate();
     const { token, infoAuth } = useSelector((state) => state.auth)
@@ -18,6 +21,7 @@ const Setting = () => {
         const id = infoAuth?._id
         startTransition(() => {
             socket.disconnect()
+            socket.emit('userUnconnect', id);
             dispatch(setNotification())
             dispatch(logout({ id }));
             dispatch(closeSetting());
@@ -29,23 +33,26 @@ const Setting = () => {
             navigate('/signin');
         });
     }
+    const className = 'flex items-center gap-x-2'
     return (
         <>
             <Overlay show={showSetting} onClick={handleClose}></Overlay>
             <div className={`flex-1 absolute text-black bg-white-cream flex top-full w-full justify-center gap-5 
             transition-all
                 flex-col px-5 py-5 text-sm z-[10] right-0 shadow-soft border-t border-primary 
-                md:max-w-[200px] lg:text-center
+                md:max-w-[240px] 
                 ${showSetting ? 'top-full' : 'invisible opacity-0'}`}>
                 {token ? <>
-                    <Link to={`/info/${infoAuth?.slug}`}>Thông tin người dùng</Link>
-                    <Link to={'/add-post'}>Thêm bài viết</Link>
-                    <div>Nhắn tin</div>
+                    <Link className={className}
+                        to={`/info/${infoAuth?.slug}`}><UserCircleIcon {...icon} />Thông tin người dùng</Link>
+                    <Link className={className} to={'/add-post'}><DocumentPlusIcon  {...icon} /> Thêm bài viết</Link>
                     <hr />
-                    <div className='cursor-pointer text-red-500' onClick={handleLogout}>Đăng xuất</div>
+                    <div className={`cursor-pointer text-red-500 ${className}`}
+                        onClick={handleLogout}><ArrowRightOnRectangleIcon {...icon} /> Đăng xuất</div>
                 </> :
                     <>
-                        <div onClick={handleSignin} className='cursor-pointer text-primary'>Đăng Nhập</div>
+                        <div onClick={handleSignin} className={`cursor-pointer text-primary ${className}`}>
+                            <ArrowRightOnRectangleIcon {...icon} />Đăng Nhập</div>
                     </>}
             </div>
         </>

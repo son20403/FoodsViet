@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../jwt";
-
+import Role from "../models/Role";
 const middlewareAuth = {
   verifyToken: (req, res, next) => {
     const token = req.headers.token;
@@ -54,9 +54,10 @@ const middlewareAuth = {
     });
   },
   verifyTokenAdmin: (req, res, next) => {
-    middlewareAuth.verifyTokenStaff(req, res, () => {
-      const customer = req.customer
-      if (customer && customer.role === 'admin') {
+    middlewareAuth.verifyTokenStaff(req, res, async () => {
+      const customer = req.customer;
+      const dataRole = await Role.findOne({ _id: customer.role })
+      if (customer && dataRole?.title === 'Admin') {
         next();
       } else {
         res.status(403).json({ message: `Bạn không phải là quản trị viên!` });

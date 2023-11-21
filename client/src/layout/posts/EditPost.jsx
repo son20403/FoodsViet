@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
 import { updatePostRequest } from '../../sagas/posts/postsSlice';
 import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
+import LayoutAdminModel from '../adminLayout/LayoutAdminModel';
 
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
@@ -24,7 +25,7 @@ const schemaValidate = Yup.object({
 const EditPost = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
     const { handleSubmit, setValue, formState: { errors }, control } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const { categories } = useSelector((state) => state.categories)
     const handleSubmits = (value) => {
         try {
@@ -45,36 +46,34 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     }, []);
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <div className='absolute top-10  left-1/2 -translate-x-1/2   page-content mt-5 z-[100]'>
-                <div className='content transition-all  w-full z-[100] p-10 bg-white  rounded-lg'>
-                    <Heading isHeading>Chỉnh sửa bài viết </Heading>
-                    <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 pt-10 mb-10'>
-                            <Field>
-                                <Input control={control} errors={errors} value={data?.title} name='title'
-                                    placeholder='Nhập tiêu đề bài viết' type='text' >
-                                    <BookmarkIcon />
-                                </Input>
-                            </Field>
-                            <Field>
-                                <Select value={data?.category} data={categories} control={control} name={'category'} />
-                            </Field>
-                            <div className=' col-span-1 md:col-span-2 mb-10'>
-                                <Label htmlFor={"image"}>Hình ảnh</Label>
-                                <FileInput oldImage={data?.image}
-                                    control={control} name={'image'} errors={errors} lable={'Hình ảnh'} />
-                            </div>
-                            <div className=' col-span-1 md:col-span-2'>
-                                <Field>
-                                    <Label htmlFor={'content'}>Nội dung</Label>
-                                    <Textarea value={data?.content} control={control} errors={errors} name={'content'} />
-                                </Field>
-                            </div>
+            <LayoutAdminModel onClick={onClick}>
+                <Heading isHeading>Chỉnh sửa bài viết </Heading>
+                <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
+                    <div className='grid grid-cols-1 gap-y-10 pt-10 mb-10'>
+                        <Field>
+                            <Input control={control} errors={errors} value={data?.title} name='title'
+                                placeholder='Nhập tiêu đề bài viết' type='text' >
+                                <BookmarkIcon />
+                            </Input>
+                        </Field>
+                        <Field>
+                            <Select value={data?.category} data={categories} control={control} name={'category'} />
+                        </Field>
+                        <div className='mb-10'>
+                            <Label htmlFor={"image"}>Hình ảnh</Label>
+                            <FileInput oldImage={data?.image}
+                                control={control} name={'image'} errors={errors} lable={'Hình ảnh'} />
                         </div>
-                        <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
-                    </form>
-                </div>
-            </div>
+                        <div className=''>
+                            <Field>
+                                <Label htmlFor={'content'}>Nội dung</Label>
+                                <Textarea value={data?.content} control={control} errors={errors} name={'content'} />
+                            </Field>
+                        </div>
+                    </div>
+                    <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
+                </form>
+            </LayoutAdminModel>
         </ModalBase>
     );
 };

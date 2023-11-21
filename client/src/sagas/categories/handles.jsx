@@ -39,13 +39,16 @@ export function* handleGetAllCategoriesAdmin({ payload }) {
   }
 }
 export function* handleCreateCategoryAdmin({ payload }) {
+  const { category, reset } = payload
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(createCategoryAdmin, payload?.category);
+    const response = yield call(createCategoryAdmin, category);
     if (response) {
       yield put(addCategoriesAdminSuccess());
       yield put(getCategoriesAdminRequest());
+      yield put(setNotifyGlobal(response?.data?.message));
+      yield reset();
     }
   } catch (error) {
     yield handleCommonError(error);

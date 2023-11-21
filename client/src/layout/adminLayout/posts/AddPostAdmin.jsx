@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import LoadingRequest from "../../loading/LoadingRequest";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
-import { FileInput, Input } from "../../../components/input";
+import { FileInput, Input, InputTextarea } from "../../../components/input";
 import { Select } from "../../../components/select";
 import { Label } from "../../../components/label";
 import { Textarea } from "../../../components/textarea";
@@ -37,7 +37,7 @@ const AddPostAdmin = () => {
   const { showAddPost } = useSelector((state) => state.global);
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, }, reset,
     control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
   const handleSubmits = (value) => {
@@ -48,7 +48,7 @@ const AddPostAdmin = () => {
       date,
       timestamps,
     };
-    dispatch(addPostAdminRequest({ post }));
+    dispatch(addPostAdminRequest({ post, reset }));
     handleClosePost();
   };
   useEffect(() => {
@@ -64,9 +64,9 @@ const AddPostAdmin = () => {
             onSubmit={handleSubmit(handleSubmits)}
             className="mb-10 text-center"
           >
-            <div className="grid grid-cols-1 gap-10 pt-10 mb-10 md:grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-10 pt-10 mb-10">
               <Field>
-                <Input
+                <InputTextarea
                   control={control}
                   errors={errors}
                   value=""
@@ -75,12 +75,12 @@ const AddPostAdmin = () => {
                   type="text"
                 >
                   <BookmarkIcon />
-                </Input>
+                </InputTextarea>
               </Field>
               <Field>
                 <Select data={categories} control={control} name={"category"} errors={errors} />
               </Field>
-              <div className="col-span-1 mb-10  md:col-span-2">
+              <div className=" mb-10">
                 <Label htmlFor={"image"}>Hình ảnh</Label>
                 <FileInput
                   control={control}
@@ -89,7 +89,7 @@ const AddPostAdmin = () => {
                   lable={"Hình ảnh"}
                 />
               </div>
-              <div className="col-span-1  md:col-span-2">
+              <div className="">
                 <Field>
                   <Label htmlFor={"content"}>Nội dung</Label>
                   <Textarea

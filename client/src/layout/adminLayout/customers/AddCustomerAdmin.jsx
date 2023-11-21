@@ -38,8 +38,8 @@ const schemaValidate = Yup.object({
 
 const AddCustomerAdmin = () => {
     const dispatch = useDispatch();
-    const { handleSubmit, setValue, formState: { errors }, control,
-    } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
+    const { handleSubmit, setValue, formState: { errors }, control, reset
+    } = useForm({ resolver: yupResolver(schemaValidate), mode: "onChange" });
 
     const handleClose = () => {
         dispatch(closeAddCustomer())
@@ -53,7 +53,7 @@ const AddCustomerAdmin = () => {
                 ...value,
                 date, timestamps
             };
-            dispatch(addCustomerAdminRequest(customer));
+            dispatch(addCustomerAdminRequest({ customer, reset }));
             handleClose();
             dispatch(closeDetailCustomer())
             resetImageField();
@@ -119,7 +119,7 @@ const AddCustomerAdmin = () => {
                             </Field>
                         </div>
                         <div className="w-full flex justify-center items-center mt-10">
-                            <Button className='bg-primary w-full lg:w-auto' type='submit'>Lưu thông tin</Button>
+                            <Button className='bg-primary w-full lg:w-auto' type='submit'>Thêm người dùng</Button>
                         </div>
                     </form>
                 </div>

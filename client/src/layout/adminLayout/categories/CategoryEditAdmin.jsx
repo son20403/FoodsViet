@@ -7,7 +7,7 @@ import { categoriesRequest } from "../../../sagas/categories/categoriesSlice";
 import ModalBase from "../../modal/ModalBase";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
-import { FileInput, Input } from "../../../components/input";
+import { FileInput, Input, InputTextarea } from "../../../components/input";
 import { BookmarkIcon } from "../../../components/Icon";
 import { Label } from "../../../components/label";
 import { Button } from "../../../components/button";
@@ -62,13 +62,13 @@ const CategoryEditAdmin = () => {
     <ModalBase onClose={handleClose} visible={showUpdateCategory}>
       <LayoutAdminModel onClick={handleClose}>
         <div className="p-10 bg-white">
-          <Heading isHeading>Thêm loại</Heading>
+          <Heading isHeading className="mb-10">Thêm loại</Heading>
           <form
             onSubmit={handleSubmit(handleSubmits)}
             className="flex flex-col mb-10 text-center gap-y-10 "
           >
             <Field>
-              <Input
+              <InputTextarea
                 control={control}
                 errors={errors}
                 name="title"
@@ -77,7 +77,7 @@ const CategoryEditAdmin = () => {
                 type="text"
               >
                 <BookmarkIcon />
-              </Input>
+              </InputTextarea>
             </Field>
             <div className="col-span-1 mb-10 md:col-span-2">
               <Label htmlFor={"image"}>Hình ảnh</Label>
@@ -90,7 +90,7 @@ const CategoryEditAdmin = () => {
               />
             </div>
             <Button type="submit" className="mx-auto ">
-              Thêm bài viết
+              Sửa loại
             </Button>
           </form>
         </div>
