@@ -110,7 +110,7 @@ const CategoryDetailAdmin = () => {
             </CardBody>
           </Card>
           <SpeedDialAdmin
-            detail={categoryDetail} handleEdit={handleEditCategory} handleUpdateStatus={handleUpdateStatus} />
+            detail={categoryDetail} handleEdit={handleEditCategory} handleUpdateStatus={handleUpdateStatus} idEntity={categoryDetail?.id_author} />
         </LayoutAdminModel>
       </ModalBase>
     </>

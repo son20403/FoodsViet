@@ -26,6 +26,8 @@ const initialState = {
   showAddCustomer: false,
   showAddAdmin: false,
   showAddComment: false,
+  showSignin: false,
+  showSignup: false,
 };
 export const globalSlice = createSlice({
   name: "global",
@@ -35,6 +37,18 @@ export const globalSlice = createSlice({
       return {
         ...state,
         showNavbar: !state.showNavbar,
+      };
+    },
+    toggleSignin: (state) => {
+      return {
+        ...state,
+        showSignin: !state.showSignin,
+      };
+    },
+    toggleSignup: (state) => {
+      return {
+        ...state,
+        showSignup: !state.showSignup,
       };
     },
     toggleNotification: (state) => {
@@ -316,5 +330,7 @@ export const {
   toggleNotification,
   closeFeedback,
   toggleFeedback,
+  toggleSignin,
+  toggleSignup
 } = globalSlice.actions;
 export default globalSlice.reducer;

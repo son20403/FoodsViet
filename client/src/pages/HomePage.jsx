@@ -43,14 +43,14 @@ const HomePage = () => {// Gửi dữ liệu đến server
                     style={{ backgroundImage: 'url(./src/assets/image/banner4.jpg)' }}>
                     <div className='bg-black opacity-80 inset-0 absolute'></div>
                     <div className='page-content my-28 mt-10'>
-                        <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-14 '>
+                        <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 gap-y-10 md:gap-10 mb-14 '>
                             {categories?.length > 0 && categories?.slice(0, 4).map(item => (
-                                <div key={item._id} className='h-[300px] shadow-2xl md:h-[394px] relative rounded-md'>
+                                <Link to={`/categories/${item?.slug}`} key={item._id} className='h-[300px] shadow-2xl md:h-[394px] relative rounded-md'>
                                     <img src={item?.image} alt="" className='w-full h-full object-cover rounded-md' />
                                     <div className='absolute bottom-0 translate-y-1/2 w-auto min-w-[80%]  
                                     rounded-md px-2 py-1 left-1/2 -translate-x-2/4 bg-primary text-white
                                     font-medium text-center text-xs md:text-base'>{item?.title}</div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -70,7 +70,9 @@ const HomePage = () => {// Gửi dữ liệu đến server
                     - Người dùng nỗi bật -
                 </Heading>
                 <Section className='bg-[#f7f7f7] py-10'>
-                    <ListCustomer data={customers}></ListCustomer>
+                    <div className='page-content'>
+                        <ListSlide isCustomer={true} className={'text-black page-content'} data={customers}></ListSlide>
+                    </div>
                 </Section>
                 <Section className='page-content '>
                     <Heading isHeading className='mb-10 mx-2 text-center'>

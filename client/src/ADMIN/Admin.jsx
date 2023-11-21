@@ -55,7 +55,7 @@ export function Dashboard() {
       id: 4,
       title: "Thêm nhân viên",
       icon: <UserCircleIcon className="w-5 h-5" />,
-      onclick: () => {},
+      onclick: () => { },
     },
   ];
   const labelProps = {
@@ -64,8 +64,8 @@ export function Dashboard() {
     className: `absolute top-2/4 w-[150px] text-white p-1 bg-primary/90 rounded-full 
              -translate-y-2/4 -translate-x-3/4 font-normal  `,
   };
-  const { tokenAdmin } = useSelector((state) => state.admin);
-
+  const { tokenAdmin, infoAdmin } = useSelector((state) => state.admin);
+  const { socket } = useSelector((state) => state.global);
   const dispatch = useDispatch();
   const handleToggleAddPost = () => {
     dispatch(toggleAddPost());
@@ -83,10 +83,24 @@ export function Dashboard() {
     dispatch(getCustomersAdminRequest())
     dispatch(getAllAdminRequest())
     dispatch(roleAdminRequest())
-  }, []);
+  }, [tokenAdmin]);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");
   }, [tokenAdmin]);
+  useEffect(() => {
+    if (tokenAdmin && infoAdmin && socket) {
+      socket.emit('addUser', infoAdmin?._id, 'admin')
+    }
+  }, [socket, infoAdmin, tokenAdmin]);
+  useEffect(() => {
+    const handleTabClose = () => {
+      socket.emit('adminUnconnect', infoAdmin?._id);
+    };
+    window.addEventListener('beforeunload', handleTabClose);
+    return () => {
+      window.removeEventListener('beforeunload', handleTabClose);
+    };
+  }, [socket]);
   return (
     <div className="min-h-screen bg-blue-gray-50/50 max-w-[1600px] mx-auto !relative">
       <Sidebar routes={routes} />

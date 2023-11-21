@@ -12,7 +12,7 @@ router.get('/getAllPostByCategory?:id', postController.getAllPostByCategory)
 router.get('/detail?:slug', postController.detailBySlug)
 router.put('/like?:id', middlewareAuth.verifyToken, postController.like)
 router.put('/updatePost?:id', middlewareAuth.verifyToken, uploadCloud.single("image"), postController.updatePost)
-router.post('/uploadImage', middlewareAuth.verifyToken, uploadCloud.single("image"), postController.uploadImage)
+router.post('/uploadImage', uploadCloud.single("image"), postController.uploadImage)
 router.put('/updateView?:slug', postController.updateView)
 
 module.exports = router;

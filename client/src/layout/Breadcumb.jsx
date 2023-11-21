@@ -1,26 +1,72 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
-const Breadcrumbs = ({ path }) => {
+const Breadcrumb = () => {
 
-    const routes = [
-        { path: "/", breadcrumb: "Trang chủ" },
-        { path: "/categories", breadcrumb: "Danh mục" },
-        { path: "/detail", breadcrumb: "Bài viết chi tiết" },
-        { path: "/products/category2", breadcrumb: "Danh mục 2" },
-    ];
-    const breadcrumbItems = routes
-        .filter((route) => path.startsWith(route.path))
-        .map((route) => (
-            <li key={route.path}>
-                <Link to={route.path}>{route.breadcrumb}</Link>
-            </li>
-        ));
+    const { pathname } = useLocation();
+    const [layout, page] = pathname.split("/").filter((el) => el !== "");
+    let nameLayout = ''
 
-    return <ul className=' flex gap-10'>{breadcrumbItems}</ul>;
+    switch (layout) {
+        case 'posts':
+            nameLayout = 'Bài Viết'
+            break;
+        case 'detail':
+            nameLayout = 'Chi tiết bài viết'
+            break;
+        case 'categories':
+            nameLayout = 'Danh mục'
+            break;
+        case 'about':
+            nameLayout = 'Về FoodsViet'
+            break;
+        case 'contact':
+            nameLayout = 'Liên hệ'
+            break;
+        case 'info':
+            nameLayout = 'Thông tin cá nhân'
+            break;
+        case 'add-post':
+            nameLayout = 'Tạo bài viết'
+            break;
+        default:
+            break;
+    }
+    const className = " flex items-center last:after:content-[''] after:content-['/'] after:px-3 last:after:px-0"
+    return (
+        <div
+            className={`bg-transparent uppercase !text-white flex items-center text-[11px] md:text-sm
+            justify-center p-0 transition-all`}
+        >
+            <Link to={`/`} className={className}>
+                <p
+
+                    className="text-white font-normal">
+                    Trang Chủ
+                </p>
+            </Link>
+            <Link to={layout === 'detail' || layout === 'info' ? `#` : `/${layout}`} className={className}>
+                <p
+
+                    className="text-white font-bold"
+                >
+                    {nameLayout || ''}
+                </p>
+            </Link>
+            {page &&
+                <p
+
+                    className="text-white font-bold"
+                >
+                    {page.replace(/-/g, ' ').slice(0, 50)}{page.length > 50 ? ' ...' : ''}
+                </p>
+            }
+
+        </div>
+    );
 };
 
-export default Breadcrumbs;
+export default Breadcrumb;
 
 
 

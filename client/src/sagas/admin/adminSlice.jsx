@@ -6,7 +6,7 @@ const initialState = {
     infoAdmin: getObjectFromLocalStorage('infoAdmin') || null,
     isAuthenticatedAdmin: !!localStorage.getItem('adminToken'),
     admin: [],
-    role: {},
+    role: [],
     isAdmin: false,
     adminDetail: {},
     customers: [],

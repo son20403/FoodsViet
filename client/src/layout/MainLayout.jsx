@@ -14,8 +14,10 @@ function MainLayout() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const { token } = useSelector((state) => state.auth);
+  const { token, infoAuth } = useSelector((state) => state.auth);
   const tokenLocal = localStorage.getItem("authToken");
+  const { socket } = useSelector((state) => state.global);
+
   useEffect(() => {
     dispatch(customersRequest());
     dispatch(postsRequest());
@@ -23,7 +25,15 @@ function MainLayout() {
     dispatch(setErrorGlobal(""));
     dispatch(setNotifyGlobal(""));
   }, [token, dispatch, tokenLocal, location?.pathname]);
-
+  useEffect(() => {
+    const handleTabClose = () => {
+      socket.emit('userUnconnect', infoAuth?._id);
+    };
+    window.addEventListener('beforeunload', handleTabClose);
+    return () => {
+      window.removeEventListener('beforeunload', handleTabClose);
+    };
+  }, [socket]);
   return (
     <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col overflow-hidden ">
       <Header />

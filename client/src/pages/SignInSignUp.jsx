@@ -1,23 +1,32 @@
 import React, { useEffect } from 'react';
 import '../style.css'
-import useToggle from '../hooks/useToggle';
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import SignIn from './SignIn';
 import SignUp from './SignUp';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { toggleSignin } from '../sagas/global/globalSlice';
+import { icon } from '../ADMIN/routes';
 const SignInSignUp = () => {
+    const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth);
-    const { handleToggle, toggle, handleToggleFalse } = useToggle(false);
+    const { showSignin } = useSelector((state) => state.global)
     const navigate = useNavigate();
+    const handleToggleSignin = () => {
+        dispatch(toggleSignin())
+    }
     useEffect(() => {
         if (token) navigate('/')
     }, [token]);
     return (
-        <div className={`container-main ${toggle ? 'sign-up-mode' : ''} select-none`}>
+        <div className={`container-main ${showSignin ? 'sign-up-mode' : ''} select-none`}>
+            <Link to={'/'} className='fixed top-2 right-5 flex justify-center items-center gap-5 text-white z-[10]'>
+                Quay lại trang chủ <ArrowRightIcon {...icon} />
+            </Link>
             <div className="forms-container">
                 <div className="signin-signup">
-                    <SignIn onClick={handleToggleFalse}></SignIn>
-                    <SignUp onClick={handleToggleFalse}></SignUp>
+                    <SignIn onClick={handleToggleSignin}></SignIn>
+                    <SignUp onClick={handleToggleSignin}></SignUp>
                 </div>
             </div>
             <div className="panels-container">
@@ -27,9 +36,11 @@ const SignInSignUp = () => {
                         <p>
                             Hãy đăng ký 1 tài khoản để có những trải nghiệm cực thú vị với FOODSVIET
                         </p>
-                        <button onClick={handleToggle} className="btn transparent" id="sign-up-btn">
-                            Đăng ký
-                        </button>
+                        <div className='flex flex-col items-center justify-center gap-10'>
+                            <button onClick={handleToggleSignin} className="btn transparent" id="sign-up-btn">
+                                Đăng ký
+                            </button>
+                        </div>
                     </div>
                     <img src="./src/assets/foods.svg" className="image" alt='' />
                 </div>
@@ -38,7 +49,7 @@ const SignInSignUp = () => {
                         <h3>Bạn đã có tài khoản trước đây ?</h3>
                         <p>
                             Đăng nhập để xem có gì mới ở FOODSVIET không nào. LET GO!!!!.</p>
-                        <button onClick={handleToggle} className="btn transparent" id="sign-in-btn">
+                        <button onClick={handleToggleSignin} className="btn transparent" id="sign-in-btn">
                             Đăng nhập
                         </button>
                     </div>

@@ -14,7 +14,6 @@ import {
 } from "./request";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
-  addCategoriesAdminSuccess,
   addCustomerAdminSuccess,
   addPostAdminSuccess,
   getAllAdminRequest,
@@ -29,7 +28,6 @@ import {
   requestAdminFailure,
   roleAdminSuccess,
   setInfoAdmin,
-  setIsAdmin,
   updateAdminSuccess,
   updateCustomerAdminSuccess,
   updatePostAdminSuccess,
@@ -201,7 +199,6 @@ export function* handleUpdateCustomerAdmin({ payload }) {
   }
 }
 export function* handleUpdateAdmin({ payload }) {
-  console.log("🚀 ~ file: handles.jsx:191 ~ function*handleUpdateAdmin ~ payload:", payload)
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
@@ -217,13 +214,15 @@ export function* handleUpdateAdmin({ payload }) {
   }
 }
 export function* handleCreatePostsAdmin({ payload }) {
+  const { post, reset } = payload
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(createPostAdmin, payload?.post);
+    const response = yield call(createPostAdmin, post);
     if (response?.data) {
       yield put(addPostAdminSuccess());
       yield put(getPostsAdminRequest());
+      yield reset();
     }
     yield put(setNotifyGlobal(response?.data?.message));
   } catch (error) {
@@ -231,15 +230,17 @@ export function* handleCreatePostsAdmin({ payload }) {
   }
 }
 export function* handleCreateCustomerAdmin({ payload }) {
+  const { customer, reset } = payload
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(createCustomerAdmin, payload);
+    const response = yield call(createCustomerAdmin, customer);
     if (response?.data) {
       yield put(addCustomerAdminSuccess());
       yield put(getCustomersAdminRequest());
+      yield reset()
+      yield put(setNotifyGlobal(response?.data?.message));
     }
-    yield put(setNotifyGlobal(response?.data?.message));
   } catch (error) {
     yield handleCommonError(error);
   }

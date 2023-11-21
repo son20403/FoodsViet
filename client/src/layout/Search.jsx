@@ -53,7 +53,7 @@ const Search = () => {
                     </div>
                     {search_posts?.length > 5 && (
                         <div className=' flex w-full justify-center'>
-                            <Link to={`/posts?query=${query}`} className='text-xs text-primary px-2 py-1 border 
+                            <Link onClick={handleClose} to={`/posts?query=${query}`} className='text-xs text-primary px-2 py-1 border 
                             max-w-[200px] border-primary'>Xem thêm</Link>
                         </div>
                     )}

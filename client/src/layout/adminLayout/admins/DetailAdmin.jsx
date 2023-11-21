@@ -27,12 +27,10 @@ const DetailAdmin = () => {
         dispatch(closeDetailAdmin())
     }
     const { posts, adminDetail, role } = useSelector((state) => state.admin);
-    const typeRole = role.find((r) => r._id === adminDetail?.role)
-    const dataPostsByAdmin = posts.filter(
+    const dataPostsByAdmin = posts?.filter(
         (post) => post.id_customer === adminDetail?._id
     );
-
-
+    const typeRole = role?.filter((r) => r._id === adminDetail?.role)
     const handleUpdateStatus = (status) => {
         const model = "admin";
         const id = adminDetail?._id;
@@ -149,7 +147,7 @@ const DetailAdmin = () => {
                         </CardBody>
                     </Card>
                     <SpeedDialAdmin
-                        detail={adminDetail} handleEdit={handleEditAdmin} handleUpdateStatus={handleUpdateStatus} />
+                        detail={adminDetail} handleEdit={handleEditAdmin} handleUpdateStatus={handleUpdateStatus} idEntity={adminDetail?._id} />
                 </LayoutAdminModel>
             </ModalBase>
             {/* <PostEditAdmin

@@ -27,7 +27,7 @@ const ItemAdmin = ({ data }) => {
     return (
         <>
             <tr className='border-b border-blue-gray-50 last:border-b-0'>
-                <td className={`${className} max-w-[500px]`}>
+                <td className={`${className} max-w-[500px] min-w-[250px]`}>
                     <div className="flex items-center gap-4">
                         <Avatar src={data?.image} alt={data?.full_name} size="lg" />
                         <div className='flex-1'>
@@ -45,7 +45,7 @@ const ItemAdmin = ({ data }) => {
                     </div>
                 </td>
                 <td className={className}>
-                    <Typography className={`text-xs font-semibold text-blue-600 
+                    <Typography className={`text-xs font-semibold text-blue-600 min-w-[60px]
                     ${typeRole?.title === 'Admin' ? 'text-primary' : 'Nhân viên'}`}>
                         {typeRole?.title === 'Admin' ? 'Quản Trị viên' : 'Nhân viên' || ''}
                     </Typography>
