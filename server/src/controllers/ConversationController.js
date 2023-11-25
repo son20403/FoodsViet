@@ -4,6 +4,7 @@ class ConversationController {
     constructor() {
 
     }
+
     createConversation = async (req, res) => {
 
         const newConversation = new Conversation({ members: [req.body.senderId, req.body.receiverId], timestamp: new Date() })
@@ -33,3 +34,4 @@ class ConversationController {
 }
 const conversationController = new ConversationController(Conversation);
 module.exports = conversationController;
+//senderId: req.body.senderId, receiverId: req.body.receiverId
