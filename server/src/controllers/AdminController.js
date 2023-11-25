@@ -178,9 +178,10 @@ class AdminController extends BaseController {
   };
 
   updateStatus = async (req, res) => {
+    const customer = req.customer
     const id = req.query?.id;
-    const admin = req.customer?.admin;
-    const id_admin = req.customer?.id;
+    const admin = customer?.admin;
+    const id_admin = customer?.id;
     const { status } = req.body;
     const modelType = req.query.model;
     let model;
@@ -218,6 +219,23 @@ class AdminController extends BaseController {
           message: "Bạn không phải là Admin",
         });
       }
+      if (modelType === 'admin') {
+        const data = { ...dataModel._doc }
+        const dataAdmin = await model.findOne({ _id: id_admin });
+        const dataRole = await Role.findOne({ _id: data.role })
+        const dataRoleAdmin = await Role.findOne({ _id: dataAdmin.role })
+        if (dataRoleAdmin?.title !== "Admin") return res.status(400).json({
+          message: "Bạn không có quyền hạn để chỉnh sửa người này",
+        });
+        if (data?.boss) return res.status(400).json({
+          message: "Bạn không có quyền hạn để chỉnh sửa người này",
+        });
+        if (dataRole?.title === 'Admin' && !dataAdmin.boss) {
+          return res.status(400).json({
+            message: "Bạn không có quyền hạn để chỉnh sửa người này",
+          });
+        }
+      }
       const dataModelStatus = await model.findByIdAndUpdate(
         dataModel._id,
         { status, id_admin },
@@ -226,6 +244,57 @@ class AdminController extends BaseController {
         }
       );
       if (!dataModelStatus) {
+        return res.status(400).json({
+          message: "Có lỗi xảy ra",
+        });
+      }
+      return res.status(200).json({
+        message: `Cập nhật thành công`,
+      });
+    } catch (error) {
+      console.log("err", error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  };
+  updateRoleAdmin = async (req, res) => {
+    const customer = req.customer
+    const id = req.query?.id;
+    const admin = customer?.admin;
+    const id_admin = customer?.id;
+    const { role } = req.body;
+    try {
+      const dataAdmin = await this.model.findOne({ _id: id });
+      const dataBoss = await this.model.findOne({ _id: id_admin });
+      if (!dataAdmin) {
+        return res.status(400).json({
+          message: "Không tồn tại người này",
+        });
+      }
+      if (!admin) {
+        return res.status(400).json({
+          message: "Bạn không phải là Admin",
+        });
+      }
+      if (!dataBoss.boss) {
+        return res.status(400).json({
+          message: "Bạn không có quyền hạn để chỉnh sửa người này",
+        });
+      }
+      if (dataAdmin._id == id_admin) {
+        return res.status(400).json({
+          message: "Bạn không thể chỉnh sửa chính bạn",
+        });
+      }
+      const response = await this.model.findByIdAndUpdate(
+        id,
+        { role },
+        {
+          new: true,
+        }
+      );
+      if (!response) {
         return res.status(400).json({
           message: "Có lỗi xảy ra",
         });
@@ -273,46 +342,7 @@ class AdminController extends BaseController {
     }
   };
 
-  // createCustomer = async (req, res) => {
-  //   const { user_name, password, ...info } = req.body;
-  //   const fileData = req.file;
-  //   const image = fileData?.path;
-  //   const id_image = fileData?.filename;
-  //   try {
-  //     const existingUser = await this.customerModel.findOne({ user_name });
-  //     if (existingUser) {
-  //       throw new Error("Tài khoản đã tồn tại");
-  //     }
-  //     const hashPass = await argon2.hash(password);
-  //     const userData = {
-  //       ...info,
-  //       image,
-  //       id_image,
-  //       user_name,
-  //       password: hashPass,
-  //     };
-  //     const newUser = await this.customerModel(userData).save();
-  //     if (!newUser) {
-  //       throw new Error("Có lỗi xảy ra");
-  //     }
-  //     return res.status(200).json({
-  //       message: "Tạo tài khoản thành công",
-  //     });
-  //   } catch (error) {
-  //     if (fileData) cloudinary.uploader.destroy(id_image);
-  //     console.log("error: ", error);
-  //     return res
-  //       .status(
-  //         error.message === "Tài khoản đã tồn tại" ||
-  //           error.message === "Có lỗi xảy ra"
-  //           ? 400
-  //           : 500
-  //       )
-  //       .json({
-  //         message: error.message || "Server is error",
-  //       });
-  //   }
-  // };
+
   getListAdmin = async (req, res) => {
     try {
       const data = await this.model.find({});

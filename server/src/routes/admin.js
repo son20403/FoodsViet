@@ -17,7 +17,8 @@ router.delete("/deleteCategory?:id", middlewareAuth.verifyTokenStaff, adminContr
 router.delete("/deleteComment?:id", middlewareAuth.verifyTokenStaff, adminController.deleteComment);
 router.put("/updateStatus", middlewareAuth.verifyTokenStaff, adminController.updateStatus);
 router.put("/updateCustomer", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updateCustomer);
-router.put("/updateAdmin", middlewareAuth.verifyTokenStaff, middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateAdmin);
+router.put("/updateAdmin", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updateAdmin);
+router.put("/updateRoleAdmin", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateRoleAdmin);
 router.put("/updatePost", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updatePost);
 router.get("/getListAdmin", middlewareAuth.verifyTokenStaff, adminController.getListAdmin);
 router.get("/getAllPostByAdmin", middlewareAuth.verifyTokenStaff, adminController.getAllPostByAdmin);

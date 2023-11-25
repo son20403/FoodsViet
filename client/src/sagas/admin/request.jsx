@@ -21,6 +21,9 @@ export function updateStatus(id, model, entity) {
     entity
   );
 }
+export function updateRole(id, entity) {
+  return axios.put(`/${COLLECTION_NAME}/updateRoleAdmin?id=${id}`, entity);
+}
 export function updatePostAdmin(id, entity) {
   return axios.put(`/${COLLECTION_NAME}/updatePost?id=${id}`, entity, {
     headers: {
@@ -36,14 +39,14 @@ export function updateCustomerAdmin(id, entity) {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-  })
+  });
 }
 export function updateAdmin(id, entity) {
   return axios.put(`/${COLLECTION_NAME}/updateAdmin?id=${id}`, entity, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-  })
+  });
 }
 
 export function createPostAdmin(entity) {
@@ -55,6 +58,13 @@ export function createPostAdmin(entity) {
 }
 export function createCustomerAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/createCustomer`, entity, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+export function createAdmin(entity) {
+  return axios.post(`/${COLLECTION_NAME}/createAdmin`, entity, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

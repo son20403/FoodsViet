@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { detailAdminSuccess } from '../../../sagas/admin/adminSlice';
 import { toggleDetailAdmin } from '../../../sagas/global/globalSlice';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrown } from '@fortawesome/free-solid-svg-icons';
 
 const ItemAdmin = ({ data }) => {
     const className = 'py-3 px-5';
@@ -45,9 +47,10 @@ const ItemAdmin = ({ data }) => {
                     </div>
                 </td>
                 <td className={className}>
-                    <Typography className={`text-xs font-semibold text-blue-600 min-w-[60px]
-                    ${typeRole?.title === 'Admin' ? 'text-primary' : 'Nhân viên'}`}>
+                    <Typography className={`text-xs flex items-center gap-x-2 font-semibold text-blue-600 min-w-[60px]
+                    ${typeRole?.title === 'Admin' ? 'text-primary' : ''} ${data?.boss && 'text-red-500'}`}>
                         {typeRole?.title === 'Admin' ? 'Quản Trị viên' : 'Nhân viên' || ''}
+                        {data?.boss && <FontAwesomeIcon icon={faCrown} />}
                     </Typography>
                 </td>
                 <td className={className}>
@@ -95,7 +98,7 @@ const ChipOnline = ({ status = false }) => {
             size="sm"
             value={status ? "Online" : "Offline"}
             icon={
-                <span className={`mx-auto mt-1 block h-2 w-2 rounded-full content-[''] 
+                <span className={`mx-auto mt-1 block h-2 w-2 rounded-full content-['']
                 ${status ? 'bg-green-900' : 'bg-red-900'}`} />
             }
         />
