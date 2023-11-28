@@ -6,6 +6,8 @@ import ScrollToTop from "../layout/common/ScrollToTop";
 import Admin from "../ADMIN/Admin";
 import MessagePage from "../pages/MessagePage";
 import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
+import PasswordReset from "../pages/PasswordReset";
+import ForgotPassword from "../pages/ForgotPassword";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -51,6 +53,8 @@ export const router = createBrowserRouter([
   },
   { path: "/message/:id?", element: <MessagePage /> },
   { path: "/signin", element: <SignInSignUp /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password", element: <PasswordReset /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
   {

@@ -7,7 +7,15 @@ export function getAllFeedBack() {
 export function createFeedBack(entity) {
   return axios.post(`/${COLLECTION_NAME}/addFeedBack`, entity);
 }
+export function sendPassword(entity) {
+  return axios.post(`/${COLLECTION_NAME}/forgot-password`, entity);
+}
+export function resetPassword(token, entity) {
+  return axios.post(
+    `/${COLLECTION_NAME}/reset-password?token=${token}`,
+    entity
+  );
+}
 export function sendEmail(entity) {
-  console.log("🚀 ~ file: request.jsx:10 ~ sendEmail ~ entity:", entity);
   return axios.post(`/${COLLECTION_NAME}/`, entity);
 }
