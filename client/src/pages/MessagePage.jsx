@@ -9,6 +9,7 @@ import {
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
 import Logo from "../components/logo/Logo";
+import { query } from "../axios-interceptor/query-api";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
@@ -21,8 +22,10 @@ const MessagePage = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  console.log("🚀 --> MessagePage --> notifications:", notifications);
+  const [unRead, setUnRead] = useState([]);
   const scrollRef = useRef();
+  const socket2 = useRef();
+
   const navigate = useNavigate();
   let { id } = useParams();
   if (!id) {
@@ -49,10 +52,9 @@ const MessagePage = () => {
       });
     });
     socket?.on("getNotification", (data) => {
-      const isChatOpen = currentChat?.members.some(
+      const isChatOpen = currentChat?.members?.some(
         (id) => id === data.senderId
       );
-      console.log(isChatOpen);
       if (isChatOpen) {
         setNotifications((prev) => [{ ...data, isRead: true }, ...prev]);
       } else {
@@ -60,8 +62,8 @@ const MessagePage = () => {
       }
     });
     return () => {
-      socket.off("getMessage");
-      socket.off("getNotification");
+      socket?.off("getMessage");
+      socket?.off("getNotification");
     };
   }, [socket, currentChat]);
 
@@ -71,50 +73,51 @@ const MessagePage = () => {
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat._id]);
 
+  // useEffect(() => {
+  //   // socket?.emit("addUser", infoAuth._id);
+  //   socket?.on("getUsers", (users) => {
+  //     // setOnlineUsers(
+  //     //   infoAuth.followings.filter((f) => users.some((u) => u.userId === f))
+  //     // );
+  //   });
+  // }, [infoAuth]);
+  const getConversations = async () => {
+    try {
+      const res = await query().messenger.getConversations(infoAuth._id);
+      setConversations(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    socket?.emit("addUser", infoAuth._id);
-    socket?.on("getUsers", (users) => {
-      // setOnlineUsers(
-      //   infoAuth.followings.filter((f) => users.some((u) => u.userId === f))
-      // );
-    });
-  }, [infoAuth]);
-
-  useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8989/conversations/" + infoAuth._id
-        );
-        setConversations(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     getConversations();
   }, [arrivalMessage, currentChat._id, newMessage]); //newMessage
 
   useEffect(() => {
-    const getMessages = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8989/messages/" + currentChat?._id
-        );
-        setMessages(res.data);
-
-        if (currentChat?._id) {
-          navigate(
-            `/message/${currentChat?.members?.find((c) => c !== infoAuth._id)}`
-          );
-        } else {
-          navigate(`/message/${id}`);
+    setTimeout(() => {
+      const getMessages = async () => {
+        try {
+          const res = await query().messenger.getMessages(currentChat?._id);
+          setMessages(res.data);
+          if (currentChat?._id) {
+            navigate(
+              `/message/${currentChat?.members?.find(
+                (c) => c !== infoAuth._id
+              )}`
+            );
+            // const r = await axios.put(
+            //   "http://localhost:8989/messages/" + currentChat?._id
+            // );
+          } else {
+            navigate(`/message/${id}`);
+          }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getMessages();
-  }, [currentChat._id, arrivalMessage, newMessage]); //newMessage,
+      };
+      getMessages();
+    }, 500);
+  }, [currentChat._id, newMessage, arrivalMessage]); //newMessage,
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +128,7 @@ const MessagePage = () => {
         sender: infoAuth._id,
         text: newMessage,
         conversationId: currentChat._id,
+        isRead: infoAuth._id,
       };
 
       const receiverId = currentChat.members.find(
@@ -141,21 +145,18 @@ const MessagePage = () => {
         senderId: infoAuth._id,
         receiverId: id,
       };
-      const res = await axios.post(
-        "http://localhost:8989/conversations/",
-        createConversation
-      );
-      // console.log("🚀 --> handleSubmit --> res:", res.data);
+      const res = await query().messenger.creteConversation(createConversation);
       message = {
         sender: infoAuth._id,
         text: newMessage,
         conversationId: res.data[0]._id,
+        isRead: infoAuth._id,
       };
-      // setCurrentChat(res.data[0]);
     }
 
     try {
-      const res = await axios.post("http://localhost:8989/messages", message);
+      const res = await query().messenger.createMessage(message);
+      // const res = await axios.post("http://localhost:8989/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
@@ -180,7 +181,7 @@ const MessagePage = () => {
             placeholder="search ..."
             className="chatmenu mb-5 w-[90%] py-2.5 border-b border-b-gray-500"
           />
-          <div className="overflow-y-auto h-[550px]">
+          <div className="overflow-y-auto overflow-x-hidden h-[550px]">
             {conversations.map((c, index) => (
               <Conversation
                 key={index}
@@ -210,14 +211,14 @@ const MessagePage = () => {
           </div>
         ) : (
           <div className="grid h-full place-content-center place-items-center">
-            <div className="h-[180px] w-[244px] bg-[length:248px_390px] bg-[url('https://static.xx.fbcdn.net/rsrc.php/v3/yI/r/rT65reXCYoG.png')]"></div>
+            <div className="h-[180px] w-[244px] bg-[length:248px_390px] bg-[url('https://static.xx.fbcdn.net/rsrc.php/v3/yI/r/rT65reXCYoG.png')] "></div>
             <h1 className="text-2xl font-bold">Chưa chọn đoạn chat nào</h1>
           </div>
         )}
 
         {currentChat._id ? (
-          <div className="boxwrapper p-2.5 text-white">
-            <div className="h-[530px] md:h-[550px] overflow-y-auto overflow-x-hidden pr-5">
+          <div className="boxwrapper p-2.5 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-no-repeat bg-cover">
+            <div className="h-[530px] md:h-[590px] overflow-y-auto overflow-x-hidden pr-5">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />

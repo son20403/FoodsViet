@@ -4,6 +4,9 @@ import {
   handleGetConvesations,
   handleCreateMessage,
   handleGetMessage,
+  handleGetNotifycation,
+  handleFilterNotifycation,
+  handleGetMessageUnRead,
 } from "./handles";
 import {
   conversationsRequest,
@@ -11,6 +14,9 @@ import {
   messagesRequest,
   createMessagesRequest,
   createConversationsRequest,
+  notificationRequest,
+  filterNotificationRequest,
+  messageUnReadRequest,
 } from "./messengerSlice";
 
 export default function* messengerSagas() {
@@ -18,5 +24,7 @@ export default function* messengerSagas() {
   yield takeLatest(conversationsRequest.type, handleGetConvesations);
   yield takeLatest(createMessagesRequest.type, handleCreateMessage);
   yield takeLatest(messagesRequest.type, handleGetMessage);
-  //   yield takeLatest(updateCustomerRequest.type, handleUpdateCustomers)
+  yield takeLatest(notificationRequest.type, handleGetNotifycation);
+  yield takeLatest(filterNotificationRequest.type, handleFilterNotifycation);
+  yield takeLatest(messageUnReadRequest.type, handleGetMessageUnRead);
 }

@@ -4,6 +4,8 @@ const initialState = {
   conversations: [],
   currentChat: [],
   messages: [],
+  notificationMessage: [],
+  messageUnRead: [],
   loading: false,
   error: null,
 };
@@ -71,6 +73,55 @@ const messengerSlice = createSlice({
         error: null,
       };
     },
+    notificationRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    notificationSuccess: (state, action) => {
+      return {
+        ...state,
+        notificationMessage: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
+    filterNotificationRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    filterNotificationSuccess: (state, action) => {
+      const filterNotify = state.notification?.filter(
+        (notifi) => notifi._id !== action.payload
+      );
+      return {
+        ...state,
+        notificationMessage: filterNotify,
+        loading: false,
+        error: null,
+      };
+    },
+    messageUnReadRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    messageUnReadSuccess: (state, action) => {
+      return {
+        ...state,
+        loading: true,
+        messageUnRead: action.payload,
+        error: null,
+      };
+    },
+
     setLoadingMessage: (state, action) => {
       return {
         ...state,
@@ -90,5 +141,11 @@ export const {
   messagesSuccess,
   createConversationsRequest,
   createMessagesRequest,
+  notificationRequest,
+  notificationSuccess,
+  filterNotificationRequest,
+  filterNotificationSuccess,
+  messageUnReadRequest,
+  messageUnReadSuccess,
 } = messengerSlice.actions;
 export default messengerSlice.reducer;
