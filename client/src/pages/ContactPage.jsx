@@ -57,12 +57,12 @@ const ContactPage = () => {
       reset();
     }
   };
-  useEffect(() => {
-    dispatch(FeedbackRequest());
-  }, []);
   return (
     <div className="bg-white">
-      <BannerCommon image={'./src/assets/image/banner-post.jpg'} title='Liên hệ' />
+      <BannerCommon
+        image={"./src/assets/image/banner-post.jpg"}
+        title="Liên hệ"
+      />
       <div className="w-full pt-12 pb-4 mx-auto">
         <div className="text-center ">
           <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
