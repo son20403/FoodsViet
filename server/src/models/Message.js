@@ -12,7 +12,7 @@ const Message = new Schema(
         type:String
       },
       isRead: {
-        type: Boolean,default:false
+          type: Array,
       }
     },
     {

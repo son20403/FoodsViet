@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useParams } from "react-router-dom";
+import { query } from "../../axios-interceptor/query-api";
 
 const Conversation = ({
   conversation,
@@ -13,7 +13,14 @@ const Conversation = ({
 }) => {
   const { infoAuth } = useSelector((state) => state.auth);
   const { customers } = useSelector((state) => state.customers);
+  const dispatch = useDispatch();
   const [lastestMessage, setLastestMessage] = useState(null);
+  const [messageUnRead, setMessageUnRead] = useState([]);
+  let { id } = useParams();
+  if (!id) {
+    id = "";
+  }
+
   const friendId = conversation?.members?.find((m) => m !== infoAuth._id);
   let friend = {};
   friendId
@@ -21,14 +28,36 @@ const Conversation = ({
     : (friend = customers.find((f) => f._id === userId));
 
   useEffect(() => {
+    if (id === friendId) {
+      const putMessage = async () => {
+        try {
+          const requests = messageUnRead.map((m) => {
+            return query().messenger.readMessage({
+              messageId: m._id,
+              infoId: infoAuth._id,
+            });
+          });
+          const responses = await Promise.all(requests);
+        } catch (error) {
+          console.error("Lỗi khi cập nhật tin nhắn:", error);
+        }
+      };
+
+      putMessage();
+    }
+  }, [messageUnRead, lastestMessage]);
+
+  useEffect(() => {
     const getMessages = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8989/messages/" + conversation?._id
-        );
-        const lastIndex = res.data.length - 1;
-
-        setLastestMessage(res.data[lastIndex]);
+        const res = await query().messenger.getMessages(conversation?._id);
+        const lastIndex = res?.data?.length - 1;
+        setLastestMessage(res?.data[lastIndex]);
+        setMessageUnRead((prev) => {
+          return res?.data?.filter((item) =>
+            item?.isRead?.every((userId) => userId !== infoAuth?._id)
+          );
+        });
       } catch (err) {
         console.log(err);
       }
@@ -48,7 +77,7 @@ const Conversation = ({
           alt=""
           className="w-10 h-10 rounded-[50%] mr-5"
         />
-        <div className="relative flex flex-col w-full flex-1">
+        <div className="relative flex flex-col flex-1 w-full">
           <span className="font-bold ">{friend?.full_name}</span>
           {children && <p className="line-clamp-1">{children}</p>}
           {!children && (
@@ -98,8 +127,12 @@ const Conversation = ({
         {online && (
           <div className="absolute w-3 h-3 bg-green-600 rounded-full bottom-1 -left-8"></div>
         )}
-        {unRead && (
-          <div className="absolute right-0 w-3 h-3 -translate-y-1/2 bg-blue-600 rounded-full top-1/2"></div>
+        {messageUnRead.length > 0 && (
+          <div className="absolute right-0 w-3 h-3 p-2 text-white -translate-y-1/2 bg-blue-600 rounded-full top-1/2">
+            <p className="absolute text-xs -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+              {messageUnRead.length + 1 > 9 ? 9 + "+" : messageUnRead.length}
+            </p>
+          </div>
         )}
       </div>
     </NavLink>

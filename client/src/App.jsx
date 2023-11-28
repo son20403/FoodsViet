@@ -11,8 +11,10 @@ import { ThemeProvider } from "@material-tailwind/react";
 import LoadingPage from "./layout/loading/LoadingPage";
 function App() {
   const { token, infoAuth } = useSelector((state) => state.auth);
-  const { errorGlobal, notifyGlobal, socket } = useSelector((state) => state.global);
-  const dispatch = useDispatch()
+  const { errorGlobal, notifyGlobal, socket } = useSelector(
+    (state) => state.global
+  );
+  const dispatch = useDispatch();
   useEffect(() => {
     if (errorGlobal) toast.error(errorGlobal);
   }, [errorGlobal]);
@@ -21,19 +23,18 @@ function App() {
   }, [notifyGlobal]);
   useEffect(() => {
     if (token && infoAuth) {
-      dispatch(setSocket(socketIOClient(BASE_URL)))
-    }
-    else {
-      dispatch(setSocket(null))
+      dispatch(setSocket(socketIOClient(BASE_URL)));
+    } else {
+      dispatch(setSocket(null));
     }
   }, [token, infoAuth]);
   useEffect(() => {
     if (infoAuth && socket) {
-      socket.emit('addUser', infoAuth?._id, 'customer')
+      socket.emit("addUser", infoAuth?._id, "customer");
     }
   }, [socket, infoAuth]);
   useEffect(() => {
-    dispatch(customersRequest())
+    dispatch(customersRequest());
   }, []);
   return (
     <ThemeProvider>

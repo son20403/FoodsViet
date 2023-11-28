@@ -9,6 +9,10 @@ import Footer from "./Footer";
 import Header from "./Header";
 
 import { postsRequest } from "../sagas/posts/postsSlice";
+import {
+  conversationsRequest,
+  messagesRequest,
+} from "../sagas/messenger/messengerSlice";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -24,6 +28,8 @@ function MainLayout() {
     dispatch(setNotify());
     dispatch(setErrorGlobal(""));
     dispatch(setNotifyGlobal(""));
+    // dispatch(messagesRequest());
+    // dispatch(conversationsRequest());
   }, [token, dispatch, tokenLocal, location?.pathname]);
   useEffect(() => {
     const handleTabClose = () => {

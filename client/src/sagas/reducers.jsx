@@ -7,6 +7,7 @@ import customersSlice from "./customers/customersSlice";
 import commentsSlice from "./comments/commentsSlice";
 import adminSlice from "./admin/adminSlice";
 import notificationSlice from "./notification/notificationSlice";
+import messengerSlice from "./messenger/messengerSlice";
 import feedbacksSlice from "./feedbackMail/feedbacksSlice";
 
 const reducer = combineReducers({
@@ -18,6 +19,7 @@ const reducer = combineReducers({
   auth: authSlice,
   admin: adminSlice,
   notification: notificationSlice,
+  messenger: messengerSlice,
   feedback: feedbacksSlice,
 });
 

@@ -4,6 +4,7 @@ import MainLayout from "../layout/MainLayout";
 import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
 import Admin from "../ADMIN/Admin";
+import MessagePage from "../pages/MessagePage";
 import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
@@ -17,9 +18,7 @@ const SignInPageAdmin = lazy(() =>
   import("../pages/adminPage/SignInPageAdmin")
 );
 
-const PageAdmin = lazy(() =>
-  import("../pages/adminPage/PageAdmin")
-);
+const PageAdmin = lazy(() => import("../pages/adminPage/PageAdmin"));
 
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
@@ -31,7 +30,7 @@ const ListPostsByCategory = lazy(() => import("../pages/ListPostsByCategory"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
-const MessagePage = lazy(() => import("../pages/MessagePage"));
+// const MessagePage = lazy(() => import("../pages/MessagePage"));
 
 export const router = createBrowserRouter([
   {

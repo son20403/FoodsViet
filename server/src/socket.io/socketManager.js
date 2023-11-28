@@ -69,6 +69,7 @@ const socketManager = (server) => {
                     text,
                     messageId
                 })
+                io.to(user.socketId).emit("getNotifyMessage")
                 //  user.unreadMessages.push(messageId);
                 io.to(user.socketId).emit("getNotification", {
                     senderId,
