@@ -23,7 +23,6 @@ const Admin = new Schema(
     status: { type: String, default: 'pending' },
     online: { type: Boolean, default: false },
     timeOnlined: { type: Number },
-    timeDestroy: { type: Number },
   },
   {
     timestamps: true,
