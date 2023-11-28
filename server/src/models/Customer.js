@@ -22,7 +22,6 @@ const Customer = new Schema(
         date: { type: String, default: '' },
         timestamps: { type: Number },
         timeOnlined: { type: Number },
-        timeDestroy: { type: Number },
     },
     {
         timestamps: true,
