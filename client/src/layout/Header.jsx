@@ -84,17 +84,45 @@ const Header = () => {
   useEffect(() => {
     handleGetNotification();
   }, [location?.pathname, token]);
+
   useEffect(() => {
     if (socket) {
       socket.on("sendNotify", () => {
+        console.log("ok");
         setTimeout(() => {
           handleGetNotification();
-        }, 200);
+        }, 500);
       });
       socket.on("getNotifyMessage", () => {
         setTimeout(() => {
           handleGetNotificationMessage();
         }, 200);
+      });
+    }
+    if (notifications?.length > 0) {
+      const total = notifications.filter((noti) => noti.status === true).length;
+      setNotificationIsActive(total);
+    } else {
+      setNotificationIsActive(0);
+    }
+  }, [socket, notifications]);
+
+  useEffect(() => {
+    dispatch(closeNotification());
+    dispatch(closeNavbar());
+    dispatch(closeSearch());
+    dispatch(closeSetting());
+  }, [location?.pathname, dispatch]);
+  useEffect(() => {
+    handleGetNotification();
+  }, [location?.pathname, token]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("sendNotify", () => {
+        console.log("ok");
+        setTimeout(() => {
+          handleGetNotification();
+        }, 500);
       });
     }
     if (notifications?.length > 0) {

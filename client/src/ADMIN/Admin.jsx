@@ -22,9 +22,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
 import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
-import { getAllAdminRequest, getCategoriesAdminRequest, getCustomersAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
-import { toggleAddCategory, toggleAddCustomer, toggleAddPost } from "../sagas/global/globalSlice";
+import {
+  getAllAdminRequest,
+  getCategoriesAdminRequest,
+  getCustomersAdminRequest,
+  getPostsAdminRequest,
+  roleAdminRequest,
+} from "../sagas/admin/adminSlice";
+import {
+  toggleAddAdmin,
+  toggleAddCategory,
+  toggleAddCustomer,
+  toggleAddPost,
+} from "../sagas/global/globalSlice";
 import AddCustomerAdmin from "../layout/adminLayout/customers/AddCustomerAdmin";
+import AddAdmin from "../layout/adminLayout/admins/AddAdmin";
 export function Dashboard() {
   const navLink = [
     {
@@ -47,43 +59,66 @@ export function Dashboard() {
       id: 3,
       title: "Thêm người dùng",
       icon: <UserPlusIcon className="w-5 h-5" />,
-      onclick: () => { handleToggleCustomer() },
+      onclick: () => {
+        handleToggleCustomer();
+      },
     },
     {
       id: 4,
       title: "Thêm nhân viên",
       icon: <UserCircleIcon className="w-5 h-5" />,
-      onclick: () => { },
+      onclick: () => {
+        handleToggleAdmin();
+      },
     },
   ];
   const labelProps = {
     variant: "small",
     color: "blue-gray",
-    className: `absolute top-2/4 w-[150px] text-white p-1 bg-primary/90 rounded-full 
+    className: `absolute top-2/4 w-[150px] text-white p-1 bg-primary/90 rounded-full
              -translate-y-2/4 -translate-x-3/4 font-normal  `,
   };
-  const { tokenAdmin } = useSelector((state) => state.admin);
-
-  const dispatch = useDispatch()
+  const { tokenAdmin, infoAdmin, admin } = useSelector((state) => state.admin);
+  const dataAdmin = admin?.find((ad) => ad._id === infoAdmin?._id);
+  const { socket } = useSelector((state) => state.global);
+  const dispatch = useDispatch();
   const handleToggleAddPost = () => {
-    dispatch(toggleAddPost())
-  }
+    dispatch(toggleAddPost());
+  };
   const handleToggleCategory = () => {
-    dispatch(toggleAddCategory())
-  }
+    dispatch(toggleAddCategory());
+  };
   const handleToggleCustomer = () => {
-    dispatch(toggleAddCustomer())
-  }
+    dispatch(toggleAddCustomer());
+  };
+  const handleToggleAdmin = () => {
+    dispatch(toggleAddAdmin());
+  };
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(getPostsAdminRequest())
-    dispatch(getCategoriesAdminRequest())
-    dispatch(getCustomersAdminRequest())
-    dispatch(getAllAdminRequest())
-  }, []);
+    dispatch(getPostsAdminRequest());
+    dispatch(getCategoriesAdminRequest());
+    dispatch(getCustomersAdminRequest());
+    dispatch(getAllAdminRequest());
+    dispatch(roleAdminRequest());
+  }, [tokenAdmin]);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");
   }, [tokenAdmin]);
+  useEffect(() => {
+    if (tokenAdmin && infoAdmin && socket) {
+      socket.emit("addUser", infoAdmin?._id, "admin");
+    }
+  }, [socket, infoAdmin, tokenAdmin]);
+  useEffect(() => {
+    const handleTabClose = () => {
+      socket.emit("adminUnconnect", infoAdmin?._id);
+    };
+    window.addEventListener("beforeunload", handleTabClose);
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, [socket]);
   return (
     <div className="min-h-screen bg-blue-gray-50/50 max-w-[1600px] mx-auto !relative">
       <Sidebar routes={routes} />
@@ -106,7 +141,9 @@ export function Dashboard() {
               <SpeedDialAction
                 onClick={nav.onclick}
                 key={nav.id}
-                className="relative text-white bg-primary/90"
+                className={`relative text-white bg-primary/90 ${
+                  !dataAdmin?.boss && nav.id === 4 ? "hidden" : ""
+                }`}
               >
                 {nav.icon}
                 <Typography {...labelProps}>{nav.title}</Typography>
@@ -118,6 +155,7 @@ export function Dashboard() {
       <AddPostAdmin />
       <AddCategoryAdmin />
       <AddCustomerAdmin />
+      <AddAdmin />
     </div>
   );
 }

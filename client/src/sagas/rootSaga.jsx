@@ -7,6 +7,7 @@ import categoriesSagas from "./categories/categoriesSagas";
 import messengerSagas from "./messenger/messengerSagas";
 import adminSagas from "./admin/adminSagas";
 import notificationSagas from "./notification/notificationSagas";
+import feedSagas from "./feedbackMail/feedbacksSagas";
 
 export default function* rootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export default function* rootSaga() {
     fork(adminSagas),
     fork(notificationSagas),
     fork(messengerSagas),
+    fork(feedSagas),
   ]);
 }

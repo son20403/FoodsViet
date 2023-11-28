@@ -5,7 +5,7 @@ import { Heading } from "../../../components/heading";
 import LayoutAdminModel from "../LayoutAdminModel";
 import { Button } from "../../../components/button";
 import { Field } from "../../../components/field";
-import { FileInput, Input } from "../../../components/input";
+import { FileInput, Input, InputTextarea } from "../../../components/input";
 import { BookmarkIcon } from "../../../components/Icon";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -22,7 +22,7 @@ const schemaValidate = Yup.object({
 const AddCategoryAdmin = () => {
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors }, reset,
     control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
 
@@ -43,7 +43,7 @@ const AddCategoryAdmin = () => {
       id_author,
     };
 
-    dispatch(addCategoriesAdminRequest({ category }));
+    dispatch(addCategoriesAdminRequest({ category, reset }));
     handleCloseCategory();
   };
   return (
@@ -53,10 +53,10 @@ const AddCategoryAdmin = () => {
           <Heading isHeading>Thêm loại</Heading>
           <form
             onSubmit={handleSubmit(handleAddCategory)}
-            className="flex flex-col mb-10 text-center gap-y-10 "
+            className="flex flex-col mb-10 text-center gap-y-10 mt-10"
           >
             <Field>
-              <Input
+              <InputTextarea
                 control={control}
                 errors={errors}
                 value=""
@@ -65,7 +65,7 @@ const AddCategoryAdmin = () => {
                 type="text"
               >
                 <BookmarkIcon />
-              </Input>
+              </InputTextarea>
             </Field>
             <div className="col-span-1 mb-10 md:col-span-2">
               <Label htmlFor={"image"}>Hình ảnh</Label>
@@ -77,7 +77,7 @@ const AddCategoryAdmin = () => {
               />
             </div>
             <Button type="submit" className="mx-auto ">
-              Thêm bài viết
+              Thêm loại
             </Button>
           </form>
         </div>

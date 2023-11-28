@@ -29,10 +29,10 @@ function App() {
     }
   }, [token, infoAuth]);
   useEffect(() => {
-    if (token && infoAuth && socket) {
-      socket.emit("addUser", infoAuth?._id);
+    if (infoAuth && socket) {
+      socket.emit("addUser", infoAuth?._id, "customer");
     }
-  }, [socket, infoAuth, token]);
+  }, [socket, infoAuth]);
   useEffect(() => {
     dispatch(customersRequest());
   }, []);

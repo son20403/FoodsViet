@@ -26,7 +26,7 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
     const slug = data?.slug
     const { handleSubmit, setValue, formState: { errors }, control } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleEditUser = (value) => {
         try {
             dispatch(setLoadingCustomer(true))
@@ -50,7 +50,7 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
                 <form onSubmit={handleSubmit(handleEditUser)} className=' px-2'>
                     <div className=' flex justify-between items-center border-b border-primary pb-5'>
                         <Heading isHeading className=''>Chỉnh sửa thông tin</Heading>
-                        <Button className='bg-primary' type='submit'>SAVE</Button>
+                        <Button className='bg-primary' type='submit'>Lưu</Button>
                     </div>
                     <div className='flex gap-x-5 items-center my-10'>
                     </div>

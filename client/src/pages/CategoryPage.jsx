@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
-import { Heading } from '../components/heading';
 import ListCategory from '../layout/categories/ListCategory';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import PageWrap from '../layout/common/PageWrap';
 import Section from '../layout/common/Section';
-import Banner from '../layout/Banner';
 import BannerCommon from '../layout/common/BannerCommon';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';

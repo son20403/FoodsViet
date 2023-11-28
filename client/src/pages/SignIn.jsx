@@ -22,7 +22,7 @@ const schemaValidate = Yup.object({
 const SignIn = () => {
     const dispatch = useDispatch()
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleSignIn = (value) => {
         try {
             if (isValid) {
@@ -33,18 +33,16 @@ const SignIn = () => {
         }
     }
     return (
-        <>
-            <form onSubmit={handleSubmit(handleSignIn)} className="sign-in-form form_signin-signup max-md:">
-                <h2 className="title">Đăng nhập</h2>
-                <div className='flex flex-col gap-6 m-auto w-full bg-white p-5 rounded-lg' >
-                    <Input control={control} type='text' name={'user_name'} errors={errors} placeholder='Tài khoản'
-                        value='' ><UserIcon /></Input>
-                    <InputPassword control={control} name={'password'} errors={errors} placeholder='Mật khẩu'
-                        value='' ><UserIcon /></InputPassword>
-                    <Button isLoading={isSubmitting} type='submit' >Đăng nhập</Button>
-                </div>
-            </form>
-        </>
+        <form onSubmit={handleSubmit(handleSignIn)} className="sign-in-form form_signin-signup max-md:">
+            <h2 className="title">Đăng nhập</h2>
+            <div className='flex flex-col gap-6 m-auto w-full bg-white p-5 rounded-lg' >
+                <Input control={control} type='text' name={'user_name'} errors={errors} placeholder='Tài khoản'
+                    value='' ><UserIcon /></Input>
+                <InputPassword control={control} name={'password'} errors={errors} placeholder='Mật khẩu'
+                    value='' ><UserIcon /></InputPassword>
+                <Button isLoading={isSubmitting} type='submit' >Đăng nhập</Button>
+            </div>
+        </form>
     );
 };
 

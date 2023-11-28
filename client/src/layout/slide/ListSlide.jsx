@@ -5,7 +5,7 @@ import { SwiperSlide } from 'swiper/react';
 import ItemImageSkeleton from '../ItemImageSketeton';
 
 
-const ListSlide = ({ data = [], className }) => {
+const ListSlide = ({ data = [], className, isCustomer = false }) => {
     const arr = Array(10).fill(null);
     return (
         <>
@@ -13,7 +13,7 @@ const ListSlide = ({ data = [], className }) => {
                 {
                     data.length > 0 ? data.map((item) => (
                         <SwiperSlide key={item._id}>
-                            <ItemImage className={className} data={item}></ItemImage>
+                            <ItemImage isCustomer={isCustomer} className={className} data={item}></ItemImage>
                         </SwiperSlide>
                     )) : arr.map((item, index) => (
                         <SwiperSlide key={index}>

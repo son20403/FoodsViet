@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { SwiperSlide } from 'swiper/react';
 import { toast } from 'react-toastify';
 import { commentsRequest, createCommentsRequest, getcommentsByPostRequest } from '../sagas/comments/commentsSlice';
@@ -26,6 +26,7 @@ import LoadingRequest from '../layout/loading/LoadingRequest';
 import { PopoverDrop } from '../layout/Popover';
 import { addNotificationRequest } from '../sagas/notification/notificationSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
+import Breadcrumb from '../layout/Breadcumb';
 
 
 const schemaValidate = Yup.object({
@@ -34,9 +35,10 @@ const schemaValidate = Yup.object({
 
 const DetailPage = () => {
     const { slug } = useParams()
+    const navigate = useNavigate();
 
     const dispatch = useDispatch()
-    const { detail_post, loading, postsCategory, postsCustomer } = useSelector((state) => state.posts);
+    const { detail_post, loading, postsCategory, postsCustomer, error } = useSelector((state) => state.posts);
     const { token, infoAuth } = useSelector((state) => state.auth);
     const { customers } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
@@ -46,7 +48,7 @@ const DetailPage = () => {
     const { handleToggle, toggle } = useToggle(false);
 
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleResetForm = () => {
         reset()
     }
@@ -151,27 +153,39 @@ const DetailPage = () => {
             setTimeout(scrollToCenter, 1200);
         }
     }, [hash]);
+    useEffect(() => {
+        if (!loading && error?.message) {
+            navigate('/not-found')
+        }
+    }, [loading, error]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
-            <div className='w-full lg:max-h-[700px] min-h-[200px] py-52 lg:py-72 bg-fixed bg-cover bg-center h-auto overflow-hidden relative  md:min-h-[300px] lg:min-h-[500px] '
+            <div className='w-full lg:max-h-[700px] min-h-[200px] py-52 lg:py-72 bg-fixed bg-cover
+                bg-center h-auto overflow-hidden relative  md:min-h-[300px] lg:min-h-[500px] '
                 style={{ backgroundImage: `url(${detail_post?.image})` }}>
                 <div className='absolute inset-0 bg-black bg-opacity-70'>
-                    <div className='page-content px-5 mt-3 lg:px-10 flex flex-col h-full text-white flex-1 
+                    <div className='page-content px-5 lg:px-10 flex flex-col h-full text-white flex-1 
                         justify-center items-center' >
-                        <Heading isHeading className='lg:text-5xl md:text-3xl text-2xl font-normal text-center md:text-start 
+                        <div className='page-content flex items-start mb-7'>
+                            <Breadcrumb></Breadcrumb>
+                        </div>
+                        <Heading isHeading
+                            className='lg:text-5xl md:text-3xl text-2xl font-normal text-center md:text-start 
                         lg:leading-normal leading-normal'>
                             {detail_post?.title}
                         </Heading>
-                        <div className='text-white text-center md:text-start text-xs md:text-sm lg:text-base uppercase opacity-80  mt-10 flex '>
+                        <div className='text-white text-center md:text-start text-xs md:text-sm 
+                        lg:text-base uppercase opacity-80  mt-10 flex '>
                             {typeAuthor === 'customer' ? <Link to={`/info/${customerByPosts?.slug}`}
                                 className='px-2 border-r last:border-none'>{customerByPosts?.full_name}</Link>
                                 : typeAuthor === 'admin'
                                     ? <div className='px-2 border-r last:border-none'>Quản Trị Viên</div>
                                     : ''}
                             <div className='px-2 border-r last:border-none'>{detail_post?.date} </div>
-                            <Link to={`/category/${dataCategory?.slug}`}
-                                className='px-2 border-r last:border-none'>{dataCategory?.title}</Link></div>
+                            <Link to={`/categories/${dataCategory?.slug}`}
+                                className='px-2 border-r last:border-none'>{dataCategory?.title}</Link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -194,7 +208,7 @@ const DetailPage = () => {
                                     </div>
                                     : ''}
                             <div className=' flex gap-10 items-center'>
-                                <DataPost timestamps={detail_post?.timestamps}
+                                <DataPost isDetail timestamps={detail_post?.timestamps}
                                     comments={commentsPost?.length} likes={listLikes}></DataPost>
                                 {isAuth && <PopoverDrop x={80} icon={<EllipsisIcon />}>
                                     <div className='flex items-center gap-5'>
@@ -226,16 +240,17 @@ const DetailPage = () => {
                         </div>
                     </div>
                     <div className='mt-10 '>
-                        <div className='pb-5 flex items-center gap-x-5'>
-                            <Heading isHeading className='ml-0'>
+                        <span id='commentPost'></span>
+                        <div className='pb-5 flex items-center gap-x-5' >
+                            <Heading isHeading className='ml-0' >
                                 Bình luận
                             </Heading>
                             <span>({commentsPost?.length})</span>
-                            <div className='cursor-pointer' onClick={handleReloadComment}>
+                            <span className='cursor-pointer' onClick={handleReloadComment}>
                                 <ArrowPathIcon className="h-6 w-6 text-gray-500"></ArrowPathIcon>
-                            </div>
+                            </span>
                         </div>
-                        {token && <div className='mt-5 lg:mb-10 w-full bg-white border py-3 px-2'>
+                        {token && <div className='mt-5 lg:mb-10 w-full bg-white py-3 px-2'>
                             <form onSubmit={handleSubmit(handleComment)} autoComplete='off'
                                 className='flex items-center gap-x-4'>
                                 <div className='flex-1'>

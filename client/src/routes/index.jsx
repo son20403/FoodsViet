@@ -5,6 +5,7 @@ import NotFound404 from "../pages/not-found/NotFound404";
 import ScrollToTop from "../layout/common/ScrollToTop";
 import Admin from "../ADMIN/Admin";
 import MessagePage from "../pages/MessagePage";
+import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -16,6 +17,8 @@ const CategoryPageAdmin = lazy(() =>
 const SignInPageAdmin = lazy(() =>
   import("../pages/adminPage/SignInPageAdmin")
 );
+
+const PageAdmin = lazy(() => import("../pages/adminPage/PageAdmin"));
 
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
@@ -38,7 +41,7 @@ export const router = createBrowserRouter([
       { path: "/categories", element: <CategoryPage /> },
       { path: "/info/:slug", element: <InfoUser /> },
       { path: "/detail/:slug", element: <DetailPage /> },
-      { path: "/category/:slug", element: <ListPostsByCategory /> },
+      { path: "/categories/:slug", element: <ListPostsByCategory /> },
       { path: "/info-user/:id", element: <InfoUser /> },
       { path: "/posts", element: <PostPage /> },
       { path: "/add-post", element: <AddNewPosts /> },
@@ -47,17 +50,6 @@ export const router = createBrowserRouter([
     ],
   },
   { path: "/message/:id?", element: <MessagePage /> },
-  // { path: "/message/", element: <MessagePage /> },
-  //   {
-  //     path: "/message",
-  //     element: <MainLayout />,
-  //     children: [
-  //       {
-  //         path: "",
-  //         element: <MessagePage></MessagePage>,
-  //       },
-  //     ],
-  //   },
   { path: "/signin", element: <SignInSignUp /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
@@ -70,6 +62,8 @@ export const router = createBrowserRouter([
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
+      { path: "feedBack", element: <FeedBackPageAdmin /> },
+      { path: "manage", element: <PageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },
       // { path: "edit-customer/:id", element: <EditCustomer /> },
       // { path: "edit-admin/:id", element: <EditAdmin /> },

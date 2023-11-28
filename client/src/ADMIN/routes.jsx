@@ -6,6 +6,8 @@ import {
   NewspaperIcon,
   Square3Stack3DIcon,
   UserIcon,
+  EnvelopeOpenIcon,
+  ShieldCheckIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
   className: "w-5 h-5 text-inherit",
@@ -30,25 +32,19 @@ const routes = [
         path: "/categories",
       },
       {
-        icon: <UserIcon  {...icon} />,
+        icon: <UserIcon {...icon} />,
         name: "Người dùng",
         path: "/customers",
       },
-    ],
-  },
-  {
-    title: "auth pages",
-    layout: "auth",
-    pages: [
       {
-        icon: <ArrowRightOnRectangleIcon {...icon} />,
-        name: "sign in",
-        path: "/sign-in",
+        icon: <EnvelopeOpenIcon {...icon} />,
+        name: "Feedback",
+        path: "/feedBack",
       },
       {
-        icon: <UserPlusIcon {...icon} />,
-        name: "sign up",
-        path: "/sign-up",
+        icon: <ShieldCheckIcon  {...icon} />,
+        name: "Quản lý",
+        path: "/manage",
       },
     ],
   },

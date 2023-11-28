@@ -44,13 +44,15 @@ const MessagePage = () => {
     }
   }, [id, conversations]);
   useEffect(() => {
-    socket?.on("getMessage", (data) => {
-      setArrivalMessage({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
+    setTimeout(() => {
+      socket?.on("getMessage", (data) => {
+        setArrivalMessage({
+          sender: data.senderId,
+          text: data.text,
+          createdAt: Date.now(),
+        });
       });
-    });
+    }, 500);
     socket?.on("getNotification", (data) => {
       const isChatOpen = currentChat?.members?.some(
         (id) => id === data.senderId

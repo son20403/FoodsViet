@@ -8,6 +8,7 @@ import commentsSlice from "./comments/commentsSlice";
 import adminSlice from "./admin/adminSlice";
 import notificationSlice from "./notification/notificationSlice";
 import messengerSlice from "./messenger/messengerSlice";
+import feedbacksSlice from "./feedbackMail/feedbacksSlice";
 
 const reducer = combineReducers({
   global: globalSlice,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   admin: adminSlice,
   notification: notificationSlice,
   messenger: messengerSlice,
+  feedback: feedbacksSlice,
 });
 
 export default reducer;

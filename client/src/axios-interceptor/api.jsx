@@ -18,7 +18,7 @@ api.interceptors.request.use(config => {
     config.headers['userType'] = 'customer';
     return config;
 }, error => {
-    console.log("🚀 ~ file: api.jsx:18 ~ error:", error)
+    console.log("file: api.jsx:18 ~ error:", error)
     return Promise.reject(error);
 });
 

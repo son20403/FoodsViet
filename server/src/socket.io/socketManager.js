@@ -1,4 +1,6 @@
 const socketIo = require('socket.io');
+import Admin from "../models/Admin";
+import Customer from "../models/Customer";
 const socketManager = (server) => {
     const io = socketIo(server, {
         cors: {
@@ -15,19 +17,37 @@ const socketManager = (server) => {
     const getUser = (userId) => {
         return users.find(user => user.userId === userId)
     }
+    const getUserSocket = (socketId) => {
+        return users.find(user => user.socketId === socketId)
+    }
 
-    io.on("connection", (socket) => {
-        console.log("New client connected " + socket.id);
+    io.on("connection", async (socket) => {
         socket.on("disconnect", () => {
-            console.log("Client disconnected");
             removeUser(socket.id)
             io.emit("getUsers", users)
+            console.log("🚀 ~ file: socketManager.js:12 ~ addUser ~ addUser:", users)
+        });
+        socket.on("userUnconnect", async (id) => {
+            console.log("userUnconnect")
+            removeUser(socket.id)
+            await Customer.findByIdAndUpdate(id, { online: false });
+        });
+        socket.on("adminUnconnect", async (id) => {
+            removeUser(socket.id)
+            await Admin.findByIdAndUpdate(id, { online: false });
         });
 
-        socket.on('addUser', (id_customer) => {
+        socket.on('addUser', async (id_customer, type) => {
+            console.log("🚀 ~ file: socketManager.js:38 ~ socket.on ~ id_customer:", id_customer)
+            if (type === 'customer') {
+                await Customer.findByIdAndUpdate(id_customer, { online: true });
+            } else {
+                await Admin.findByIdAndUpdate(id_customer, { online: true });
+            }
             addUser(id_customer, socket.id)
-            console.log("🚀 ~ file: socketManager.js:9 ~ socketManager ~ listCustomerOnline:", users)
             io.emit("getUsers", users)
+            console.log("🚀 ~ file: socketManager.js:12 ~ addUser ~ addUser:", users)
+
         })
         socket.on('receiverNotify', ({ id_receiver }) => {
             const receiver = getUser(id_receiver)
@@ -39,15 +59,10 @@ const socketManager = (server) => {
         socket.on('update', () => {
             io.emit('update')
         });
-        // socket.on('receiverComment', ({ id_receiver }) => {
-        //     const receiver = getUser(id_receiver)
-        //     if (receiver) {
-        //         io.to(receiver.socketId).emit('sendComment', '');
-        //     }
-        // });
         socket.on("sendMessage", ({ senderId, receiverId, text, messageId }) => {
             console.log("🚀 ~ file: socketManager.js:66 ~ socket.on ~ senderId:", senderId)
             const user = getUser(receiverId);
+            console.log("🚀 ~ file: socketManager.js:67 ~ socket.on ~ user:", user)
             if (user) {
                 io.to(user.socketId).emit("getMessage", {
                     senderId,

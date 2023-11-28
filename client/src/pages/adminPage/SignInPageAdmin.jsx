@@ -18,7 +18,7 @@ import { useEffect } from "react";
 const schemaValidate = Yup.object({
     user_name: Yup.string().required("Vui lòng nhập tên đăng nhập!")
         .max(20, "Tên tài khoản không được dài quá 20 ký tự")
-        .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
+        .min(4, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
     password: Yup.string()
         .required("Vui lòng nhập mật khẩu!")
         .min(6, 'Mật khẩu có ít nhất 8 ký tự!')
@@ -30,7 +30,7 @@ const schemaValidate = Yup.object({
 export function SignInPageAdmin() {
     const dispatch = useDispatch()
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control } =
-        useForm({ resolver: yupResolver(schemaValidate), mode: 'onBlur', })
+        useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleSignInAdmin = (value) => {
         try {
             if (isValid) {

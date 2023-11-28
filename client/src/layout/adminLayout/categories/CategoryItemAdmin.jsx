@@ -11,13 +11,13 @@ const CategoryItemAdmin = ({ data }) => {
   const className = "px-5 py-3";
   const { admin } = useSelector((state) => state.admin);
   const timeSince = useTimeSince();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const dataAdmin = admin.filter((ad) => ad._id === data?.id_author)[0];
 
   const handleShowCategoryDetail = () => {
-    dispatch(toggleDetailCategory())
-    dispatch(detailCategoriesAdminSuccess({ ...data }))
-  }
+    dispatch(toggleDetailCategory());
+    dispatch(detailCategoriesAdminSuccess({ ...data }));
+  };
   return (
     <>
       <tr className="border-b border-blue-gray-50 last:border-b-0">
@@ -50,15 +50,15 @@ const CategoryItemAdmin = ({ data }) => {
               data?.status === "approved"
                 ? "green"
                 : data?.status === "pending"
-                  ? "yellow"
-                  : "red"
+                ? "yellow"
+                : "red"
             }
             value={
               data?.status === "approved"
                 ? "Đã duyệt"
                 : data?.status === "pending"
-                  ? "Chờ duyệt"
-                  : "vô hiệu hóa"
+                ? "Chờ duyệt"
+                : "vô hiệu hóa"
             }
             className="py-0.5 px-2 text-[11px] font-medium inline-block"
           />

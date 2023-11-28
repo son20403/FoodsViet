@@ -6,7 +6,7 @@ import useImagePreview from '../../hooks/useImagePreview';
 import { Typography } from '../typography';
 
 
-const FileInput = ({ name, className = '', oldImage, errors, control, isAvatar = false, ...props }) => {
+const FileInput = ({ name, className = '', oldImage, errors, control, isAvatar = false, isSuccess = false, isAddItem = false, ...props }) => {
 
     const isErr = !!errors?.[name]
 
@@ -24,6 +24,11 @@ const FileInput = ({ name, className = '', oldImage, errors, control, isAvatar =
         inputField.onChange(e.target.files[0]);
         handleFileChange(e)
     }
+    useEffect(() => {
+        if (!isSuccess && isAddItem) {
+            handleSetImage()
+        }
+    }, [isSuccess, isAddItem]);
     return (
         <>
             <div className={`relative  h-full w-full  overflow-hidden

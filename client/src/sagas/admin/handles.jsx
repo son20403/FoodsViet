@@ -1,18 +1,22 @@
 import { call, put } from "redux-saga/effects";
 import {
+  createAdmin,
   createPostAdmin,
   getAllPostAdmin,
   getListAdmin,
+  getRole,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
+  updateAdmin,
   updateCustomerAdmin,
   updatePostAdmin,
+  updateRole,
   updateStatus,
 } from "./request";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
-  addCategoriesAdminSuccess,
+  addAdminSuccess,
   addCustomerAdminSuccess,
   addPostAdminSuccess,
   getAllAdminRequest,
@@ -25,12 +29,19 @@ import {
   loginAdminSuccess,
   registerAdminSuccess,
   requestAdminFailure,
+  roleAdminSuccess,
   setInfoAdmin,
+  updateAdminSuccess,
   updateCustomerAdminSuccess,
   updatePostAdminSuccess,
+  updateRoleAdminSuccess,
   updateStatusSuccess,
 } from "./adminSlice";
-import { createCustomerAdmin, getAllCustomersByAdmin } from "../customers/request";
+import { FeedbackRequest } from "../feedbackMail/feedbacksSlice";
+import {
+  createCustomerAdmin,
+  getAllCustomersByAdmin,
+} from "../customers/request";
 
 export function* handleLoginAdmin({ payload }) {
   try {
@@ -39,8 +50,8 @@ export function* handleLoginAdmin({ payload }) {
     const response = yield call(loginAdmin, payload);
     if (response) {
       const { message, accessToken, ...info } = response.data;
-      yield put(setNotifyGlobal(message));
       yield put(loginAdminSuccess(accessToken));
+      yield put(setNotifyGlobal(message));
       yield put(setInfoAdmin(info));
     }
   } catch (error) {
@@ -89,6 +100,18 @@ export function* handleGetAllPostsAdmin({ payload }) {
     yield handleCommonError(error);
   }
 }
+export function* handleGetRole({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getRole, payload);
+    if (response?.data) {
+      yield put(roleAdminSuccess(response.data?.reverse()));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
 export function* handleGetAllAdmin({ payload }) {
   try {
     yield put(setNotifyGlobal(""));
@@ -105,14 +128,14 @@ export function* handleGetAllAdmin({ payload }) {
 }
 export function* handleGetAllCustomersByAdmin({ payload }) {
   try {
-    yield put(setNotifyGlobal(''))
-    yield put(setErrorGlobal(''))
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
     const response = yield call(getAllCustomersByAdmin, payload);
     if (response) {
-      yield put(getCustomersAdminSuccess(response.data?.reverse()))
+      yield put(getCustomersAdminSuccess(response.data?.reverse()));
     }
   } catch (error) {
-    yield handleCommonError(error)
+    yield handleCommonError(error);
   }
 }
 export function* handleUpdateStatus({ payload }) {
@@ -124,23 +147,26 @@ export function* handleUpdateStatus({ payload }) {
     if (response?.data) {
       yield put(updateStatusSuccess());
       switch (model) {
-        case 'post':
+        case "post":
           yield put(getPostsAdminRequest());
           break;
-        case 'category':
+        case "category":
           yield put(getCategoriesAdminRequest());
           break;
-        case 'customer':
+        case "customer":
           yield put(getCustomersAdminRequest());
           break;
-        case 'comment':
+        case "comment":
           yield put(getCategoriesAdminRequest());
           break;
-        case 'admin':
+        case "admin":
           yield put(getAllAdminRequest());
           break;
+        case "feedback":
+          yield put(FeedbackRequest());
+          break;
         default:
-          put(setErrorGlobal("Có lỗi xảy ra khi thay đổi trạng thái!"))
+          put(setErrorGlobal("Có lỗi xảy ra khi thay đổi trạng thái!"));
           break;
       }
       yield put(setNotifyGlobal("Cập nhật trạng thái thành công"));
@@ -164,11 +190,29 @@ export function* handleUpdatePostAdmin({ payload }) {
     yield handleCommonError(error);
   }
 }
+export function* handleUpdateRoleAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(updateRole, payload?.id, payload?.role);
+    if (response?.data) {
+      yield put(updateRoleAdminSuccess());
+      yield put(getAllAdminRequest());
+      yield put(setNotifyGlobal(response.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
 export function* handleUpdateCustomerAdmin({ payload }) {
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(updateCustomerAdmin, payload?.id, payload?.customer);
+    const response = yield call(
+      updateCustomerAdmin,
+      payload?.id,
+      payload?.customer
+    );
     if (response?.data) {
       yield put(updateCustomerAdminSuccess());
       // yield put(postDetailRequest({ slug: payload?.slug }));
@@ -179,14 +223,31 @@ export function* handleUpdateCustomerAdmin({ payload }) {
     yield handleCommonError(error);
   }
 }
-export function* handleCreatePostsAdmin({ payload }) {
+export function* handleUpdateAdmin({ payload }) {
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(createPostAdmin, payload?.post);
+    const response = yield call(updateAdmin, payload?.id, payload?.admin);
+    if (response?.data) {
+      yield put(updateAdminSuccess());
+      // yield put(postDetailRequest({ slug: payload?.slug }));
+      yield put(getAllAdminRequest());
+      yield put(setNotifyGlobal(response.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleCreatePostsAdmin({ payload }) {
+  const { post, reset } = payload;
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(createPostAdmin, post);
     if (response?.data) {
       yield put(addPostAdminSuccess());
       yield put(getPostsAdminRequest());
+      yield reset();
     }
     yield put(setNotifyGlobal(response?.data?.message));
   } catch (error) {
@@ -194,22 +255,39 @@ export function* handleCreatePostsAdmin({ payload }) {
   }
 }
 export function* handleCreateCustomerAdmin({ payload }) {
+  const { customer, reset } = payload;
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(createCustomerAdmin, payload);
+    const response = yield call(createCustomerAdmin, customer);
     if (response?.data) {
       yield put(addCustomerAdminSuccess());
       yield put(getCustomersAdminRequest());
+      yield reset();
+      yield put(setNotifyGlobal(response?.data?.message));
     }
-    yield put(setNotifyGlobal(response?.data?.message));
   } catch (error) {
     yield handleCommonError(error);
   }
 }
-
+export function* handleCreateAdmin({ payload }) {
+  const { admin, reset } = payload;
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(createAdmin, admin);
+    if (response?.data) {
+      yield put(addAdminSuccess());
+      yield put(getAllAdminRequest());
+      yield reset();
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
 function* handleCommonError(error) {
-  console.log("error:", error);
+  console.log("error admin:", error);
   if (error?.code === "ERR_NETWORK") {
     yield put(requestAdminFailure(error));
     yield put(setErrorGlobal(error?.message));

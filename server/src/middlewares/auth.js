@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../jwt";
-
+import Role from "../models/Role";
+import Admin from "../models/Admin";
 const middlewareAuth = {
   verifyToken: (req, res, next) => {
     const token = req.headers.token;
@@ -24,8 +25,14 @@ const middlewareAuth = {
           if (err) return res.status(403).json({ status: 'notAuth' });
           const dataCustomer = { _id: customer?.id, admin: customer?.admin, role: customer?.role }
           const newAccessToken = generateAccessToken(dataCustomer);
-          if (newAccessToken) {
-            res.setHeader('new-token', newAccessToken);
+          if (usertype === 'customer') {
+            if (newAccessToken) {
+              res.setHeader('new-token', newAccessToken);
+            }
+          } else if (usertype === 'admin') {
+            if (newAccessToken) {
+              res.setHeader('new-token-admin', newAccessToken);
+            }
           }
           req.customer = customer;
           next();
@@ -37,10 +44,26 @@ const middlewareAuth = {
     });
   },
 
-  verifyTokenAdmin: (req, res, next) => {
-    middlewareAuth.verifyToken(req, res, () => {
+  verifyTokenStaff: (req, res, next) => {
+    middlewareAuth.verifyToken(req, res, async () => {
       const customer = req.customer
+      const dataAdmin = await Admin.findOne({ _id: customer.id })
       if (customer && customer.admin === true) {
+        if (dataAdmin.status === 'approved') {
+          next();
+        } else {
+          res.status(403).json({ message: `Bạn đã bị vô hiệu hóa tài khoản!` });
+        }
+      } else {
+        res.status(403).json({ message: `Bạn không phải là nhân viên!` });
+      }
+    });
+  },
+  verifyTokenAdmin: (req, res, next) => {
+    middlewareAuth.verifyTokenStaff(req, res, async () => {
+      const customer = req.customer;
+      const dataRole = await Role.findOne({ _id: customer.role })
+      if (customer && dataRole?.title === 'Admin') {
         next();
       } else {
         res.status(403).json({ message: `Bạn không phải là quản trị viên!` });
@@ -50,41 +73,3 @@ const middlewareAuth = {
 };
 
 module.exports = middlewareAuth;
-
-
-// import jwt from "jsonwebtoken";
-
-// const middlewareAuth = {
-//   verifyToken: (req, res, next) => {
-//     const token = req.headers.token;
-//     if (!token) return res.status(401).json("You're not authenticated");
-//     const accessToken = token.split(" ")[1];
-//     jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, customer) => {
-//       if (err) {
-//         return res.status(403).json("Token is not valid");
-//       }
-//       req.customer = customer;
-//       next();
-//     });
-//   },
-//   verifyTokenStaff: (req, res, next) => {
-//     middlewareAuth.verifyToken(req, res, () => {
-//       if (req.customer.admin && req.customer.role === 'staff') {
-//         next();
-//       } else {
-//         res.status(403).json("You're not authenticated staff");
-//       }
-//     });
-//   },
-//   verifyTokenAdmin: (req, res, next) => {
-//     middlewareAuth.verifyToken(req, res, () => {
-//       if (req.customer.admin && req.customer.role === 'admin') {
-//         next();
-//       } else {
-//         res.status(403).json("You're not authenticated admin");
-//       }
-//     });
-//   },
-// };
-
-// module.exports = middlewareAuth;

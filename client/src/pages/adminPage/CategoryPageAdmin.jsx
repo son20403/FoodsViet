@@ -1,9 +1,7 @@
 import React from "react";
 import LoadingRequest from "../../layout/loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCategoriesAdminRequest,
-} from "../../sagas/admin/adminSlice";
+import { getCategoriesAdminRequest } from "../../sagas/admin/adminSlice";
 import {
   Card,
   CardHeader,
@@ -17,9 +15,7 @@ import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDet
 import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
 
 const CategoryPageAdmin = () => {
-  const { loading, categories } = useSelector(
-    (state) => state.admin
-  );
+  const { loading, categories } = useSelector((state) => state.admin);
   // const { handleToggle, toggle } = useToggle(false)
   const dispatch = useDispatch();
   const handLoad = () => {
@@ -37,8 +33,7 @@ const CategoryPageAdmin = () => {
             <Typography variant="h6" color="white">
               Danh sách bài viết
             </Typography>
-            <div onClick={handLoad}
-              className="text-white cursor-pointer">
+            <div onClick={handLoad} className="text-white cursor-pointer">
               <ArrowPathIcon {...icon} />
             </div>
           </CardHeader>
