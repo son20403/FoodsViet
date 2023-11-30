@@ -10,6 +10,8 @@ import {
 } from "@heroicons/react/24/solid";
 import Logo from "../components/logo/Logo";
 import { query } from "../axios-interceptor/query-api";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Header from "../layout/Header";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
@@ -171,18 +173,21 @@ const MessagePage = () => {
   }, [messages]);
   return (
     <div className="flex min-h-screen ">
-      <div className="w-2/12 md:w-3/12 menu p-2.5 border-r">
+      <div className="w-2/12 md:w-4/12 menu p-2.5 border-r">
         <div className="">
-          <h1 className="text-2xl font-bold">
+          <h1 className="hidden font-bold md:block">
             <Logo>FOOSVIET</Logo>
           </h1>
         </div>
         <div className="">
-          <input
-            type="text"
-            placeholder="search ..."
-            className="chatmenu mb-5 w-[90%] py-2.5 border-b border-b-gray-500"
-          />
+          <div className="relative flex items-center justify-center md:justify-start h-[54px] mt-7">
+            <MagnifyingGlassIcon className="md:absolute z-10 w-5 h-5 top-[7px] left-4 "></MagnifyingGlassIcon>
+            <input
+              type="text"
+              placeholder="search ..."
+              className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
+            />
+          </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">
             {conversations.map((c, index) => (
               <Conversation
@@ -195,7 +200,7 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <section className="relative w-10/12 md:w-9/12">
+      <section className="relative w-10/12 md:w-8/12">
         {id ? (
           <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
             <div className="flex-1">
@@ -219,8 +224,8 @@ const MessagePage = () => {
         )}
 
         {currentChat._id ? (
-          <div className="boxwrapper p-2.5 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-no-repeat bg-cover">
-            <div className="h-[530px] md:h-[590px] overflow-y-auto overflow-x-hidden pr-5">
+          <div className="boxwrapper p-2.5 pb-0 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat">
+            <div className="md:h-[610px] h-[600px] overflow-y-auto overflow-x-hidden pr-5">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />
@@ -247,7 +252,7 @@ const MessagePage = () => {
         {id ? (
           <form
             onSubmit={handleSubmit}
-            className="flex items-center mt-5 chatBottom gap-x-3 p-2.5 absolute bottom-0 w-full"
+            className="absolute bottom-0 flex items-center w-[98%] bg-white gap-x-3"
           >
             <input
               name=""
