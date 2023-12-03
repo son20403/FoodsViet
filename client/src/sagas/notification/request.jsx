@@ -1,4 +1,5 @@
 import axios from "../../axios-interceptor/api";
+import admin from "../../axios-interceptor/admin";
 const COLLECTION_NAME = 'notification'
 export function addNotification(entity) {
     return axios.post(`/${COLLECTION_NAME}/addNotification`, entity)
@@ -8,6 +9,9 @@ export function getAllNotification() {
 }
 export function getNotificationByCustomer() {
     return axios.get(`/${COLLECTION_NAME}/getNotificationByCustomer`,)
+}
+export function getNotificationByAdmin() {
+    return admin.get(`/${COLLECTION_NAME}/getNotificationByAdmin`,)
 }
 export function deleteNotificationByCustomer(id) {
     return axios.delete(`/${COLLECTION_NAME}/deleteNotification?id=${id}`,)
@@ -21,6 +25,9 @@ export function updateAllNotificationByCustomer() {
 }
 export function updateNotificationByCustomer(id) {
     return axios.put(`/${COLLECTION_NAME}/updateNotification?id=${id}`,)
+}
+export function updateNotificationByAdmin(id) {
+    return admin.put(`/${COLLECTION_NAME}/updateNotificationAdmin?id=${id}`,)
 }
 // headers: {
 //     "Content-Type": "multipart/form-data",

@@ -35,78 +35,76 @@ const PostItemAdmin = ({ data }) => {
     dispatch(detailCategoriesAdminSuccess({ ...dataCategory }));
   }
   return (
-    <>
-      <tr className="border-b border-blue-gray-50 last:border-b-0">
-        <td className={`${className} max-w-[500px]`}>
-          <div className="flex items-center gap-4">
-            <Avatar src={data?.image} alt={data?.title} size="lg" />
-            <div className="flex-1">
-              <Typography className="text-xs font-normal text-blue-gray-500">
-                {dataCategory?.title || ""}
-              </Typography>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-semibold"
-              >
-                {data?.title}
-              </Typography>
-            </div>
+    <tr className="border-b border-blue-gray-50 last:border-b-0" id={data?._id}>
+      <td className={`${className} max-w-[500px]`}>
+        <div className="flex items-center gap-4">
+          <Avatar src={data?.image} alt={data?.title} size="lg" />
+          <div className="flex-1">
+            <Typography className="text-xs font-normal text-blue-gray-500">
+              {dataCategory?.title || ""}
+            </Typography>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-semibold"
+            >
+              {data?.title}
+            </Typography>
           </div>
-        </td>
-        <td className={className}>
-          <Typography className="text-xs font-semibold text-blue-gray-600">
-            {(authorType === "customer"
-              ? dataCustomer?.full_name
-              : authorType === "admin"
+        </div>
+      </td>
+      <td className={className}>
+        <Typography className="text-xs font-semibold text-blue-gray-600">
+          {(authorType === "customer"
+            ? dataCustomer?.full_name
+            : authorType === "admin"
               ? dataAdmin?.full_name
               : "") || ""}
-          </Typography>
-          <Typography className="text-xs font-normal text-blue-gray-500">
-            {(authorType === "customer"
-              ? dataCustomer?.user_name
-              : authorType === "admin"
+        </Typography>
+        <Typography className="text-xs font-normal text-blue-gray-500">
+          {(authorType === "customer"
+            ? dataCustomer?.user_name
+            : authorType === "admin"
               ? `${dataAdmin?.user_name} (${authorType})`
               : "") || ""}
-          </Typography>
-        </td>
-        <td className={`${className} `}>
-          <Chip
-            variant="gradient"
-            color={
-              data?.status === "approved"
-                ? "green"
-                : data?.status === "pending"
+        </Typography>
+      </td>
+      <td className={`${className} `}>
+        <Chip
+          variant="gradient"
+          color={
+            data?.status === "approved"
+              ? "green"
+              : data?.status === "pending"
                 ? "yellow"
                 : "red"
-            }
-            value={
-              data?.status === "approved"
-                ? "Đã duyệt"
-                : data?.status === "pending"
+          }
+          value={
+            data?.status === "approved"
+              ? "Đã duyệt"
+              : data?.status === "pending"
                 ? "Chờ duyệt"
                 : "vô hiệu hóa"
-            }
-            className="py-0.5 px-2 text-[11px] font-medium inline-block"
-          />
-        </td>
-        <td className={className}>
-          <Typography className="flex flex-col text-xs font-semibold text-blue-gray-600">
-            <span>{data?.date || ""}</span>
-            <span className="font-normal text-gray-500">
-              ({timeSince(data?.timestamps || Date.now())})
-            </span>
-          </Typography>
-        </td>
-        <td
-          className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}
-        >
-          <Typography className="text-xs font-semibold cursor-pointer text-blue-gray-600">
-            <EyeIcon {...icon} onClick={handleShowPostDetail}></EyeIcon>
-          </Typography>
-        </td>
-      </tr>
-    </>
+          }
+          className="py-0.5 px-2 text-[11px] font-medium inline-block"
+        />
+      </td>
+      <td className={className}>
+        <Typography className="flex flex-col text-xs font-semibold text-blue-gray-600">
+          <span>{data?.date || ""}</span>
+          <span className="font-normal text-gray-500">
+            ({timeSince(data?.timestamps || Date.now())})
+          </span>
+        </Typography>
+      </td>
+      <td
+        className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}
+      >
+        <Typography className="text-xs font-semibold cursor-pointer text-blue-gray-600">
+          <EyeIcon {...icon} onClick={handleShowPostDetail}></EyeIcon>
+        </Typography>
+      </td>
+    </tr>
   );
 };
 

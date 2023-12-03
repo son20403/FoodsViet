@@ -29,10 +29,14 @@ const schemaValidate = Yup.object({
 const AddNewPosts = () => {
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
+    const { socket } = useSelector((state) => state.global)
     const { handleSubmit, formState: { errors, isSubmitting, isValid, isSubmitSuccessful }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const { categories, loading } = useSelector((state) => state.categories)
     const { loading: loadingPost } = useSelector((state) => state.posts)
+    const handleSendNotification = () => {
+        socket.emit('notificationAdmin');
+    }
     const handleSubmits = (value) => {
         const date = getDate()
         const timestamps = getTimestamp()
@@ -42,7 +46,7 @@ const AddNewPosts = () => {
             timestamps
         }
         if (isValid) {
-            dispatch(createPostsRequest({ post, reset }))
+            dispatch(createPostsRequest({ post, reset, handleSendNotification }))
         }
     }
     useEffect(() => {

@@ -20,6 +20,7 @@ import { icon } from "../../../ADMIN/routes";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
+  postDetailAdminSuccess,
   updateRoleAdminRequest,
   updateStatusRequest,
 } from "../../../sagas/admin/adminSlice";
@@ -27,12 +28,14 @@ import { WrapInfo } from "../../../pages/InfoUser";
 import { EmailIcon, LocationIcon, UserIcon } from "../../../components/Icon";
 import {
   closeDetailAdmin,
+  toggleDetaiPost,
   toggleUpdateAdmin,
 } from "../../../sagas/global/globalSlice";
 import SpeedDialAdmin from "../SpeedDialAdmin";
 import { PopoverDrop } from "../../Popover";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import PostItemAdmin from "../PostItemAdmin";
 
 const DetailAdmin = () => {
   const dispatch = useDispatch();
@@ -47,6 +50,10 @@ const DetailAdmin = () => {
   const { posts, adminDetail, role, infoAdmin } = useSelector(
     (state) => state.admin
   );
+  const handleShowDetailPost = (data) => {
+    dispatch(postDetailAdminSuccess(data));
+    dispatch(toggleDetaiPost());
+  }
   const dataPostsByAdmin = posts?.filter(
     (post) => post.id_customer === adminDetail?._id
   );
@@ -129,15 +136,13 @@ const DetailAdmin = () => {
                       <Typography
                         className={`text-xs flex items-center gap-x-2
                                                 font-semibold text-blue-600 min-w-[60px]
-                                                ${
-                                                  typeRole?.title === "Admin"
-                                                    ? "text-primary"
-                                                    : ""
-                                                }
-                                                ${
-                                                  adminDetail?.boss &&
-                                                  "text-red-500"
-                                                }`}
+                                                ${typeRole?.title === "Admin"
+                            ? "text-primary"
+                            : ""
+                          }
+                                                ${adminDetail?.boss &&
+                          "text-red-500"
+                          }`}
                       >
                         {typeRole?.title === "Admin"
                           ? "Quản Trị viên"
@@ -186,37 +191,10 @@ const DetailAdmin = () => {
                   Bài viết của người dùng
                 </Typography>
                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
-                  {dataPostsByAdmin?.map(({ image, title, _id, content }) => (
-                    <Card key={_id} color="transparent" shadow={false}>
-                      <CardHeader
-                        floated={false}
-                        color="gray"
-                        className="mx-0 mt-0 mb-4 h-64 xl:h-40"
-                      >
-                        <img
-                          src={image}
-                          alt={title}
-                          className="h-full w-full object-cover"
-                        />
-                      </CardHeader>
-                      <CardBody className="py-0 px-1">
-                        <Typography
-                          variant="h5"
-                          color="blue-gray"
-                          className="mt-1 mb-2 line-clamp-2"
-                        >
-                          {title}
-                        </Typography>
-                      </CardBody>
-                      <CardFooter className="mt-auto flex items-center justify-between py-0 px-1 ">
-                        <div className="mt-1">
-                          <Button variant="outlined" size="sm">
-                            Xem bài viết
-                          </Button>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  ))}
+                  {dataPostsByAdmin?.length > 0 ? dataPostsByAdmin?.map((post) => (
+                    <PostItemAdmin key={post?._id} post={post} />
+                  )) : <span className="col-span-1 text-center md:col-span-2 xl:col-span-3">
+                    Không có bài viết nào!</span>}
                 </div>
               </div>
             </CardBody>

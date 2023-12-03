@@ -8,6 +8,8 @@ import MessagePage from "../pages/MessagePage";
 import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 import PasswordReset from "../pages/PasswordReset";
 import ForgotPassword from "../pages/ForgotPassword";
+// import HomeAdmin from "../layout/adminLayout/HomeAdmin";
+const HomeAdmin = lazy(() => import("../pages/adminPage/HomeAdmin"));
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -61,8 +63,8 @@ export const router = createBrowserRouter([
     path: "/admin",
     element: <AppAdmin />,
     children: [
-      { path: "", element: <>Home</> },
-      { path: "home", element: <>Home</> },
+      { path: "", element: <HomeAdmin /> },
+      { path: "home", element: <HomeAdmin /> },
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },

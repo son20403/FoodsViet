@@ -191,9 +191,11 @@ class BaseController {
         status,
       };
       const dataPost = await Post(modelPost).save();
+      const { _id } = dataPost._doc;
       if (dataPost) {
         return res.status(200).json({
           message: "Tạo bài viết thành công",
+          id: _id
         });
       } else {
         if (fileData) cloudinary.uploader.destroy(id_image);

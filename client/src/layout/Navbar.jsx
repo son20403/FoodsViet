@@ -6,7 +6,7 @@ import { Heading } from '../components/heading';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeNavbar } from '../sagas/global/globalSlice';
 
-const listLink = [
+export const listLink = [
     {
         id: 1,
         title: 'Trang chủ',

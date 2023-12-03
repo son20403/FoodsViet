@@ -2,6 +2,7 @@ import { call, put } from "redux-saga/effects";
 import { createPost, getAllPost, getAllPostsByCategory, getAllPostsByCustomer, getDetailPost, getSearchPost, likePost, updatePost } from "./request";
 import { createPostsSuccess, getDetailPostSuccess, getPostsByCategorySuccess, getPostsByCustomerSuccess, getPostsSuccess, getSearchPostsSuccess, likePostSuccess, postDetailRequest, requestFailure, updatePostSuccess } from "./postsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
+import { addNotificationRequest } from "../notification/notificationSlice";
 
 export function* handleGetAllPosts({ payload }) {
     try {
@@ -76,14 +77,20 @@ export function* handleGetSearchPosts({ payload }) {
 
 }
 export function* handleCreatePosts({ payload }) {
-    const { post, reset } = payload
+    const { post, reset, handleSendNotification } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
         const response = yield call(createPost, post);
         if (response?.data) {
+            console.log("🚀 ~ file: handles.jsx:86 ~ function*handleCreatePosts ~ response?.data:", response?.data)
             yield put(createPostsSuccess())
+            yield put(addNotificationRequest({
+                id_post: response.data?.id, id_customer: 'admin',
+                typeNotity: 'createPost'
+            }))
             yield put(setNotifyGlobal(response?.data?.message));
+            yield handleSendNotification()
             yield reset()
         }
     } catch (error) {

@@ -426,7 +426,24 @@ class AdminController extends BaseController {
       });
     }
   }
+  logout = async (req, res) => {
+    const id_customer = req.query?.id;
+    const timeOnlined = Date.now();
+    await this.model.findByIdAndUpdate(id_customer, {
+      online: false,
+      timeOnlined,
+    });
+    res.cookie("refreshTokenAdmin", "", {
+      expires: new Date(0),
+      httpOnly: true,
+      secure: false,
+      path: "/",
+      sameSite: "strict",
+    });
+    res.status(200).json({ message: "Đăng xuất thành công" });
+  };
 }
+
 
 const adminController = new AdminController(
   Admin,

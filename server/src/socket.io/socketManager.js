@@ -59,6 +59,10 @@ const socketManager = (server) => {
         socket.on('update', () => {
             io.emit('update')
         });
+        socket.on('notificationAdmin', () => {
+            console.log('nhận');
+            io.emit('notificationAdmin')
+        });
         socket.on("sendMessage", ({ senderId, receiverId, text, messageId }) => {
             console.log("🚀 ~ file: socketManager.js:66 ~ socket.on ~ senderId:", senderId)
             const user = getUser(receiverId);

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   socket: null,
+  socketAdmin: null,
   showNavbar: false,
   showSetting: false,
   showSidebar: false,
@@ -286,6 +287,12 @@ export const globalSlice = createSlice({
         socket: action.payload,
       };
     },
+    setSocketAdmin: (state, action) => {
+      return {
+        ...state,
+        socketAdmin: action.payload,
+      };
+    },
   },
 });
 
@@ -331,6 +338,6 @@ export const {
   closeFeedback,
   toggleFeedback,
   toggleSignin,
-  toggleSignup
+  toggleSignup, setSocketAdmin
 } = globalSlice.actions;
 export default globalSlice.reducer;

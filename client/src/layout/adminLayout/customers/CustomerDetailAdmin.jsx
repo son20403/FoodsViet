@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import ModalBase from "../../modal/ModalBase";
 import LayoutAdminModel from "../LayoutAdminModel";
 import {
-    IconButton, SpeedDial, SpeedDialAction, SpeedDialContent, SpeedDialHandler, Card, CardBody, CardHeader, CardFooter, Avatar, Typography, Button,
+    Card, CardBody, CardHeader, CardFooter, Avatar, Typography, Button,
 } from "@material-tailwind/react";
 import {
-    ArchiveBoxXMarkIcon, ArrowUpTrayIcon, ClockIcon, PencilSquareIcon, PlusIcon, NewspaperIcon, HeartIcon
+    NewspaperIcon, HeartIcon
 } from "@heroicons/react/24/outline";
 import { icon } from "../../../ADMIN/routes";
 
 import { useDispatch, useSelector } from "react-redux";
-import useToggle from "../../../hooks/useToggle";
-import { updateStatusRequest } from "../../../sagas/admin/adminSlice";
+import { postDetailAdminSuccess, updateStatusRequest } from "../../../sagas/admin/adminSlice";
 import { WrapInfo } from "../../../pages/InfoUser";
 import { EmailIcon, LocationIcon, UserIcon } from "../../../components/Icon";
-import { closeDetailCustomer, toggleUpdateCustomer } from "../../../sagas/global/globalSlice";
+import { closeDetailCustomer, toggleDetaiPost, toggleUpdateCustomer } from "../../../sagas/global/globalSlice";
 import SpeedDialAdmin from "../SpeedDialAdmin";
+import PostItemAdmin from "../PostItemAdmin";
 
 const CustomerDetailAdmin = () => {
     const dispatch = useDispatch();
@@ -110,37 +110,10 @@ const CustomerDetailAdmin = () => {
                                     Bài viết của người dùng
                                 </Typography>
                                 <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
-                                    {dataPostsByCustomer?.map(({ image, title, _id, content }) => (
-                                        <Card key={_id} color="transparent" shadow={false}>
-                                            <CardHeader
-                                                floated={false}
-                                                color="gray"
-                                                className="mx-0 mt-0 mb-4 h-64 xl:h-40"
-                                            >
-                                                <img
-                                                    src={image}
-                                                    alt={title}
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            </CardHeader>
-                                            <CardBody className="py-0 px-1">
-                                                <Typography
-                                                    variant="h5"
-                                                    color="blue-gray"
-                                                    className="mt-1 mb-2 line-clamp-2"
-                                                >
-                                                    {title}
-                                                </Typography>
-                                            </CardBody>
-                                            <CardFooter className="mt-auto flex items-center justify-between py-0 px-1 ">
-                                                <div className="mt-1">
-                                                    <Button variant="outlined" size="sm">
-                                                        Xem bài viết
-                                                    </Button>
-                                                </div>
-                                            </CardFooter>
-                                        </Card>
-                                    ))}
+                                    {dataPostsByCustomer?.length > 0 ? dataPostsByCustomer?.map((post) => (
+                                        <PostItemAdmin key={post?._id} post={post} />
+                                    )) : <span className="col-span-1 text-center md:col-span-2 xl:col-span-3">
+                                        Không có bài viết nào!</span>}
                                 </div>
                             </div>
                         </CardBody>

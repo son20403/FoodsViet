@@ -43,6 +43,23 @@ class NotificationController extends BaseController {
             });
         }
     }
+    getNotificationByAdmin = async (req, res) => {
+        try {
+            const data = await this.model.find({ id_customer: 'admin' });
+            if (!data) {
+                return res.status(400).json({
+                    message: "Có lỗi xảy ra",
+                });
+            }
+            return res.status(200).json(data);
+
+        } catch (error) {
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Lỗi server!!!",
+            });
+        }
+    }
 
     addNotification = async (req, res) => {
         const id_sender = req.customer?.id;

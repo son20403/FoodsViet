@@ -88,7 +88,6 @@ const Header = () => {
   useEffect(() => {
     if (socket) {
       socket.on("sendNotify", () => {
-        console.log("ok");
         setTimeout(() => {
           handleGetNotification();
         }, 500);
@@ -116,23 +115,6 @@ const Header = () => {
   useEffect(() => {
     handleGetNotification();
   }, [location?.pathname, token]);
-  useEffect(() => {
-    if (socket) {
-      socket.on("sendNotify", () => {
-        console.log("ok");
-        setTimeout(() => {
-          handleGetNotification();
-        }, 500);
-      });
-    }
-    if (notifications?.length > 0) {
-      const total = notifications.filter((noti) => noti.status === true).length;
-      setNotificationIsActive(total);
-    } else {
-      setNotificationIsActive(0);
-    }
-  }, [socket, notifications]);
-
   const [isScroll, setIsScroll] = useState(false);
   useEffect(() => {
     const handleScrollbar = () => {

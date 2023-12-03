@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import AddPostAdmin from "../layout/adminLayout/posts/AddPostAdmin";
 import AddCategoryAdmin from "../layout/adminLayout/categories/AddCategoryAdmin";
+import socketIOClient from "socket.io-client";
 import {
   getAllAdminRequest,
   getCategoriesAdminRequest,
@@ -30,6 +31,7 @@ import {
   roleAdminRequest,
 } from "../sagas/admin/adminSlice";
 import {
+  setSocketAdmin,
   toggleAddAdmin,
   toggleAddCategory,
   toggleAddCustomer,
@@ -37,6 +39,9 @@ import {
 } from "../sagas/global/globalSlice";
 import AddCustomerAdmin from "../layout/adminLayout/customers/AddCustomerAdmin";
 import AddAdmin from "../layout/adminLayout/admins/AddAdmin";
+import PostDetailAdmin from "../layout/adminLayout/posts/PostDetailAdmin";
+import PostEditAdmin from "../layout/adminLayout/posts/PostEditAdmin";
+import BASE_URL from "../connect";
 export function Dashboard() {
   const navLink = [
     {
@@ -80,7 +85,7 @@ export function Dashboard() {
   };
   const { tokenAdmin, infoAdmin, admin } = useSelector((state) => state.admin);
   const dataAdmin = admin?.find((ad) => ad._id === infoAdmin?._id);
-  const { socket } = useSelector((state) => state.global);
+  const { socketAdmin } = useSelector((state) => state.global);
   const dispatch = useDispatch();
   const handleToggleAddPost = () => {
     dispatch(toggleAddPost());
@@ -106,19 +111,26 @@ export function Dashboard() {
     if (!tokenAdmin) navigate("/admin/signin");
   }, [tokenAdmin]);
   useEffect(() => {
-    if (tokenAdmin && infoAdmin && socket) {
-      socket.emit("addUser", infoAdmin?._id, "admin");
+    if (tokenAdmin && infoAdmin) {
+      dispatch(setSocketAdmin(socketIOClient(BASE_URL)));
+    } else {
+      dispatch(setSocketAdmin(null));
     }
-  }, [socket, infoAdmin, tokenAdmin]);
+  }, [tokenAdmin, infoAdmin]);
+  useEffect(() => {
+    if (tokenAdmin && infoAdmin && socketAdmin) {
+      socketAdmin.emit("addUser", infoAdmin?._id, "admin");
+    }
+  }, [socketAdmin, infoAdmin, tokenAdmin]);
   useEffect(() => {
     const handleTabClose = () => {
-      socket.emit("adminUnconnect", infoAdmin?._id);
+      socketAdmin.emit("adminUnconnect", infoAdmin?._id);
     };
     window.addEventListener("beforeunload", handleTabClose);
     return () => {
       window.removeEventListener("beforeunload", handleTabClose);
     };
-  }, [socket]);
+  }, [socketAdmin]);
   return (
     <div className="min-h-screen bg-blue-gray-50/50 max-w-[1600px] mx-auto !relative">
       <Sidebar routes={routes} />
@@ -141,9 +153,8 @@ export function Dashboard() {
               <SpeedDialAction
                 onClick={nav.onclick}
                 key={nav.id}
-                className={`relative text-white bg-primary/90 ${
-                  !dataAdmin?.boss && nav.id === 4 ? "hidden" : ""
-                }`}
+                className={`relative text-white bg-primary/90 ${!dataAdmin?.boss && nav.id === 4 ? "hidden" : ""
+                  }`}
               >
                 {nav.icon}
                 <Typography {...labelProps}>{nav.title}</Typography>
@@ -156,6 +167,8 @@ export function Dashboard() {
       <AddCategoryAdmin />
       <AddCustomerAdmin />
       <AddAdmin />
+      <PostDetailAdmin />
+      <PostEditAdmin />
     </div>
   );
 }

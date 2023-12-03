@@ -3,6 +3,7 @@ import { getObjectFromLocalStorage, removeObjectFromLocalStorage, saveObjectToLo
 
 const initialState = {
     notifications: {},
+    notificationsAdmin: {},
     loading: false,
     error: ''
 }
@@ -22,6 +23,20 @@ const notificationSlice = createSlice({
             return {
                 ...state,
                 notifications: action.payload,
+                loading: false,
+                error: '',
+            }
+        }, getNotificationByAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        getNotificationByAdminSuccess: (state, action) => {
+            return {
+                ...state,
+                notificationsAdmin: action.payload,
                 loading: false,
                 error: '',
             }
@@ -97,6 +112,20 @@ const notificationSlice = createSlice({
                 error: '',
             }
         },
+        updateNotificationAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        updateNotificationAdminSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: '',
+            }
+        },
         updateAllNotificationRequest: (state) => {
             return {
                 ...state,
@@ -127,5 +156,5 @@ const notificationSlice = createSlice({
     }
 })
 
-export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification, deleteAllNotificationRequest, deleteAllNotificationSuccess } = notificationSlice.actions
+export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification, deleteAllNotificationRequest, deleteAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, updateNotificationAdminRequest, updateNotificationAdminSuccess } = notificationSlice.actions
 export default notificationSlice.reducer
