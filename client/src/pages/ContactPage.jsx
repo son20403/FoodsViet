@@ -19,6 +19,7 @@ import {
   createFeedbacksRequest,
 } from "../sagas/feedbackMail/feedbacksSlice";
 import BannerCommon from "../layout/common/BannerCommon";
+import useSetTitle from "../hooks/useSetTitle";
 
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập tên!"),
@@ -32,6 +33,7 @@ const schemaValidate = Yup.object({
   // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 });
 const ContactPage = () => {
+  useSetTitle('Liên hệ')
   const dispatch = useDispatch();
   const { infoAuth } = useSelector((state) => state.auth);
   const {

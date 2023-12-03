@@ -41,6 +41,9 @@ const PostPageAdmin = () => {
             setTimeout(scrollToCenter, 1200);
         }
     }, [hashValue]);
+    useEffect(() => {
+        handLoad()
+    }, []);
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>

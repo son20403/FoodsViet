@@ -5,8 +5,10 @@ import Section from '../layout/common/Section';
 import BannerCommon from '../layout/common/BannerCommon';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';
+import useSetTitle from '../hooks/useSetTitle';
 
 const CategoryPage = () => {
+    useSetTitle('Danh sách loại')
     const { categories, loading } = useSelector((state) => state.categories);
     const { token } = useSelector((state) => state.auth);
     const dispatch = useDispatch()

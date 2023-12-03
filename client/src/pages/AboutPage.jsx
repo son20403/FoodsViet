@@ -2,6 +2,7 @@
 import React from "react";
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "../components/Icon";
 import BannerCommon from "../layout/common/BannerCommon";
+import useSetTitle from "../hooks/useSetTitle";
 const teamMembers = [
   {
     id: 1,
@@ -29,6 +30,7 @@ const teamMembers = [
   },
 ];
 const AboutPage = () => {
+  useSetTitle('Về FoodsViet')
   return (
     <div className="bg-white ">
       <BannerCommon image={'../src/assets/image/banner-post.jpg'} title='Về FOODSVIET' />

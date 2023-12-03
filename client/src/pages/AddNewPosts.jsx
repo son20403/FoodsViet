@@ -18,6 +18,7 @@ import PageWrap from '../layout/common/PageWrap';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import * as Yup from "yup";
 import { useDispatch, useSelector } from 'react-redux';
+import useSetTitle from '../hooks/useSetTitle';
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
     category: Yup.string().required("Vui lòng chọn chủ đề!"),
@@ -27,6 +28,7 @@ const schemaValidate = Yup.object({
 
 })
 const AddNewPosts = () => {
+    useSetTitle('Tạo bài viết')
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
     const { socket } = useSelector((state) => state.global)
@@ -61,7 +63,7 @@ const AddNewPosts = () => {
             </Section>
             <PageWrap>
                 <div className='page-content mt-5 px-2'>
-                    <Heading isHeading>Thêm bài viết </Heading>
+                    <Heading isHeading>Tạo bài viết </Heading>
                     <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
                         <div className='grid grid-cols-1 gap-10 pt-10 mb-10'>
                             <Field>
@@ -85,7 +87,7 @@ const AddNewPosts = () => {
                                 </Field>
                             </div>
                         </div>
-                        <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
+                        <Button type='submit' className=' mx-auto'>Tạo bài viết</Button>
                     </form>
                 </div>
             </PageWrap>

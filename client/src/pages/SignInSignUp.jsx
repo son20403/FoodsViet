@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toggleSignin } from "../sagas/global/globalSlice";
 import { icon } from "../ADMIN/routes";
+import useSetTitle from "../hooks/useSetTitle";
 const SignInSignUp = () => {
+  useSetTitle('Đăng nhập/Đăng ký')
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const { showSignin } = useSelector((state) => state.global);
@@ -20,9 +22,8 @@ const SignInSignUp = () => {
   }, [token]);
   return (
     <div
-      className={`container-main ${
-        showSignin ? "sign-up-mode" : ""
-      } select-none`}
+      className={`container-main ${showSignin ? "sign-up-mode" : ""
+        } select-none`}
     >
       <Link
         to={"/"}

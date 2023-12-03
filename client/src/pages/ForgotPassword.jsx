@@ -10,12 +10,14 @@ import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { icon } from "../ADMIN/routes";
 import { useDispatch } from "react-redux";
 import { forgotPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
+import useSetTitle from "../hooks/useSetTitle";
 
 const schemaValidate = Yup.object({
   user_name: Yup.string().required("Vui lòng nhập tài khoản!"),
 });
 
 const ForgotPassword = () => {
+  useSetTitle('Quên mật khẩu')
   const dispatch = useDispatch();
   const handleSubmits = (value) => {
     const user_name = {

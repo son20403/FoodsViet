@@ -12,8 +12,10 @@ import { postsRequest } from '../sagas/posts/postsSlice';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';
 import { customersRequest } from '../sagas/customers/customersSlice';
 import { Link } from 'react-router-dom';
+import useSetTitle from '../hooks/useSetTitle';
 
 const HomePage = () => {// Gửi dữ liệu đến server
+    useSetTitle('Trang chủ')
     const { posts, loading } = useSelector((state) => state.posts)
     const { categories } = useSelector((state) => state.categories);
     const { customers } = useSelector((state) => state.customers);
