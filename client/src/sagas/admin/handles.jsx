@@ -77,6 +77,7 @@ export function* handleLogoutAdmin({ payload }) {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
     const response = yield call(logoutAdmin, payload);
+    console.log("🚀 ~ file: handles.jsx:80 ~ function*handleLogoutAdmin ~ response:", response)
     if (response) {
       yield put(setErrorGlobal(""));
       yield put(setNotifyGlobal(response.data?.message));

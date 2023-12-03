@@ -41,10 +41,6 @@ const ContactPage = () => {
     reset,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
   const handleSubmits = (value) => {
-    console.log(
-      "🚀 ~ file: ContactPage.jsx:41 ~ handleSubmits ~ value:",
-      value
-    );
     const date = getDate();
     const timestamps = getTimestamp();
     const feedback = {

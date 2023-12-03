@@ -7,7 +7,7 @@ export function registerAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/register`, entity);
 }
 export function logoutAdmin() {
-  return axios.post(`/${COLLECTION_NAME}/logout`);
+  return axios.post(`/${COLLECTION_NAME}/logoutAdmin`);
 }
 export function getAllPostAdmin() {
   return axios.get(`/${COLLECTION_NAME}/getAllPostByAdmin`);

@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Card,
     CardHeader,
     CardBody,
     Typography,
 } from "@material-tailwind/react";
+import { useLocation } from 'react-router-dom';
 import PostItemAdmin from '../../layout/adminLayout/posts/PostItemAdmin';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingRequest from '../../layout/loading/LoadingRequest';
 import { getPostsAdminRequest } from '../../sagas/admin/adminSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { icon } from '../../ADMIN/routes';
-import PostDetailAdmin from '../../layout/adminLayout/posts/PostDetailAdmin';
-import { toggleDetaiPost } from '../../sagas/global/globalSlice';
-import PostEditAdmin from '../../layout/adminLayout/posts/PostEditAdmin';
 
 const PostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
@@ -21,6 +19,28 @@ const PostPageAdmin = () => {
     const handLoad = () => {
         dispatch(getPostsAdminRequest())
     }
+    const location = useLocation();
+    const hashValue = new URLSearchParams(location.hash.substring(1)).get('id_post');
+    useEffect(() => {
+        const scrollToCenter = () => {
+            if (hashValue) {
+                const element = document.getElementById(hashValue);
+                if (element) {
+                    const elementRect = element.getBoundingClientRect();
+                    const absoluteElementTop = elementRect.top + window.scrollY;
+                    const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+                    window.scrollTo({ top: middle, behavior: 'smooth' });
+                    element.className = 'bg-primary/10 transition-all rounded-lg'
+                    setTimeout(() => {
+                        element.className = 'relative'
+                    }, 1500);
+                }
+            }
+        };
+        if (hashValue) {
+            setTimeout(scrollToCenter, 1200);
+        }
+    }, [hashValue]);
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>
@@ -64,8 +84,6 @@ const PostPageAdmin = () => {
                     </CardBody>
                 </Card>
             </div>
-            <PostDetailAdmin></PostDetailAdmin>
-            <PostEditAdmin></PostEditAdmin>
         </div>
     );
 };

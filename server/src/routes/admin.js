@@ -9,6 +9,7 @@ router.post("/createCustomer", middlewareAuth.verifyTokenStaff, uploadCloud.sing
 router.post("/createAdmin", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.register);
 router.post("/createPost", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.createPost);
 router.post("/login", adminController.login); //middlewareAuth.verifyTokenStaff
+router.post("/logoutAdmin", adminController.logout); //middlewareAuth.verifyTokenStaff
 router.delete("/deleteCustomer?:id", middlewareAuth.verifyTokenStaff, adminController.deleteCustomer);
 router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenStaff, adminController.deleteAdmin);
 router.delete("/deleteAdmin?:id", middlewareAuth.verifyTokenStaff, adminController.deleteAdmin);

@@ -126,11 +126,11 @@ class CategoryController extends BaseController {
           message: "Không tồn tại loại này",
         });
       }
-      const isValid = hasCategory.id_author === id_author;
-      if (!isValid)
-        return res.status(400).json({
-          message: "Bạn không có quyền để sửa loại này",
-        });
+      // const isValid = hasCategory.id_author === id_author;
+      // if (!isValid)
+      //   return res.status(400).json({
+      //     message: "Bạn không có quyền để sửa loại này",
+      //   });
       let newImage = hasCategory.image;
       let newIdImage = hasCategory.id_image;
 
