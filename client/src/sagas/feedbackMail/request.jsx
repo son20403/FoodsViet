@@ -10,9 +10,18 @@ export function createFeedBack(entity) {
 export function sendPassword(entity) {
   return axios.post(`/${COLLECTION_NAME}/forgot-password`, entity);
 }
+export function sendPasswordAdmin(entity) {
+  return axios.post(`/${COLLECTION_NAME}/admin/forgot-password`, entity);
+}
 export function resetPassword(token, entity) {
-  return axios.post(
+  return admin.post(
     `/${COLLECTION_NAME}/reset-password?token=${token}`,
+    entity
+  );
+}
+export function resetPasswordAdmin(token, entity) {
+  return admin.post(
+    `/${COLLECTION_NAME}/admin/reset-password?token=${token}`,
     entity
   );
 }

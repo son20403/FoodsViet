@@ -77,7 +77,12 @@ const CustomerDetailAdmin = () => {
     <>
       <ModalBase onClose={handleClose} visible={showFeedback}>
         <LayoutAdminModel onClick={handleClose}>
-          <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-cover	bg-center">
+          <div
+            className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-cover	bg-center"
+            style={{
+              backgroundImage: `url(https://i.ex-cdn.com/vntravellive.com/files/news/2022/07/20/am-thuc-viet-nam-thuoc-top-ngon-nhat-the-gioi-104749.jpg)`,
+            }}
+          >
             <div className="absolute inset-0 h-full w-full bg-gray-500/50" />
           </div>
           <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
@@ -117,7 +122,7 @@ const CustomerDetailAdmin = () => {
               </div>
               <div className="px-4 pb-4">
                 <div className="text-xs leading-6 md:text-sm lg:text-base">
-                  <Label htmlFor={"message"}>Nội dung</Label>
+                  <Label className="mb-2 text-black">Nội dung</Label>
 
                   <div
                     dangerouslySetInnerHTML={{
@@ -146,7 +151,7 @@ const CustomerDetailAdmin = () => {
                         className="bg-primary w-full lg:w-auto"
                         type="submit"
                       >
-                        Lưu thông tin
+                        Lưu
                       </Button>
                     </div>
                   </form>

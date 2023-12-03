@@ -2,6 +2,7 @@
 import nodemailer from "nodemailer";
 import FeedBack from "../models/SendEmail";
 import Customer from "../models/Customer";
+import Admin from "../models/Admin";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 const util = require("util");
@@ -90,6 +91,31 @@ class SendEmailController {
       });
     }
   };
+  forgotPasswordAdmin = async (req, res) => {
+    try {
+      const { user_name } = req.body;
+      const user = await Admin.findOne({ user_name });
+      if (!user) {
+        res.status(401).json({ message: "Không tìm thấy người dùng" });
+      }
+      const email = user.email;
+      const token = jwt.sign({ id: user._id }, process.env.JWT_ACCESS_KEY, {
+        expiresIn: "5h",
+      });
+      const link = `${process.env.CLIENT_URL}/admin/reset-password?token=${token}`;
+      console.log(
+        "🚀 ~ file: SendMailController.js:107 ~ SendEmailController ~ forgotPasswordAdmin= ~ link:",
+        link
+      );
+      forgotPass({ email, link });
+      return res.status(200).json({ message: "Email sent successfully" });
+    } catch (error) {
+      console.log("err", error);
+      return res.status(500).json({
+        message: "Có lỗi xảy ra",
+      });
+    }
+  };
 
   resetPassword = async (req, res) => {
     const token = req.query.token;
@@ -118,6 +144,55 @@ class SendEmailController {
 
       const hashedPassword = await argon2.hash(newPassword);
       const updated = await Customer.findByIdAndUpdate(
+        id,
+        { password: hashedPassword },
+        {
+          new: true,
+        }
+      );
+      if (!updated) {
+        return res.status(401).json({ message: "Không thể cập nhập!" });
+      }
+
+      return res.json({ message: "Cập nhập mật khẩu thành công" });
+    } catch (error) {
+      console.log("err", error);
+      if (error && error.name === "TokenExpiredError")
+        return res.status(401).json({
+          message: "Liên kết đã hết hạn!",
+        });
+      return res.status(500).json({
+        message: "Có lỗi xảy ra",
+      });
+    }
+  };
+  resetPasswordAdmin = async (req, res) => {
+    const token = req.query.token;
+    const { newPassword } = req.body;
+
+    try {
+      let id = "";
+      const decoded = await jwtVerifyAsync(token, process.env.JWT_ACCESS_KEY);
+      if (decoded) {
+        id = decoded.id;
+      } else {
+        return res.status(401).json({ message: "Hết thời gian đổi mật khẩu!" });
+      }
+      const user = await Admin.findOne({ _id: id });
+      if (!user) {
+        return res.status(401).json({ message: "Không tìm thấy người dùng" });
+      }
+
+      const passwordValid = await argon2.verify(user?.password, newPassword);
+
+      if (passwordValid) {
+        return res.status(402).jsonp({
+          message: "Mật khẩu đã tồn tại",
+        });
+      }
+
+      const hashedPassword = await argon2.hash(newPassword);
+      const updated = await Admin.findByIdAndUpdate(
         id,
         { password: hashedPassword },
         {
@@ -199,23 +274,25 @@ const sendEmail = ({ fullName, email, phone, message }) => {
     html: `
     <div style="width: 100%; background-color: #f3f9ff; padding: 5rem 0">
     <div style="max-width: 700px; background-color: white; margin: 0 auto">
-      <div style="width: 100%; background-color: #FFA500; padding: 20px 0">
+      <div style="width: 100%;">
       <a href="${process.env.CLIENT_URL}" ><img
-          src="https://cdn-icons-png.flaticon.com/512/2927/2927347.png"
-          style="width: 100%; height: 70px; object-fit: contain"
+          src="https://i.ex-cdn.com/vntravellive.com/files/news/2022/07/20/am-thuc-viet-nam-thuoc-top-ngon-nhat-the-gioi-104749.jpg"
+          style="width: 100%; height: 350px; object-fit: cover"
         /></a>
 
       </div>
       <div style="width: 100%; gap: 10px; padding: 30px 0; display: grid">
         <p style="font-weight: 800; font-size: 1.2rem; padding: 0 30px">
-          Form Blog FoodsViet
+          Từ Blog FoodsViet
         </p>
-        <div style="font-size: .8rem; margin: 0 30px">
-          <p>FullName: <b>${fullName}</b></p>
-          <p>Email: <b>${email}</b></p>
-          <p>Phone: <b>${phone}</b></p>
-          <p>Message: <i>${message}</i></p>
+        <h1 style="text-align: center; " > Phản hồi </h1>
+        <div style="font-size: .8rem; margin: 80px 30px">
+          <p>Tên: <b style="color:#FFA500;">${fullName}</b></p>
+          <p>Email: <b style="color:#FFA500;">${email}</b></p>
+          <p>Số điện thoại: <b style="color:#FFA500;">${phone}</b></p>
+          <p>Nội dung: <b style="color:#FFA500;">${message}</b></p>
         </div>
+        <p style="text-align: center;">Phản hồi thành công! ❤</p>
       </div>
     </div>
   </div>`,
@@ -229,27 +306,28 @@ const forgotPass = ({ link, email }) => {
     to: email,
     subject: "Reset password from BlogFoodViet",
     html: `
-    <div style="width: 100%; background-color: #f3f9ff; padding: 5rem 0">
+    <div style="width: 100%;background-color: #f3f9ff; padding: 5rem 0">
     <div style="max-width: 700px; background-color: white; margin: 0 auto">
-      <div style="width: 100%; background-color: #FFA500; padding: 20px 0">
+      <div style="width: 100%; ">
       <a href="${process.env.CLIENT_URL}" ><img
-          src="https://cdn-icons-png.flaticon.com/512/2927/2927347.png"
-          style="width: 100%; height: 70px; object-fit: contain"
+          src="https://i.ex-cdn.com/vntravellive.com/files/news/2022/07/20/am-thuc-viet-nam-thuoc-top-ngon-nhat-the-gioi-104749.jpg"
+          style="width: 100%; height: 350px; object-fit: cover"
         /></a>
 
       </div>
       <div style="width: 100%; gap: 10px; padding: 30px 0; display: grid">
-        <p style="font-weight: 800; font-size: 1.2rem; padding: 0 30px">
-          Form Blog FoodsViet
+        <p style="font-weight: 800; font-size: 1.2rem; padding: 0 30px; text-align: center;">
+          Từ Blog FoodsViet
         </p>
         <div style="font-size: .8rem; margin: 0 30px">
-        <h1> Reset Password </h1>
+        <h1 style="text-align: center; " > Đặt lại mật khẩu </h1>
         <p>
-        <a href="${link}">nhấn vào đây</a> để cập nhập mật khẩu
+        để cập nhập mật khẩu  <a href="${link}" style="color: #FFA500; font-weight: medium;">nhấn vào đây</a>
     </p> 
-    <p>
+    <p style="margin-bottom: 60px; ">
     bạn có 5 phút kể từ lúc nhập được mail này
     </p>
+    <p style="text-align: center;">Chúc bạn thành công! ❤</p>
         </div>
       </div>
     </div>

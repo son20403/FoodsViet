@@ -68,7 +68,7 @@ const feedbacksSlice = createSlice({
         error: null,
       };
     },
-    forgetPasswordRequest: (state) => {
+    forgotPasswordRequest: (state) => {
       return {
         ...state,
         loading: true,
@@ -76,7 +76,22 @@ const feedbacksSlice = createSlice({
       };
     },
 
-    forgetPasswordSuccess: (state) => {
+    forgotPasswordSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    forgotPassworAdmindRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+
+    forgotPasswordAdminSuccess: (state) => {
       return {
         ...state,
         error: null,
@@ -92,6 +107,21 @@ const feedbacksSlice = createSlice({
     },
 
     resetPasswordSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    resetPasswordAdminRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+
+    resetPasswordAdminSuccess: (state) => {
       return {
         ...state,
         error: null,
@@ -117,9 +147,13 @@ export const {
   feedbackDetailRequest,
   sendFeedbacksRequest,
   sendFeedbacksSuccess,
-  forgetPasswordRequest,
-  forgetPasswordSuccess,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
   resetPasswordRequest,
   resetPasswordSuccess,
+  forgotPassworAdmindRequest,
+  forgotPasswordAdminSuccess,
+  resetPasswordAdminRequest,
+  resetPasswordAdminSuccess,
 } = feedbacksSlice.actions;
 export default feedbacksSlice.reducer;
