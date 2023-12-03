@@ -15,10 +15,6 @@ import { FeedbackRequest } from "../../sagas/feedbackMail/feedbacksSlice";
 
 const FeedBackPageAdmin = () => {
   const { loading, feedback } = useSelector((state) => state.feedback);
-  console.log(
-    "🚀 ~ file: FeedBackPageAdmin.jsx:18 ~ FeedBackPageAdmin ~ feedback:",
-    feedback
-  );
   const dispatch = useDispatch();
   const handLoad = () => {
     dispatch(FeedbackRequest());
@@ -37,7 +33,7 @@ const FeedBackPageAdmin = () => {
             className="z-10 flex items-center justify-between p-6 mb-8 bg-primary"
           >
             <Typography variant="h6" color="white">
-              Danh sách feedback
+              Danh sách phản hồi
             </Typography>
             <div onClick={handLoad} className="text-white cursor-pointer">
               <ArrowPathIcon {...icon} />
@@ -80,7 +76,6 @@ const FeedBackPageAdmin = () => {
           </CardBody>
         </Card>
       </div>
-      {/* <CategoryDetailAdmin></CategoryDetailAdmin> */}
       <FeedBackDetail></FeedBackDetail>
     </div>
   );

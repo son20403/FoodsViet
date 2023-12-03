@@ -27,6 +27,7 @@ import { PopoverDrop } from '../layout/Popover';
 import { addNotificationRequest } from '../sagas/notification/notificationSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import Breadcrumb from '../layout/Breadcumb';
+import useSetTitle from '../hooks/useSetTitle';
 
 
 const schemaValidate = Yup.object({
@@ -36,7 +37,7 @@ const schemaValidate = Yup.object({
 const DetailPage = () => {
     const { slug } = useParams()
     const navigate = useNavigate();
-
+    const [titlePost, setTitlePost] = useState('');
     const dispatch = useDispatch()
     const { detail_post, loading, postsCategory, postsCustomer, error } = useSelector((state) => state.posts);
     const { token, infoAuth } = useSelector((state) => state.auth);
@@ -46,14 +47,11 @@ const DetailPage = () => {
 
     const { comments, commentsPost } = useSelector((state) => state.comments);
     const { handleToggle, toggle } = useToggle(false);
-
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleResetForm = () => {
         reset()
     }
-
-
 
     const dataCategory = categories?.filter((cate) => cate._id === detail_post?.category)[0]
     const postByCategories = postsCategory?.filter((post) => post?.slug !== slug);
@@ -158,6 +156,9 @@ const DetailPage = () => {
             navigate('/not-found')
         }
     }, [loading, error]);
+    useEffect(() => {
+        document.title = detail_post?.title
+    }, [detail_post]);
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>

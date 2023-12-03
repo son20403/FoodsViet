@@ -1,8 +1,5 @@
 import {
   HomeIcon,
-  BellIcon,
-  ArrowRightOnRectangleIcon,
-  UserPlusIcon,
   NewspaperIcon,
   Square3Stack3DIcon,
   UserIcon,
@@ -38,7 +35,7 @@ const routes = [
       },
       {
         icon: <EnvelopeOpenIcon {...icon} />,
-        name: "Feedback",
+        name: "Phản hồi",
         path: "/feedBack",
       },
       {

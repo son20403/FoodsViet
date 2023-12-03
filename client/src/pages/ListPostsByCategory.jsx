@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { categoriesRequest } from '../sagas/categories/categoriesSlice';
+import useSetTitle from '../hooks/useSetTitle';
 
 
 const ListPostsByCategory = () => {
@@ -14,6 +15,7 @@ const ListPostsByCategory = () => {
     const { posts, loading } = useSelector((state) => state.posts)
     const { categories } = useSelector((state) => state.categories)
     const dataCategory = categories?.filter((cate) => cate?.slug === slug)[0];
+    useSetTitle(dataCategory?.title || 'Danh sách bài viết theo loại')
     const listPosts = posts?.filter((post) => post?.category === dataCategory?._id)
     useEffect(() => {
         dispatch(categoriesRequest())

@@ -8,6 +8,7 @@ import { Button } from "../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
+import useSetTitle from "../hooks/useSetTitle";
 
 const schemaValidate = Yup.object({
   password: Yup.string()
@@ -25,6 +26,7 @@ const schemaValidate = Yup.object({
 });
 
 const PasswordReset = () => {
+  useSetTitle('Đổi mật khẩu')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();

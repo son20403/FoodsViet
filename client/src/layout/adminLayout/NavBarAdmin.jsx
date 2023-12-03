@@ -1,21 +1,17 @@
 import { useLocation, Link } from "react-router-dom";
 import {
-  Navbar, Typography, IconButton, Breadcrumbs, Input, Menu, MenuHandler, MenuList, MenuItem, Avatar, Badge
+  Navbar, Typography, IconButton, Breadcrumbs, Input, Menu, MenuHandler, MenuList, MenuItem, Avatar
 } from "@material-tailwind/react";
 import {
   Bars3Icon,
   ClockIcon,
-  CreditCardIcon,
   BellIcon
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../sagas/global/globalSlice";
 import { useEffect, useState } from "react";
-import { getNotificationByAdminRequest, updateNotificationAdminRequest, updateNotificationRequest } from "../../sagas/notification/notificationSlice";
+import { getNotificationByAdminRequest, updateNotificationAdminRequest } from "../../sagas/notification/notificationSlice";
 import useTimeSince from "../../hooks/useTimeSince";
-import { PopoverDrop } from "../Popover";
-import { EllipsisIcon, TrashIcon } from "../../components/Icon";
-import IconWrap from "../../components/Icon/IconWrap";
 
 
 export function DashboardNavbar() {
@@ -34,8 +30,8 @@ export function DashboardNavbar() {
     dispatch(getNotificationByAdminRequest());
   };
   useEffect(() => {
-    dispatch(getNotificationByAdminRequest())
-  }, []);
+    handleGetNotification()
+  }, [pathname]);
   useEffect(() => {
     if (socketAdmin) {
       socketAdmin.on("notificationAdmin", () => {
@@ -108,12 +104,11 @@ export function DashboardNavbar() {
             <MenuHandler>
               <div className="relative">
                 <div className="absolute text-xs p-3 z-10 flex items-center justify-center bg-red-500 
-                text-white right-3 top-0 
-                  rounded-full">
+                text-white -right-1 -top-2 rounded-full">
                   <span className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
                     {notificationIsActive}</span>
                 </div>
-                <IconButton variant="text" color="blue-gray" className="mx-5">
+                <IconButton variant="text" color="blue-gray" className="mx-1">
                   <BellIcon className="h-5 w-5 text-blue-gray-500" />
                 </IconButton>
               </div>
@@ -132,7 +127,6 @@ export function DashboardNavbar() {
   );
 }
 
-// DashboardNavbar.displayName = "/src/widgets/layout/dashboard-navbar.jsx";
 
 export default DashboardNavbar;
 

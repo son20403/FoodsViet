@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -11,7 +10,7 @@ import {
 import Logo from "../components/logo/Logo";
 import { query } from "../axios-interceptor/query-api";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Header from "../layout/Header";
+import useSetTitle from "../hooks/useSetTitle";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
@@ -22,14 +21,11 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [unRead, setUnRead] = useState([]);
   const scrollRef = useRef();
-  const socket2 = useRef();
-
   const navigate = useNavigate();
   let { id } = useParams();
+  useSetTitle('Trò chuyện')
   if (!id) {
     id = "";
   }
@@ -76,15 +72,6 @@ const MessagePage = () => {
       currentChat?.members?.includes(arrivalMessage.sender) &&
       setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat._id]);
-
-  // useEffect(() => {
-  //   // socket?.emit("addUser", infoAuth._id);
-  //   socket?.on("getUsers", (users) => {
-  //     // setOnlineUsers(
-  //     //   infoAuth.followings.filter((f) => users.some((u) => u.userId === f))
-  //     // );
-  //   });
-  // }, [infoAuth]);
   const getConversations = async () => {
     try {
       const res = await query().messenger.getConversations(infoAuth._id);
@@ -109,9 +96,6 @@ const MessagePage = () => {
                 (c) => c !== infoAuth._id
               )}`
             );
-            // const r = await axios.put(
-            //   "http://localhost:8989/messages/" + currentChat?._id
-            // );
           } else {
             navigate(`/message/${id}`);
           }
@@ -160,7 +144,6 @@ const MessagePage = () => {
 
     try {
       const res = await query().messenger.createMessage(message);
-      // const res = await axios.post("http://localhost:8989/messages", message);
       setMessages([...messages, res.data]);
       setNewMessage("");
     } catch (err) {
@@ -173,7 +156,7 @@ const MessagePage = () => {
   }, [messages]);
   return (
     <div className="flex min-h-screen ">
-      <div className="w-2/12 md:w-4/12 menu p-2.5 border-r">
+      <div className="w-2/12 md:w-4/12 lg:w-3/12 menu p-2.5 border-r">
         <div className="">
           <h1 className="hidden font-bold md:block">
             <Logo>FOOSVIET</Logo>
@@ -200,9 +183,9 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <section className="relative w-10/12 md:w-8/12">
+      <section className="relative w-10/12 md:w-8/12  lg:w-9/12  ">
         {id ? (
-          <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
+          <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5 ">
             <div className="flex-1">
               <Conversation
                 conversation={currentChat}
@@ -224,8 +207,9 @@ const MessagePage = () => {
         )}
 
         {currentChat._id ? (
-          <div className="boxwrapper p-2.5 pb-0 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat">
-            <div className="md:h-[610px] h-[600px] overflow-y-auto overflow-x-hidden pr-5">
+          <div className="boxwrapper relative p-2.5 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat ">
+            <div className="absolute inset-0 bg-black w-full h-full bg-opacity-5"></div>
+            <div className="relative md:h-[610px] h-full max-h-[600px] overflow-y-auto overflow-x-hidden pr-5 pb-12">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />

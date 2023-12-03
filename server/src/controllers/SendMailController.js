@@ -1,4 +1,3 @@
-// emailController.js
 import nodemailer from "nodemailer";
 import FeedBack from "../models/SendEmail";
 import Customer from "../models/Customer";
@@ -7,9 +6,8 @@ import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 const util = require("util");
 const jwtVerifyAsync = util.promisify(jwt.verify);
-
 class SendEmailController {
-  constructor() {}
+  constructor() { }
   send = async (req, res) => {
     const { fullName, email, phone, message } = req.body;
     try {
@@ -22,7 +20,6 @@ class SendEmailController {
   createFeedBack = async (req, res) => {
     const dataFeedBack = req.body;
     try {
-      // sendEmail(dataFeedBack);
       const data = await FeedBack(dataFeedBack).save();
       if (data) {
         return res.status(200).json({
@@ -41,20 +38,8 @@ class SendEmailController {
       });
     }
   };
-  // getAllFeedBack = async (req, res) => {
-  //   const id = req.query.id;
-  //   try {
-  //     const feedback = await FeedBack.find({
-  //       id: id,
-  //     }).populate("sender");
-  //     res.status(200).json(feedback);
-  //   } catch (err) {
-  //     res.status(500).json(err);
-  //   }
-  // };
   getAllFeedBack = async (req, res) => {
     const id = req.query.id;
-
     try {
       const data = await FeedBack.find({ id: id });
       if (!data) {
@@ -83,7 +68,7 @@ class SendEmailController {
       });
       const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
       forgotPass({ email, link });
-      return res.status(200).json({ message: "Email sent successfully" });
+      return res.status(200).json({ message: "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!" });
     } catch (error) {
       console.log("err", error);
       return res.status(500).json({
@@ -96,19 +81,15 @@ class SendEmailController {
       const { user_name } = req.body;
       const user = await Admin.findOne({ user_name });
       if (!user) {
-        res.status(401).json({ message: "Không tìm thấy người dùng" });
+        return res.status(401).json({ message: "Không tìm thấy quản trị viên này!" });
       }
       const email = user.email;
       const token = jwt.sign({ id: user._id }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: "5h",
+        expiresIn: "5s",
       });
       const link = `${process.env.CLIENT_URL}/admin/reset-password?token=${token}`;
-      console.log(
-        "🚀 ~ file: SendMailController.js:107 ~ SendEmailController ~ forgotPasswordAdmin= ~ link:",
-        link
-      );
       forgotPass({ email, link });
-      return res.status(200).json({ message: "Email sent successfully" });
+      return res.status(200).json({ message: "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!" });
     } catch (error) {
       console.log("err", error);
       return res.status(500).json({
@@ -215,34 +196,6 @@ class SendEmailController {
       });
     }
   };
-
-  // resetPassword = async (req, res) => {
-  //   const { password, re_password } = req.body;
-  //   const timestamps = Date.now();
-  //   try {
-  //     if (password !== re_password) {
-  //       throw new Error("Mật khẩu không trùng khớp!");
-  //     }
-
-  //     const hashPass = await argon2.hash(password);
-  //     const userData = {
-  //       password: hashPass,
-  //       timestamps,
-  //     };
-  //     const newPassword = await Customer(userData).save();
-  //     if (!newPassword) {
-  //       throw new Error("Có lỗi xảy ra");
-  //     }
-  //     return res.status(200).json({
-  //       message: "Đổi mật khẩu thành công",
-  //     });
-  //   } catch (error) {
-  //     console.log("err", error);
-  //     return res.status(500).json({
-  //       message: "Có lỗi xảy ra",
-  //     });
-  //   }
-  // };
 }
 
 const sendEmailController = new SendEmailController(sendEmail, forgotPass);
@@ -283,7 +236,7 @@ const sendEmail = ({ fullName, email, phone, message }) => {
       </div>
       <div style="width: 100%; gap: 10px; padding: 30px 0; display: grid">
         <p style="font-weight: 800; font-size: 1.2rem; padding: 0 30px">
-          Từ Blog FoodsViet
+          To Blog FoodsViet
         </p>
         <h1 style="text-align: center; " > Phản hồi </h1>
         <div style="font-size: .8rem; margin: 80px 30px">
@@ -317,7 +270,7 @@ const forgotPass = ({ link, email }) => {
       </div>
       <div style="width: 100%; gap: 10px; padding: 30px 0; display: grid">
         <p style="font-weight: 800; font-size: 1.2rem; padding: 0 30px; text-align: center;">
-          Từ Blog FoodsViet
+          To Blog FoodsViet
         </p>
         <div style="font-size: .8rem; margin: 0 30px">
         <h1 style="text-align: center; " > Đặt lại mật khẩu </h1>
