@@ -1,17 +1,21 @@
 import { useLocation, Link } from "react-router-dom";
 import {
-  Navbar,
-  Typography,
-  IconButton,
-  Breadcrumbs,
-  Input,
-  Avatar,
+  Navbar, Typography, IconButton, Breadcrumbs, Input, Menu, MenuHandler, MenuList, MenuItem, Avatar, Badge
 } from "@material-tailwind/react";
 import {
   Bars3Icon,
+  ClockIcon,
+  CreditCardIcon,
+  BellIcon
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSideBar } from "../../sagas/global/globalSlice";
+import { useEffect, useState } from "react";
+import { getNotificationByAdminRequest, updateNotificationAdminRequest, updateNotificationRequest } from "../../sagas/notification/notificationSlice";
+import useTimeSince from "../../hooks/useTimeSince";
+import { PopoverDrop } from "../Popover";
+import { EllipsisIcon, TrashIcon } from "../../components/Icon";
+import IconWrap from "../../components/Icon/IconWrap";
 
 
 export function DashboardNavbar() {
@@ -20,9 +24,34 @@ export function DashboardNavbar() {
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
   const { infoAdmin } = useSelector((state) => state.admin)
+  const { notificationsAdmin } = useSelector((state) => state.notification)
+  const { socketAdmin } = useSelector((state) => state.global)
+  const [notificationIsActive, setNotificationIsActive] = useState(0);
   const setOpenSidenav = () => {
     dispatch(toggleSideBar())
   }
+  const handleGetNotification = () => {
+    dispatch(getNotificationByAdminRequest());
+  };
+  useEffect(() => {
+    dispatch(getNotificationByAdminRequest())
+  }, []);
+  useEffect(() => {
+    if (socketAdmin) {
+      socketAdmin.on("notificationAdmin", () => {
+        console.log('ok');
+        setTimeout(() => {
+          handleGetNotification();
+        }, 500);
+      });
+    }
+    if (notificationsAdmin?.length > 0) {
+      const total = notificationsAdmin.filter((noti) => noti.status === true).length;
+      setNotificationIsActive(total);
+    } else {
+      setNotificationIsActive(0);
+    }
+  }, [socketAdmin, notificationsAdmin]);
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
@@ -75,84 +104,28 @@ export function DashboardNavbar() {
           <div>
             <Avatar src={infoAdmin?.image} size="sm" />
           </div>
-          {/* <Menu>
+          <Menu>
             <MenuHandler>
-              <IconButton variant="text" color="blue-gray">
-                <BellIcon className="h-5 w-5 text-blue-gray-500" />
-              </IconButton>
+              <div className="relative">
+                <div className="absolute text-xs p-3 z-10 flex items-center justify-center bg-red-500 
+                text-white right-3 top-0 
+                  rounded-full">
+                  <span className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+                    {notificationIsActive}</span>
+                </div>
+                <IconButton variant="text" color="blue-gray" className="mx-5">
+                  <BellIcon className="h-5 w-5 text-blue-gray-500" />
+                </IconButton>
+              </div>
             </MenuHandler>
-            <MenuList className="w-max border-0">
-              <MenuItem className="flex items-center gap-3">
-                <Avatar
-                  src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
-                  alt="item-1"
-                  size="sm"
-                  variant="circular"
-                />
-                <div>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-1 font-normal"
-                  >
-                    <strong>New message</strong> from Laur
-                  </Typography>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="flex items-center gap-1 text-xs font-normal opacity-60"
-                  >
-                    <ClockIcon className="h-3.5 w-3.5" /> 13 minutes ago
-                  </Typography>
-                </div>
-              </MenuItem>
-              <MenuItem className="flex items-center gap-4">
-                <Avatar
-                  src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-spotify.svg"
-                  alt="item-1"
-                  size="sm"
-                  variant="circular"
-                />
-                <div>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-1 font-normal"
-                  >
-                    <strong>New album</strong> by Travis Scott
-                  </Typography>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="flex items-center gap-1 text-xs font-normal opacity-60"
-                  >
-                    <ClockIcon className="h-3.5 w-3.5" /> 1 day ago
-                  </Typography>
-                </div>
-              </MenuItem>
-              <MenuItem className="flex items-center gap-4">
-                <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-tr from-blue-gray-800 to-blue-gray-900">
-                  <CreditCardIcon className="h-4 w-4 text-white" />
-                </div>
-                <div>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-1 font-normal"
-                  >
-                    Payment successfully completed
-                  </Typography>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="flex items-center gap-1 text-xs font-normal opacity-60"
-                  >
-                    <ClockIcon className="h-3.5 w-3.5" /> 2 days ago
-                  </Typography>
-                </div>
-              </MenuItem>
+            <MenuList className="w-max border-0 flex flex-col gap-y-3 max-h-[400px] overflow-y-auto overscroll-none">
+              {notificationsAdmin && notificationsAdmin?.length > 0 ? notificationsAdmin?.map((notify) => (
+                <NotifyItem key={notify?._id} notify={notify}></NotifyItem>
+              ))
+                : <div className='text-center'>Không có thông báo nào</div>
+              }
             </MenuList>
-          </Menu> */}
+          </Menu>
         </div>
       </div>
     </Navbar>
@@ -162,3 +135,44 @@ export function DashboardNavbar() {
 // DashboardNavbar.displayName = "/src/widgets/layout/dashboard-navbar.jsx";
 
 export default DashboardNavbar;
+
+const NotifyItem = ({ notify }) => {
+  const timeSince = useTimeSince()
+  const dispatch = useDispatch()
+  const { customers } = useSelector((state) => state.admin);
+  const infoCustomer = customers.find((cus) => cus._id === notify?.id_sender)
+  const handleUpdateNotification = () => {
+    if (notify?.status === true) {
+      dispatch(updateNotificationAdminRequest(notify?._id))
+    }
+  }
+
+  return (
+    <Link to={`/admin/posts#id_post=${notify?.id_post}`}>
+      <MenuItem className={`flex items-center gap-3 ${notify?.status ? 'bg-primary bg-opacity-10' : ''}`} onClick={handleUpdateNotification}>
+        <Avatar
+          src={infoCustomer?.image}
+          alt="item-1"
+          size="sm"
+          variant="circular"
+        />
+        <div>
+          <Typography
+            variant="small"
+            color="blue-gray"
+            className="mb-1 font-normal"
+          >
+            <strong>{infoCustomer?.full_name}</strong> Đã đăng bài viết mới!
+          </Typography>
+          <Typography
+            variant="small"
+            color="blue-gray"
+            className="flex items-center gap-1 text-xs font-normal opacity-60"
+          >
+            <ClockIcon className="h-3.5 w-3.5" /> {timeSince(notify?.timestamps)}
+          </Typography>
+        </div>
+      </MenuItem>
+    </Link>
+  )
+}
