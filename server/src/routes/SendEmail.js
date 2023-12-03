@@ -12,6 +12,8 @@ router.get(
 router.post("/addFeedBack", sendEmailController.createFeedBack);
 router.post("/forgot-password", sendEmailController.forgotPassword);
 router.post("/reset-password", sendEmailController.resetPassword);
+router.post("/admin/forgot-password", sendEmailController.forgotPasswordAdmin);
+router.post("/admin/reset-password", sendEmailController.resetPasswordAdmin);
 router.post("/", sendEmailController.send);
 
 export default router;

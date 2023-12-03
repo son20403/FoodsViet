@@ -8,8 +8,8 @@ import { Button } from "../components/button";
 import { Link } from "react-router-dom";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { icon } from "../ADMIN/routes";
-import { useDispatch, useSelector } from "react-redux";
-import { forgetPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
+import { useDispatch } from "react-redux";
+import { forgotPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
 
 const schemaValidate = Yup.object({
   user_name: Yup.string().required("Vui lòng nhập tài khoản!"),
@@ -23,7 +23,7 @@ const ForgotPassword = () => {
     };
 
     if (isValid) {
-      dispatch(forgetPasswordRequest({ user_name }));
+      dispatch(forgotPasswordRequest({ user_name }));
       reset();
     }
   };

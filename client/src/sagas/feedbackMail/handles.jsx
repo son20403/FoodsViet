@@ -3,18 +3,22 @@ import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import {
   FeedbackRequest,
   createFeedbacksSuccess,
-  forgetPasswordSuccess,
   getFeedbackSuccess,
   requestFailure,
   resetPasswordSuccess,
   sendFeedbacksSuccess,
+  forgotPasswordAdminSuccess,
+  forgotPasswordSuccess,
+  resetPasswordAdminSuccess,
 } from "./feedbacksSlice";
 import {
   createFeedBack,
   getAllFeedBack,
   resetPassword,
+  resetPasswordAdmin,
   sendEmail,
   sendPassword,
+  sendPasswordAdmin,
 } from "./request";
 import { updateStatusRequest } from "../admin/adminSlice";
 export function* handleCreateFeedback({ payload }) {
@@ -53,7 +57,7 @@ export function* handleSendPassword({ payload }) {
     yield put(setErrorGlobal(""));
     const response = yield call(sendPassword, payload.user_name);
     if (response?.data) {
-      yield put(forgetPasswordSuccess());
+      yield put(forgotPasswordSuccess());
       yield put(setNotifyGlobal(response?.data?.message));
     }
   } catch (error) {
@@ -70,6 +74,36 @@ export function* handleResetPassword({ payload }) {
 
     if (response?.data) {
       yield put(resetPasswordSuccess());
+      yield handleBack();
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSendPasswordAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(sendPasswordAdmin, payload.user_name);
+    if (response?.data) {
+      yield put(forgotPasswordAdminSuccess());
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleResetPasswordAdmin({ payload }) {
+  const { handleBack, password: newPassword, token } = payload;
+  const password = { newPassword };
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(resetPasswordAdmin, token, password);
+
+    if (response?.data) {
+      yield put(resetPasswordAdminSuccess());
       yield handleBack();
       yield put(setNotifyGlobal(response?.data?.message));
     }

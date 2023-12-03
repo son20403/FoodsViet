@@ -98,7 +98,7 @@ const ContactPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-5 mx-5 mt-10 md:grid-cols-2">
-            <div className="w-full">
+            <div className="w-full h-[370px]">
               <img
                 src="../src/assets/image/pixzolo-photography-Qtd5z7g4thc-unsplash.jpg"
                 alt=""
