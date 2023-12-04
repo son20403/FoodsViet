@@ -19,6 +19,7 @@ import {
   createFeedbacksRequest,
 } from "../sagas/feedbackMail/feedbacksSlice";
 import BannerCommon from "../layout/common/BannerCommon";
+import useSetTitle from "../hooks/useSetTitle";
 
 const schemaValidate = Yup.object({
   fullName: Yup.string().required("Vui lòng nhập tên!"),
@@ -32,6 +33,7 @@ const schemaValidate = Yup.object({
   // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 });
 const ContactPage = () => {
+  useSetTitle('Liên hệ')
   const dispatch = useDispatch();
   const { infoAuth } = useSelector((state) => state.auth);
   const {
@@ -41,10 +43,6 @@ const ContactPage = () => {
     reset,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
   const handleSubmits = (value) => {
-    console.log(
-      "🚀 ~ file: ContactPage.jsx:41 ~ handleSubmits ~ value:",
-      value
-    );
     const date = getDate();
     const timestamps = getTimestamp();
     const feedback = {
@@ -57,12 +55,12 @@ const ContactPage = () => {
       reset();
     }
   };
-  useEffect(() => {
-    dispatch(FeedbackRequest());
-  }, []);
   return (
     <div className="bg-white">
-      <BannerCommon image={'./src/assets/image/banner-post.jpg'} title='Liên hệ' />
+      <BannerCommon
+        image={"./src/assets/image/banner-post.jpg"}
+        title="Liên hệ"
+      />
       <div className="w-full pt-12 pb-4 mx-auto">
         <div className="text-center ">
           <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
@@ -102,7 +100,7 @@ const ContactPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 gap-5 mx-5 mt-10 md:grid-cols-2">
-            <div className="w-full">
+            <div className="w-full h-[370px]">
               <img
                 src="../src/assets/image/pixzolo-photography-Qtd5z7g4thc-unsplash.jpg"
                 alt=""

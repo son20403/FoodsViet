@@ -48,6 +48,9 @@ const InfoUser = () => {
       navigate('/not-found')
     }
   }, [loading, error]);
+  useEffect(() => {
+    document.title = customer_detail?.full_name
+  }, [customer_detail]);
   return (
     <div className="relative bg-gray-50">
       <LoadingRequest show={loading}></LoadingRequest>

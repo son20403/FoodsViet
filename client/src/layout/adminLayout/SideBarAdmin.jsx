@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import { Link, NavLink } from "react-router-dom";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { XMarkIcon, ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import {
     Avatar,
     Button,
@@ -10,8 +10,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { closeSidebar, toggleNavbar } from "../../sagas/global/globalSlice";
 
+import { icon } from "../../ADMIN/routes";
+import { startTransition } from "react";
+import { setNotification } from "../../sagas/notification/notificationSlice";
+import { logoutAdmin } from "../../sagas/admin/adminSlice";
+
 export function Sidebar({ brandImg, brandName, routes }) {
     const { infoAdmin } = useSelector((state) => state.admin)
+    const { socketAdmin } = useSelector((state) => state.global)
+    const navigate = useNavigate();
     const dispatch = useDispatch()
     const sidenavTypes = {
         dark: "bg-gradient-to-br from-blue-gray-800 to-blue-gray-900",
@@ -24,7 +31,15 @@ export function Sidebar({ brandImg, brandName, routes }) {
     }
     const sidenavType = 'dark'
     const sidenavColor = 'white'
-
+    const handleLogout = () => {
+        const id = infoAdmin?._id
+        startTransition(() => {
+            socketAdmin.emit('adminUnconnect', id);
+            dispatch(setNotification())
+            dispatch(logoutAdmin({ id }));
+            navigate('/admin/signin');
+        });
+    }
     return (
         <aside
             className={`${sidenavTypes['white']} ${showSidebar ? "translate-x-0" : "-translate-x-80"
@@ -98,6 +113,29 @@ export function Sidebar({ brandImg, brandName, routes }) {
                         ))}
                     </ul>
                 ))}
+            </div>
+            <div className="m-4">
+                <ul className="mb-4 flex flex-col gap-1">
+                    <li >
+                        <div>
+                            <Button
+                                variant={"text"}
+                                color={"white"}
+                                className="flex items-center gap-4 px-4 capitalize"
+                                fullWidth
+                                onClick={handleLogout}
+                            >
+                                <ArrowRightOnRectangleIcon {...icon} />
+                                <Typography
+                                    color="inherit"
+                                    className="font-medium capitalize"
+                                >
+                                    Đăng xuất
+                                </Typography>
+                            </Button>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </aside>
     );

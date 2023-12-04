@@ -6,6 +6,12 @@ import ScrollToTop from "../layout/common/ScrollToTop";
 import Admin from "../ADMIN/Admin";
 import MessagePage from "../pages/MessagePage";
 import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
+import PasswordReset from "../pages/PasswordReset";
+import ForgotPassword from "../pages/ForgotPassword";
+import ForgotPasswordAdmin from "../pages/adminPage/ForgotPasswordAdmin";
+// import HomeAdmin from "../layout/adminLayout/HomeAdmin";
+const HomeAdmin = lazy(() => import("../pages/adminPage/HomeAdmin"));
+
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
 const CustomersPageAdmin = lazy(() =>
   import("../pages/adminPage/CustomerPageAdmin")
@@ -16,6 +22,9 @@ const CategoryPageAdmin = lazy(() =>
 
 const SignInPageAdmin = lazy(() =>
   import("../pages/adminPage/SignInPageAdmin")
+);
+const RetsetPasswordAdmin = lazy(() =>
+  import("../pages/adminPage/RetsetPasswordAdmin")
 );
 
 const PageAdmin = lazy(() => import("../pages/adminPage/PageAdmin"));
@@ -51,14 +60,16 @@ export const router = createBrowserRouter([
   },
   { path: "/message/:id?", element: <MessagePage /> },
   { path: "/signin", element: <SignInSignUp /> },
+  { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password", element: <PasswordReset /> },
   { path: "/not-found", element: <NotFound404 /> },
   { path: "*", element: <NotFound404 /> },
   {
     path: "/admin",
     element: <AppAdmin />,
     children: [
-      { path: "", element: <>Home</> },
-      { path: "home", element: <>Home</> },
+      { path: "", element: <HomeAdmin /> },
+      { path: "home", element: <HomeAdmin /> },
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
@@ -78,6 +89,8 @@ export const router = createBrowserRouter([
     ],
   },
   { path: "admin/signin", element: <SignInPageAdmin /> },
+  { path: "admin/reset-password", element: <RetsetPasswordAdmin /> },
+  { path: "admin/forgot-password", element: <ForgotPasswordAdmin /> },
 ]);
 function AppCustomer() {
   return (

@@ -8,9 +8,11 @@ import { useLocation } from 'react-router-dom';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { SearchIcon } from '../components/Icon';
 import { Input } from '@material-tailwind/react';
+import useSetTitle from '../hooks/useSetTitle';
 
 
 const PostPage = () => {
+    useSetTitle('Danh sách bài viết')
     const dispatch = useDispatch()
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search).get("query");

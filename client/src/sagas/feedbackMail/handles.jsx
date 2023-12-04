@@ -5,9 +5,21 @@ import {
   createFeedbacksSuccess,
   getFeedbackSuccess,
   requestFailure,
+  resetPasswordSuccess,
   sendFeedbacksSuccess,
+  forgotPasswordAdminSuccess,
+  forgotPasswordSuccess,
+  resetPasswordAdminSuccess,
 } from "./feedbacksSlice";
-import { createFeedBack, getAllFeedBack, sendEmail } from "./request";
+import {
+  createFeedBack,
+  getAllFeedBack,
+  resetPassword,
+  resetPasswordAdmin,
+  sendEmail,
+  sendPassword,
+  sendPasswordAdmin,
+} from "./request";
 import { updateStatusRequest } from "../admin/adminSlice";
 export function* handleCreateFeedback({ payload }) {
   try {
@@ -39,6 +51,66 @@ export function* handleSendFeedback({ payload }) {
     yield handleCommonError(error);
   }
 }
+export function* handleSendPassword({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(sendPassword, payload.user_name);
+    if (response?.data) {
+      yield put(forgotPasswordSuccess());
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleResetPassword({ payload }) {
+  const { handleBack, password: newPassword, token } = payload;
+  const password = { newPassword };
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(resetPassword, token, password);
+
+    if (response?.data) {
+      yield put(resetPasswordSuccess());
+      yield handleBack();
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSendPasswordAdmin({ payload }) {
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(sendPasswordAdmin, payload.user_name);
+    if (response?.data) {
+      yield put(forgotPasswordAdminSuccess());
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleResetPasswordAdmin({ payload }) {
+  const { handleBack, password: newPassword, token } = payload;
+  const password = { newPassword };
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(resetPasswordAdmin, token, password);
+
+    if (response?.data) {
+      yield put(resetPasswordAdminSuccess());
+      yield handleBack();
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
 
 export function* handleGetAllFeedBack({ payload }) {
   try {
@@ -55,7 +127,7 @@ export function* handleGetAllFeedBack({ payload }) {
   }
 }
 function* handleCommonError(error) {
-  console.log("error post:", error);
+  console.log("error send mail:", error);
   if (error?.code === "ERR_NETWORK") {
     yield put(requestFailure(error));
     yield put(setErrorGlobal(error?.message));

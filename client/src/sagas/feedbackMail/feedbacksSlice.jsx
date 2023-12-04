@@ -68,7 +68,66 @@ const feedbacksSlice = createSlice({
         error: null,
       };
     },
+    forgotPasswordRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
 
+    forgotPasswordSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    forgotPassworAdmindRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+
+    forgotPasswordAdminSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    resetPasswordRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+
+    resetPasswordSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    resetPasswordAdminRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+
+    resetPasswordAdminSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
     requestFailure: (state, action) => {
       return {
         ...state,
@@ -85,6 +144,16 @@ export const {
   createFeedbacksRequest,
   createFeedbacksSuccess,
   feedbackDetailAdminSuccess,
-  feedbackDetailRequest,sendFeedbacksRequest,sendFeedbacksSuccess
+  feedbackDetailRequest,
+  sendFeedbacksRequest,
+  sendFeedbacksSuccess,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
+  resetPasswordRequest,
+  resetPasswordSuccess,
+  forgotPassworAdmindRequest,
+  forgotPasswordAdminSuccess,
+  resetPasswordAdminRequest,
+  resetPasswordAdminSuccess,
 } = feedbacksSlice.actions;
 export default feedbacksSlice.reducer;

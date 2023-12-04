@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import {
   useNavigate,
@@ -18,6 +17,7 @@ import { query } from "../axios-interceptor/query-api";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Header from "../layout/Header";
 import SearchConversation from "../layout/SearchConversation";
+import useSetTitle from "../hooks/useSetTitle";
 
 const MessagePage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
@@ -34,6 +34,7 @@ const MessagePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   let { id } = useParams();
+  useSetTitle("Trò chuyện");
   if (!id) {
     id = "";
   }
@@ -162,7 +163,7 @@ const MessagePage = () => {
   }, [messages]);
   return (
     <div className="flex min-h-screen ">
-      <div className="w-2/12 md:w-4/12 menu p-2.5 border-r">
+      <div className="w-2/12 md:w-4/12 lg:w-3/12 menu p-2.5 border-r">
         <div className="">
           <h1 className="hidden font-bold md:block">
             <Logo>FOOSVIET</Logo>
@@ -198,9 +199,9 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <section className="relative w-10/12 md:w-8/12">
+      <section className="relative w-10/12 md:w-8/12 lg:w-9/12 ">
         {id ? (
-          <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5">
+          <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5 ">
             <div className="flex-1">
               <Conversation
                 conversation={currentChat}
