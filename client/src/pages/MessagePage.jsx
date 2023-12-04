@@ -184,7 +184,7 @@ const MessagePage = () => {
               placeholder="search ..."
               className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
               onFocus={handleFocus}
-              // onBlur={handleBlur}
+            // onBlur={handleBlur}
             />
           </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">
@@ -224,7 +224,7 @@ const MessagePage = () => {
 
         {currentChat._id ? (
           <div className="boxwrapper p-2.5 pb-0 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat">
-            <div className="h-[590px] md:h-[610px] overflow-y-auto overflow-x-hidden pr-5">
+            <div className="h-[590px] md:h-[610px] overflow-y-auto overflow-x-hidden pr-5 pb-10">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />
