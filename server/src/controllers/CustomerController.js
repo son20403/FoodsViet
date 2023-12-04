@@ -25,6 +25,33 @@ class CustomerController extends BaseController {
             });
         }
     };
+    search = async (req, res) => {
+        try {
+            const value = req.query.key;
+            const {infoId} = req.query;
+            const keyRegex = new RegExp(value, 'i')
+            const query = {
+                    $or: [
+                { full_name: { $regex: keyRegex } },
+                { slug: { $regex: keyRegex } },
+                            ],
+                    status: 'approved',
+            };
+            const dataCustomers = await Customer.find(query);
+           const filterAccount = dataCustomers.filter(data => data._id != infoId)
+            if (!dataCustomers)
+                return res.status(400).json({
+                    message: "Có lỗi xảy ra",
+                });
+            return res.status(200).json(filterAccount);
+        } catch (error) {
+            console.log('err', error);
+            return res.status(500).json({
+                message: "Lỗi Server",
+            });
+        }
+    };
+
     // updateCustomer = async (req, res) => {
     //     const id = req.customer.id;
     //     const formData = req.body;

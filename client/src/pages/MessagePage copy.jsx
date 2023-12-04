@@ -29,6 +29,7 @@ const MessagePage = () => {
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [search, setSearch] = useState(false);
+  console.log("🚀 --> MessagePage --> search:", search);
   const scrollRef = useRef();
 
   const navigate = useNavigate();
@@ -39,15 +40,18 @@ const MessagePage = () => {
   }
   let chatted = {};
   const user = customers.find((c) => c._id === id);
+
+  // useEffect(() => {
+  //   if (!infoAuth) {
+  //     navigate("/signin");
+  //   }
+  // }, [infoAuth]);
   useEffect(() => {
     chatted = conversations?.filter((conversation) =>
       conversation.members.find((m) => m === id)
     );
-
     if (chatted.length > 0) {
       setCurrentChat(chatted[0]);
-    } else {
-      setCurrentChat([]);
     }
   }, [id, conversations]);
   useEffect(() => {
@@ -109,7 +113,7 @@ const MessagePage = () => {
   const handleFocus = () => {
     setSearch(true);
   };
-  const handleClick = () => {
+  const handleBlur = () => {
     setSearch(false);
   };
 
@@ -168,16 +172,10 @@ const MessagePage = () => {
             <Logo>FOOSVIET</Logo>
           </h1>
         </div>
-
-        {search ? (
-          <SearchConversation onClick={handleClick}></SearchConversation>
-        ) : null}
+        {search ? <SearchConversation></SearchConversation> : null}
         <div className="">
           <div className="relative flex items-center justify-center md:justify-start h-[54px] mt-7">
-            <MagnifyingGlassIcon
-              className="md:absolute z-10 w-5 h-5 top-[7px] left-4 md:hover:cursor-default hover:cursor-pointer"
-              onClick={handleFocus}
-            ></MagnifyingGlassIcon>
+            <MagnifyingGlassIcon className="md:absolute z-10 w-5 h-5 top-[7px] left-4 "></MagnifyingGlassIcon>
             <input
               type="text"
               placeholder="search ..."

@@ -12,4 +12,15 @@ export const query = () => ({
         friendId: infoId,
       }),
   },
+  customers: {
+    getSearchCustomer: ({ infoId, query }) => {
+      const params = {
+        key: query,
+        infoId,
+      };
+      return axios.get(`/customer/search`, {
+        params,
+      });
+    },
+  },
 });
