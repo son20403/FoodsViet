@@ -127,8 +127,10 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(conversationsRequest({ userId: infoAuth?._id }));
-  }, [infoAuth]);
+    if (infoAuth?._id) {
+      dispatch(conversationsRequest({ userId: infoAuth?._id }));
+    }
+  }, [infoAuth?._id]);
   useEffect(() => {
     handleGetNotificationMessage();
   }, [location?.pathname, infoAuth, conversations]);

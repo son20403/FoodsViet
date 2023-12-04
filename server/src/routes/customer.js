@@ -12,5 +12,7 @@ router.get('/detail?:id', customerController.detail)
 // router.get('/detail', middlewareAuth.verifyToken, customerController.detail)
 router.put('/updateCustomer', middlewareAuth.verifyToken, uploadCloud.single("image"), customerController.updateCustomer)
 router.post('/createCustomer', middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), customerController.register)
+router.get('/search?:key', customerController.search)
+
 
 module.exports = router;

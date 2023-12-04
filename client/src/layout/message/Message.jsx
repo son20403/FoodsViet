@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { format } from "timeago.js";
 
 const Message = ({ own, message }) => {
@@ -10,11 +11,13 @@ const Message = ({ own, message }) => {
       <div
         className={`flex ${own ? "flex-row-reverse" : ""} items-center gap-x-3`}
       >
-        <img
-          src={user?.image}
-          className="object-cover w-8 h-8 rounded-full"
-          alt=""
-        />
+        <NavLink to={`/info/${user?.slug}`} className={"cursor-pointer"}>
+          <img
+            src={user?.image}
+            className="object-cover w-8 h-8 rounded-full"
+            alt=""
+          />
+        </NavLink>
         <div
           className={`p-2.5 text-white md:max-w-[350px] max-w-[300px] my-2.5 ${
             own

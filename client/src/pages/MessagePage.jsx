@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import Conversation from "../layout/conversation/Conversation";
 import Message from "../layout/message/Message";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import {
   InformationCircleIcon,
   PaperAirplaneIcon,
@@ -10,6 +15,8 @@ import {
 import Logo from "../components/logo/Logo";
 import { query } from "../axios-interceptor/query-api";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Header from "../layout/Header";
+import SearchConversation from "../layout/SearchConversation";
 import useSetTitle from "../hooks/useSetTitle";
 
 const MessagePage = () => {
@@ -21,24 +28,27 @@ const MessagePage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  const [search, setSearch] = useState(false);
   const scrollRef = useRef();
+
   const navigate = useNavigate();
+  const location = useLocation();
   let { id } = useParams();
-  useSetTitle('Trò chuyện')
+  useSetTitle("Trò chuyện");
   if (!id) {
     id = "";
   }
-
   let chatted = {};
   const user = customers.find((c) => c._id === id);
-
   useEffect(() => {
     chatted = conversations?.filter((conversation) =>
       conversation.members.find((m) => m === id)
     );
+
     if (chatted.length > 0) {
       setCurrentChat(chatted[0]);
+    } else {
+      setCurrentChat([]);
     }
   }, [id, conversations]);
   useEffect(() => {
@@ -51,19 +61,8 @@ const MessagePage = () => {
         });
       });
     }, 500);
-    socket?.on("getNotification", (data) => {
-      const isChatOpen = currentChat?.members?.some(
-        (id) => id === data.senderId
-      );
-      if (isChatOpen) {
-        setNotifications((prev) => [{ ...data, isRead: true }, ...prev]);
-      } else {
-        setNotifications((prev) => [data, ...prev]);
-      }
-    });
     return () => {
       socket?.off("getMessage");
-      socket?.off("getNotification");
     };
   }, [socket, currentChat]);
 
@@ -74,8 +73,10 @@ const MessagePage = () => {
   }, [arrivalMessage, currentChat._id]);
   const getConversations = async () => {
     try {
-      const res = await query().messenger.getConversations(infoAuth._id);
-      setConversations(res.data);
+      if (infoAuth) {
+        const res = await query().messenger.getConversations(infoAuth._id);
+        setConversations(res.data);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -106,6 +107,12 @@ const MessagePage = () => {
       getMessages();
     }, 500);
   }, [currentChat._id, newMessage, arrivalMessage]); //newMessage,
+  const handleFocus = () => {
+    setSearch(true);
+  };
+  const handleClick = () => {
+    setSearch(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,13 +169,22 @@ const MessagePage = () => {
             <Logo>FOOSVIET</Logo>
           </h1>
         </div>
+
+        {search ? (
+          <SearchConversation onClick={handleClick}></SearchConversation>
+        ) : null}
         <div className="">
           <div className="relative flex items-center justify-center md:justify-start h-[54px] mt-7">
-            <MagnifyingGlassIcon className="md:absolute z-10 w-5 h-5 top-[7px] left-4 "></MagnifyingGlassIcon>
+            <MagnifyingGlassIcon
+              className="md:absolute z-10 w-5 h-5 top-[7px] left-4 md:hover:cursor-default hover:cursor-pointer"
+              onClick={handleFocus}
+            ></MagnifyingGlassIcon>
             <input
               type="text"
               placeholder="search ..."
               className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
+              onFocus={handleFocus}
+              // onBlur={handleBlur}
             />
           </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">
@@ -183,7 +199,7 @@ const MessagePage = () => {
           </div>
         </div>
       </div>
-      <section className="relative w-10/12 md:w-8/12  lg:w-9/12  ">
+      <section className="relative w-10/12 md:w-8/12 lg:w-9/12 ">
         {id ? (
           <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5 ">
             <div className="flex-1">
@@ -207,9 +223,8 @@ const MessagePage = () => {
         )}
 
         {currentChat._id ? (
-          <div className="boxwrapper relative p-2.5 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat ">
-            <div className="absolute inset-0 bg-black w-full h-full bg-opacity-5"></div>
-            <div className="relative md:h-[610px] h-full max-h-[600px] overflow-y-auto overflow-x-hidden pr-5 pb-12">
+          <div className="boxwrapper p-2.5 pb-0 text-white bg-[url('https://svgshare.com/i/jyv.svg')] bg-repeat">
+            <div className="h-[590px] md:h-[610px] overflow-y-auto overflow-x-hidden pr-5">
               {messages.map((m, index) => (
                 <div ref={scrollRef} key={index}>
                   <Message message={m} own={m.sender === infoAuth._id} />
