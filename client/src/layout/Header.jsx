@@ -127,8 +127,10 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(conversationsRequest({ userId: infoAuth?._id }));
-  }, [infoAuth]);
+    if (infoAuth?._id) {
+      dispatch(conversationsRequest({ userId: infoAuth?._id }));
+    }
+  }, [infoAuth?._id]);
   useEffect(() => {
     handleGetNotificationMessage();
   }, [location?.pathname, infoAuth, conversations]);
@@ -173,25 +175,28 @@ const Header = () => {
               </div>
             )}
           </div>
-          <Link to={"/message/"}>
-            {messageUnRead?.length > 0 ? (
-              <Badge content={messageUnRead.length} overlap="circular">
+          {infoAuth ? (
+            <Link to={"/message/"}>
+              {messageUnRead?.length > 0 ? (
+                <Badge content={messageUnRead.length} overlap="circular">
+                  <div
+                    className={`pt-1 pr-1
+                            ${isScroll ? " !text-gray-600 " : " !text-white"}`}
+                  >
+                    <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
+                  </div>
+                </Badge>
+              ) : (
                 <div
-                  className={`pt-1 pr-1
+                  className={`
                             ${isScroll ? " !text-gray-600 " : " !text-white"}`}
                 >
                   <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
                 </div>
-              </Badge>
-            ) : (
-              <div
-                className={`
-                            ${isScroll ? " !text-gray-600 " : " !text-white"}`}
-              >
-                <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
-              </div>
-            )}
-          </Link>
+              )}
+            </Link>
+          ) : null}
+
           <Avatar onClick={handleShowSetting} image={dataAuth?.image}></Avatar>
           <div className="cursor-pointer lg:hidden" onClick={handleShowNavbar}>
             <FontAwesomeIcon

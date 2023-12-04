@@ -38,7 +38,7 @@ export function* handleGetConvesations({ payload }) {
 
     if (response) {
       yield put(conversationsSuccess(response?.data));
-      // console.log(response);
+      console.log(response);
     }
   } catch (error) {
     console.log(error);
