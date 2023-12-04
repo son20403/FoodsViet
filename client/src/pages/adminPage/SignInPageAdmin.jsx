@@ -73,7 +73,7 @@ export function SignInPageAdmin() {
                             Sign In
                         </Button>
                         <Typography variant="small" className="mt-6 flex justify-center">Bạn quên mật khẩu?
-                            <Link to="/auth/sign-up">
+                            <Link to="/admin/forgot-password">
                                 <Typography
                                     as="span"
                                     variant="small"

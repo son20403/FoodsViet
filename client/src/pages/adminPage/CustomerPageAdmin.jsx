@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingRequest from "../../layout/loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { getCustomersAdminRequest } from "../../sagas/admin/adminSlice";
@@ -13,14 +13,18 @@ import { icon } from "../../ADMIN/routes";
 import CustomerItemAdmin from "../../layout/adminLayout/customers/CustomerItemAdmin";
 import CustomerDetailAdmin from "../../layout/adminLayout/customers/CustomerDetailAdmin";
 import CustomerEditAdmin from "../../layout/adminLayout/customers/CustomerEditAdmin";
+import useScrollToCenter from "../../hooks/useScrollToCenter";
 
 const CustomersPageAdmin = () => {
   const { loading, customers } = useSelector((state) => state.admin);
-
+  useScrollToCenter('id_customer')
   const dispatch = useDispatch();
   const handLoad = () => {
     dispatch(getCustomersAdminRequest());
   };
+  useEffect(() => {
+    handLoad()
+  }, []);
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

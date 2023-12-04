@@ -5,7 +5,6 @@ import Comment from "../models/Comment";
 import Categories from "../models/Category";
 import Role from "../models/Role";
 import BaseController from "./Controller";
-import argon2 from "argon2";
 import FeedBack from "../models/SendEmail";
 
 const cloudinary = require("cloudinary").v2;
@@ -253,6 +252,53 @@ class AdminController extends BaseController {
       });
     } catch (error) {
       console.log("err", error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  };
+  searchAdmin = async (req, res) => {
+    const modelType = req.query.model;
+    let model;
+    switch (modelType) {
+      case "post":
+        model = this.postModel;
+        break;
+      case "admin":
+        model = this.model;
+        break;
+      case "category":
+        model = this.categoryModel;
+        break;
+      case "customer":
+        model = this.customerModel;
+        break;
+      default:
+        return res.status(400).json({ message: "Model không hợp lệ" });
+    }
+    try {
+      const value = req.query.key;
+      const keyRegex = new RegExp(value, 'i')
+      const query = {
+        $and: [
+          {
+            $or: [
+              { title: { $regex: keyRegex } },
+              { slug: { $regex: keyRegex } },
+              { full_name: { $regex: keyRegex } },
+              { user_name: { $regex: keyRegex } },
+            ],
+          },
+        ],
+      };
+      const dataPost = await model.find(query);
+      if (!dataPost)
+        return res.status(400).json({
+          message: "Có lỗi xảy ra",
+        });
+      return res.status(200).json(dataPost);
+    } catch (error) {
+      console.log('err', error);
       return res.status(500).json({
         message: "Lỗi Server",
       });

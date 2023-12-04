@@ -89,6 +89,7 @@ export function* handleSendPasswordAdmin({ payload }) {
     if (response?.data) {
       yield put(forgotPasswordAdminSuccess());
       yield put(setNotifyGlobal(response?.data?.message));
+      yield payload?.handleBack()
     }
   } catch (error) {
     yield handleCommonError(error);

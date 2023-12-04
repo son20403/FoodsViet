@@ -5,10 +5,11 @@ import {
 import {
   Bars3Icon,
   ClockIcon,
-  BellIcon
+  BellIcon,
+  MagnifyingGlassIcon
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSideBar } from "../../sagas/global/globalSlice";
+import { toggleSearchAdmin, toggleSideBar } from "../../sagas/global/globalSlice";
 import { useEffect, useState } from "react";
 import { getNotificationByAdminRequest, updateNotificationAdminRequest } from "../../sagas/notification/notificationSlice";
 import useTimeSince from "../../hooks/useTimeSince";
@@ -29,13 +30,16 @@ export function DashboardNavbar() {
   const handleGetNotification = () => {
     dispatch(getNotificationByAdminRequest());
   };
+  const handleShowSearch = () => {
+    dispatch(toggleSearchAdmin())
+  }
   useEffect(() => {
     handleGetNotification()
   }, [pathname]);
+
   useEffect(() => {
     if (socketAdmin) {
       socketAdmin.on("notificationAdmin", () => {
-        console.log('ok');
         setTimeout(() => {
           handleGetNotification();
         }, 500);
@@ -43,7 +47,8 @@ export function DashboardNavbar() {
     }
     if (notificationsAdmin?.length > 0) {
       const total = notificationsAdmin.filter((noti) => noti.status === true).length;
-      setNotificationIsActive(total);
+      if (total)
+        setNotificationIsActive(total);
     } else {
       setNotificationIsActive(0);
     }
@@ -86,17 +91,9 @@ export function DashboardNavbar() {
           </Typography>
         </div>
         <div className="flex items-center">
-          <div className="mr-auto hidden md:block md:mr-4 md:w-56">
-            <Input label="Type here" />
+          <div className="block mr-4 cursor-pointer" onClick={handleShowSearch}>
+            <MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />
           </div>
-          <IconButton
-            variant="text"
-            color="blue-gray"
-            className="grid xl:hidden"
-            onClick={setOpenSidenav}
-          >
-            <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
-          </IconButton>
           <div>
             <Avatar src={infoAdmin?.image} size="sm" />
           </div>
@@ -121,6 +118,14 @@ export function DashboardNavbar() {
               }
             </MenuList>
           </Menu>
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            className="grid xl:hidden mr-4"
+            onClick={setOpenSidenav}
+          >
+            <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
+          </IconButton>
         </div>
       </div>
     </Navbar>

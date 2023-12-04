@@ -22,7 +22,9 @@ const FeedBackPageAdmin = () => {
   useEffect(() => {
     dispatch(FeedbackRequest());
   }, []);
-
+  useEffect(() => {
+    handLoad()
+  }, []);
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

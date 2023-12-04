@@ -29,6 +29,7 @@ const initialState = {
   showAddComment: false,
   showSignin: false,
   showSignup: false,
+  showSearchAdmin: false,
 };
 export const globalSlice = createSlice({
   name: "global",
@@ -293,6 +294,18 @@ export const globalSlice = createSlice({
         socketAdmin: action.payload,
       };
     },
+    toggleSearchAdmin: (state) => {
+      return {
+        ...state,
+        showSearchAdmin: !state.showSearchAdmin,
+      };
+    },
+    closeSearchAdmin: (state) => {
+      return {
+        ...state,
+        showSearchAdmin: false,
+      };
+    },
   },
 });
 
@@ -338,6 +351,9 @@ export const {
   closeFeedback,
   toggleFeedback,
   toggleSignin,
-  toggleSignup, setSocketAdmin
+  toggleSignup,
+  setSocketAdmin,
+  closeSearchAdmin,
+  toggleSearchAdmin,
 } = globalSlice.actions;
 export default globalSlice.reducer;

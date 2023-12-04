@@ -5,6 +5,7 @@ import {
   getAllPostAdmin,
   getListAdmin,
   getRole,
+  getSearchAdmin,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
@@ -30,6 +31,10 @@ import {
   registerAdminSuccess,
   requestAdminFailure,
   roleAdminSuccess,
+  searchAdminSuccess,
+  searchCategoriesSuccess,
+  searchCustomersSuccess,
+  searchPostsSuccess,
   setInfoAdmin,
   updateAdminSuccess,
   updateCustomerAdminSuccess,
@@ -77,7 +82,6 @@ export function* handleLogoutAdmin({ payload }) {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
     const response = yield call(logoutAdmin, payload);
-    console.log("🚀 ~ file: handles.jsx:80 ~ function*handleLogoutAdmin ~ response:", response)
     if (response) {
       yield put(setErrorGlobal(""));
       yield put(setNotifyGlobal(response.data?.message));
@@ -96,6 +100,62 @@ export function* handleGetAllPostsAdmin({ payload }) {
       yield put(getPostsAdminSuccess(response.data?.reverse()));
     } else {
       yield put(getPostsAdminSuccess([]));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSearchAdmin({ payload }) {
+  const { key, model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getSearchAdmin, model, key);
+    if (response?.data) {
+      const data = response.data?.reverse()
+      yield put(searchAdminSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSearchCustomer({ payload }) {
+  const { key, model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getSearchAdmin, model, key);
+    if (response?.data) {
+      const data = response.data?.reverse()
+      yield put(searchCustomersSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSearchCategories({ payload }) {
+  const { key, model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getSearchAdmin, model, key);
+    if (response?.data) {
+      const data = response.data?.reverse()
+      yield put(searchCategoriesSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleSearchPosts({ payload }) {
+  const { key, model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getSearchAdmin, model, key);
+    if (response?.data) {
+      const data = response.data?.reverse()
+      yield put(searchPostsSuccess(data));
     }
   } catch (error) {
     yield handleCommonError(error);

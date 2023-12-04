@@ -39,6 +39,7 @@ const Notification = () => {
                 flex-col  text-sm z-[10] right-0 shadow-soft border-t border-primary 
                 md:max-w-[600px] max-h-[500px] overflow-y-auto  overscroll-none
                 ${showNotification ? 'top-full' : 'invisible opacity-0'}`}>
+                <div className='absolute font-bold text-base w-full left-0 pl-5 pb-3'>Thông báo</div>
                 <div className='sticky top-0 mb-2 ml-auto cursor-pointer'>
                     <PopoverDrop x={80}
                         icon={

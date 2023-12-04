@@ -16,13 +16,18 @@ import { icon } from "../../ADMIN/routes";
 import ItemAdmin from "../../layout/adminLayout/admins/ItemAdmin";
 import DetailAdmin from "../../layout/adminLayout/admins/DetailAdmin";
 import EditAdmin from "../../layout/adminLayout/admins/EditAdmin";
+import useScrollToCenter from "../../hooks/useScrollToCenter";
 
 const PageAdmin = () => {
   const { loading, admin, tokenAdmin } = useSelector((state) => state.admin);
+  useScrollToCenter('id_admin')
   const dispatch = useDispatch();
   const handLoad = () => {
     dispatch(getAllAdminRequest());
   };
+  useEffect(() => {
+    handLoad()
+  }, []);
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

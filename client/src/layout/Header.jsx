@@ -153,45 +153,50 @@ const Header = () => {
           >
             <SearchIcon />
           </span>
+          {
+            token && infoAuth &&
+            <>
+              <div onClick={handleToggleNotification} className="cursor-pointer">
+                {notificationIsActive > 0 ? (
+                  <Badge content={notificationIsActive} overlap="circular">
+                    <div
+                      className={`pt-1 pr-1
+                          ${isScroll ? " !text-blue-700 " : " !text-white"}`}
+                    >
+                      <BellIcon className="w-6 h-6 " />
+                    </div>
+                  </Badge>
+                ) : (
+                  <div
+                    className={`
+                              ${isScroll ? " !text-gray-600 " : " !text-white"}`}
+                  >
+                    <BellIcon className="w-6 h-6 " />
+                  </div>
+                )}
+              </div>
 
-          <div onClick={handleToggleNotification} className="cursor-pointer">
-            {notificationIsActive > 0 ? (
-              <Badge content={notificationIsActive} overlap="circular">
-                <div
-                  className={`pt-1 pr-1
-                        ${isScroll ? " !text-blue-700 " : " !text-white"}`}
-                >
-                  <BellIcon className="w-6 h-6 " />
-                </div>
-              </Badge>
-            ) : (
-              <div
-                className={`
-                            ${isScroll ? " !text-gray-600 " : " !text-white"}`}
-              >
-                <BellIcon className="w-6 h-6 " />
-              </div>
-            )}
-          </div>
-          <Link to={"/message/"}>
-            {messageUnRead?.length > 0 ? (
-              <Badge content={messageUnRead.length} overlap="circular">
-                <div
-                  className={`pt-1 pr-1
-                            ${isScroll ? " !text-gray-600 " : " !text-white"}`}
-                >
-                  <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
-                </div>
-              </Badge>
-            ) : (
-              <div
-                className={`
-                            ${isScroll ? " !text-gray-600 " : " !text-white"}`}
-              >
-                <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
-              </div>
-            )}
-          </Link>
+              <Link to={"/message/"}>
+                {messageUnRead?.length > 0 ? (
+                  <Badge content={messageUnRead.length} overlap="circular">
+                    <div
+                      className={`pt-1 pr-1
+                              ${isScroll ? " !text-gray-600 " : " !text-white"}`}
+                    >
+                      <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
+                    </div>
+                  </Badge>
+                ) : (
+                  <div
+                    className={`
+                              ${isScroll ? " !text-gray-600 " : " !text-white"}`}
+                  >
+                    <ChatBubbleOvalLeftIcon className="w-6 h-6 " />
+                  </div>
+                )}
+              </Link>
+            </>
+          }
           <Avatar onClick={handleShowSetting} image={dataAuth?.image}></Avatar>
           <div className="cursor-pointer lg:hidden" onClick={handleShowNavbar}>
             <FontAwesomeIcon
@@ -201,6 +206,7 @@ const Header = () => {
             />
           </div>
         </div>
+
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const CategoryDetailAdmin = () => {
     <ModalBase onClose={handleClose} visible={showDetailCategory}>
       <LayoutAdminModel onClick={handleClose}>
         <div
-          className="relative w-full mt-8 overflow-hidden bg-center bg-cover h-72 rounded-xl"
+          className="relative w-full mt- overflow-hidden bg-center bg-cover h-72 rounded-xl"
           style={{ backgroundImage: `url(${categoryDetail?.image})` }}
         >
           <div className="absolute inset-0 w-full h-full bg-gray-500/50" />
@@ -55,12 +55,12 @@ const CategoryDetailAdmin = () => {
                   className="rounded-lg shadow-lg shadow-blue-gray-500/40"
                 />
                 <div>
-                  <Typography variant="h5" color="blue-gray" className="mb-1">
+                  <Typography variant="h5" color="blue-gray" className="mb-1 text-base md:text-lg">
                     {categoryDetail?.title || ''}
                   </Typography>
                   <Typography
                     variant="small"
-                    className="font-normal text-blue-gray-600"
+                    className="font-normal text-blue-gray-600 text-xs md:text-sm"
                   >
                     {dataAdmin?.full_name} - {categoryDetail?.date}
                   </Typography>
