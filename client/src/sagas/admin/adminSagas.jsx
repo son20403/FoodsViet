@@ -12,6 +12,10 @@ import {
   logoutAdmin,
   registerAdminRequest,
   roleAdminRequest,
+  searchAdminRequest,
+  searchCategoriesRequest,
+  searchCustomersRequest,
+  searchPostsRequest,
   updateAdminRequest,
   updateCategoriesAdminRequest,
   updateCustomerAdminRequest,
@@ -30,6 +34,10 @@ import {
   handleLoginAdmin,
   handleLogoutAdmin,
   handleRegisterAdmin,
+  handleSearchAdmin,
+  handleSearchCategories,
+  handleSearchCustomer,
+  handleSearchPosts,
   handleUpdateAdmin,
   handleUpdateCustomerAdmin,
   handleUpdatePostAdmin,
@@ -53,10 +61,7 @@ export default function* adminSagas() {
   yield takeLatest(getCategoriesAdminRequest.type, handleGetAllCategoriesAdmin);
   yield takeLatest(addCategoriesAdminRequest.type, handleCreateCategoryAdmin);
   yield takeLatest(updateStatusRequest.type, handleUpdateStatus);
-  yield takeLatest(
-    updateCategoriesAdminRequest.type,
-    handleUpdateCategoryAdmin
-  );
+  yield takeLatest(updateCategoriesAdminRequest.type, handleUpdateCategoryAdmin);
   yield takeLatest(updateCustomerAdminRequest.type, handleUpdateCustomerAdmin);
   yield takeLatest(updateAdminRequest.type, handleUpdateAdmin);
   yield takeLatest(getCustomersAdminRequest.type, handleGetAllCustomersByAdmin);
@@ -64,4 +69,8 @@ export default function* adminSagas() {
   yield takeLatest(addAdminRequest.type, handleCreateAdmin);
   yield takeLatest(roleAdminRequest.type, handleGetRole);
   yield takeLatest(updateRoleAdminRequest.type, handleUpdateRoleAdmin);
+  yield takeLatest(searchAdminRequest.type, handleSearchAdmin);
+  yield takeLatest(searchCustomersRequest.type, handleSearchCustomer);
+  yield takeLatest(searchPostsRequest.type, handleSearchPosts);
+  yield takeLatest(searchCategoriesRequest.type, handleSearchCategories);
 }

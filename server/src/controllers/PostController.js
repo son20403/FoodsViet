@@ -13,6 +13,9 @@ class PostController extends BaseController {
             if (!dataPostDetail) return res.status(400).json({
                 message: "Bài viết này không tồn tại",
             });
+            if (dataPostDetail.status !== 'approved') return res.status(400).json({
+                message: "Bài viết này đã bị vô hiệu hóa",
+            });
             const isLiked = dataPostDetail.likes?.includes(id);
 
             if (isLiked) {
@@ -98,6 +101,9 @@ class PostController extends BaseController {
                     message: "Không tồn tại sản phẩm này",
                 });
             }
+            if (dataPost.status !== 'approved') return res.status(400).json({
+                message: "Bài viết này đã bị vô hiệu hóa",
+            });
             const dataPostView = await this.model.findByIdAndUpdate(dataPost._id, { views: dataPost.views + 1 });
             if (!dataPostView) {
                 return res.status(400).json({
@@ -117,8 +123,6 @@ class PostController extends BaseController {
     search = async (req, res) => {
         try {
             const value = req.query.key;
-            // if (value !== '') {
-            // const key = unidecode(value)
             const keyRegex = new RegExp(value, 'i')
             const query = {
                 $and: [
@@ -128,7 +132,7 @@ class PostController extends BaseController {
                             { slug: { $regex: keyRegex } },
                         ],
                     },
-                    { status: 'approved' } // Điều kiện trạng thái "approved"
+                    { status: 'approved' }
                 ],
             };
             const dataPost = await this.model.find(query);
@@ -137,9 +141,6 @@ class PostController extends BaseController {
                     message: "Có lỗi xảy ra",
                 });
             return res.status(200).json(dataPost);
-            // } else {
-            //     return res.status(200).json([])
-            // }
         } catch (error) {
             console.log('err', error);
             return res.status(500).json({
@@ -147,7 +148,6 @@ class PostController extends BaseController {
             });
         }
     };
-
     uploadImage = async (req, res) => {
         const fileData = req.file;
         try {

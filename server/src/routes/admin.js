@@ -25,6 +25,7 @@ router.get("/getListAdmin", middlewareAuth.verifyTokenStaff, adminController.get
 router.get("/getAllPostByAdmin", middlewareAuth.verifyTokenStaff, adminController.getAllPostByAdmin);
 router.get("/getDetailAdmin", middlewareAuth.verifyTokenStaff, adminController.detail);
 router.get("/getRole", middlewareAuth.verifyTokenStaff, adminController.getRole);
+router.get("/searchAdmin", middlewareAuth.verifyTokenStaff, adminController.searchAdmin);
 // router.get('/getDataCustomer', middlewareAuth.verifyToken, AdminAuthController.getDataCustomer)
 
 module.exports = router;

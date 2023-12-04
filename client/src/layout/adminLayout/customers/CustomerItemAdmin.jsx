@@ -19,7 +19,7 @@ const CustomerItemAdmin = ({ data }) => {
     }
     return (
         <>
-            <tr className='border-b border-blue-gray-50 last:border-b-0'>
+            <tr className='border-b border-blue-gray-50 last:border-b-0' id={data?._id}>
                 <td className={`${className} max-w-[500px]`}>
                     <div className="flex items-center gap-4">
                         <Avatar src={data?.image} alt={data?.full_name} size="lg" />

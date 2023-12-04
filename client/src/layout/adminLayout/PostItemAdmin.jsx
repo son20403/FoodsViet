@@ -44,12 +44,12 @@ const PostItemAdmin = ({ post }) => {
                 <Typography
                     variant="h5"
                     color="blue-gray"
-                    className="mt-1 mb-2 line-clamp-2"
+                    className="mt-1 mb-2 line-clamp-2 text-base md:text-lg"
                 >
                     {post?.title}
                 </Typography>
             </CardBody>
-            <CardFooter className="mt-auto flex items-center justify-between py-0 px-1 ">
+            <CardFooter className="mt-auto flex items-center justify-between py-0 px-1">
                 <div className="mt-1">
                     <Button onClick={() => { handleShowDetailPost(post) }} variant="outlined" size="sm">
                         Xem bài viết

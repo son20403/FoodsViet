@@ -29,6 +29,7 @@ import {
   getCustomersAdminRequest,
   getPostsAdminRequest,
   roleAdminRequest,
+  searchAdminRequest,
 } from "../sagas/admin/adminSlice";
 import {
   setSocketAdmin,
@@ -42,6 +43,7 @@ import AddAdmin from "../layout/adminLayout/admins/AddAdmin";
 import PostDetailAdmin from "../layout/adminLayout/posts/PostDetailAdmin";
 import PostEditAdmin from "../layout/adminLayout/posts/PostEditAdmin";
 import BASE_URL from "../connect";
+import SearchAdmin from "../layout/adminLayout/SearchAdmin";
 export function Dashboard() {
   const navLink = [
     {
@@ -169,6 +171,7 @@ export function Dashboard() {
       <AddAdmin />
       <PostDetailAdmin />
       <PostEditAdmin />
+      <SearchAdmin />
     </div>
   );
 }

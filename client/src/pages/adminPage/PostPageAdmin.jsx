@@ -12,35 +12,15 @@ import LoadingRequest from '../../layout/loading/LoadingRequest';
 import { getPostsAdminRequest } from '../../sagas/admin/adminSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { icon } from '../../ADMIN/routes';
+import useScrollToCenter from '../../hooks/useScrollToCenter';
 
 const PostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
+    useScrollToCenter('id_post')
     const dispatch = useDispatch()
     const handLoad = () => {
         dispatch(getPostsAdminRequest())
     }
-    const location = useLocation();
-    const hashValue = new URLSearchParams(location.hash.substring(1)).get('id_post');
-    useEffect(() => {
-        const scrollToCenter = () => {
-            if (hashValue) {
-                const element = document.getElementById(hashValue);
-                if (element) {
-                    const elementRect = element.getBoundingClientRect();
-                    const absoluteElementTop = elementRect.top + window.scrollY;
-                    const middle = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-                    window.scrollTo({ top: middle, behavior: 'smooth' });
-                    element.className = 'bg-primary/10 transition-all rounded-lg'
-                    setTimeout(() => {
-                        element.className = 'relative'
-                    }, 1500);
-                }
-            }
-        };
-        if (hashValue) {
-            setTimeout(scrollToCenter, 1200);
-        }
-    }, [hashValue]);
     useEffect(() => {
         handLoad()
     }, []);

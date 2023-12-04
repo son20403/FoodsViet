@@ -15,6 +15,9 @@ export function getAllPostAdmin() {
 export function getListAdmin() {
   return axios.get(`/${COLLECTION_NAME}/getListAdmin`);
 }
+export function getSearchAdmin(model, key) {
+  return axios.get(`/${COLLECTION_NAME}/searchAdmin?model=${model}&key=${key}`);
+}
 export function updateStatus(id, model, entity) {
   return axios.put(
     `/${COLLECTION_NAME}/updateStatus?id=${id}&model=${model}`,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingRequest from "../../layout/loading/LoadingRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoriesAdminRequest } from "../../sagas/admin/adminSlice";
@@ -13,14 +13,18 @@ import { icon } from "../../ADMIN/routes";
 import CategoryItemAdmin from "../../layout/adminLayout/categories/CategoryItemAdmin";
 import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDetailAdmin";
 import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
+import useScrollToCenter from "../../hooks/useScrollToCenter";
 
 const CategoryPageAdmin = () => {
   const { loading, categories } = useSelector((state) => state.admin);
-  // const { handleToggle, toggle } = useToggle(false)
   const dispatch = useDispatch();
+  useScrollToCenter('id_category')
   const handLoad = () => {
     dispatch(getCategoriesAdminRequest());
   };
+  useEffect(() => {
+    handLoad()
+  }, []);
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

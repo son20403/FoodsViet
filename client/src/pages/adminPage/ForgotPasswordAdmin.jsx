@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -7,15 +7,17 @@ import {
   Button,
   Typography,
 } from "@material-tailwind/react";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAdminRequest } from "../../sagas/admin/adminSlice";
 import { Input, InputPassword } from "../../components/input";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 import { forgotPassworAdmindRequest } from "../../sagas/feedbackMail/feedbacksSlice";
+import { icon } from "../../ADMIN/routes";
 const schemaValidate = Yup.object({
   user_name: Yup.string()
     .required("Vui lòng nhập tên đăng nhập!")
@@ -24,6 +26,10 @@ const schemaValidate = Yup.object({
 });
 const ForgotPasswordAdmin = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate('/admin/signin')
+  }
   const {
     handleSubmit,
     reset,
@@ -36,16 +42,21 @@ const ForgotPasswordAdmin = () => {
     };
 
     if (isValid) {
-      dispatch(forgotPassworAdmindRequest({ user_name }));
+      dispatch(forgotPassworAdmindRequest({ user_name, handleBack }));
       reset();
       // navigate("/admin/signin");
     }
   };
 
-  const navigate = useNavigate();
 
   return (
     <>
+      <Link
+        to={"/admin/signin"}
+        className="fixed top-2 left-5 flex justify-center items-center gap-5 text-white z-[10]"
+      >
+        <ArrowLeftIcon {...icon} /> Quay lại trang đăng nhập
+      </Link>
       <img
         src="https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80"
         className="absolute inset-0 z-0 h-full w-full object-cover"

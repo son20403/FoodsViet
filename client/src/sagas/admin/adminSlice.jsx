@@ -24,6 +24,10 @@ const initialState = {
   staffDetail: {},
   loading: false,
   error: null,
+  searchPosts: [],
+  searchCategories: [],
+  searchCustomers: [],
+  searchAdmins: [],
 };
 
 const adminSlice = createSlice({
@@ -479,6 +483,67 @@ const adminSlice = createSlice({
         error: null,
       };
     },
+    //Search    
+    searchAdminRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    searchAdminSuccess: (state, action) => {
+      return {
+        ...state,
+        searchAdmins: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
+    searchCustomersRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    searchCustomersSuccess: (state, action) => {
+      return {
+        ...state,
+        searchCustomers: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
+    searchCategoriesRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    searchCategoriesSuccess: (state, action) => {
+      return {
+        ...state,
+        searchCategories: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
+    searchPostsRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    searchPostsSuccess: (state, action) => {
+      return {
+        ...state,
+        searchPosts: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
   },
 });
 
@@ -543,5 +608,13 @@ export const {
   roleAdminSuccess,
   updateRoleAdminRequest,
   updateRoleAdminSuccess,
+  searchAdminRequest,
+  searchAdminSuccess,
+  searchCategoriesRequest,
+  searchCategoriesSuccess,
+  searchCustomersRequest,
+  searchCustomersSuccess,
+  searchPostsRequest,
+  searchPostsSuccess
 } = adminSlice.actions;
 export default adminSlice.reducer;
