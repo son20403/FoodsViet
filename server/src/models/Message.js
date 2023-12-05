@@ -13,7 +13,8 @@ const Message = new Schema(
       },
       isRead: {
           type: Array,
-      }
+      },
+       timestamps: { type: Number, default: Date.now,}
     },
     {
         timestamps: true,

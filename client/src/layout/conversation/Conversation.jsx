@@ -6,7 +6,7 @@ import { query } from "../../axios-interceptor/query-api";
 const Conversation = ({
   conversation,
   messages,
-  online,
+  // online,
   children,
   unRead,
   userId,
@@ -83,7 +83,7 @@ const Conversation = ({
               {lastestMessage?.text}
             </p>
           )}
-          {online && (
+          {friend?.online && (
             <div className="absolute w-3 h-3 bg-green-600 rounded-full bottom-1 -left-5"></div>
           )}
           {unRead && (
@@ -121,8 +121,8 @@ const Conversation = ({
             {lastestMessage?.text}
           </p>
         )}
-        {online && (
-          <div className="absolute w-3 h-3 bg-green-600 rounded-full bottom-1 -left-8"></div>
+        {friend?.online && (
+          <div className="absolute w-3 h-3 bg-green-600 rounded-full -bottom-2 -left-8"></div>
         )}
         {messageUnRead.length > 0 && (
           <div className="absolute right-0 w-3 h-3 p-2 text-white -translate-y-1/2 bg-blue-600 rounded-full top-1/2">
