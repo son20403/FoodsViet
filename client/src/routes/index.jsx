@@ -9,6 +9,7 @@ import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 import PasswordReset from "../pages/PasswordReset";
 import ForgotPassword from "../pages/ForgotPassword";
 import ForgotPasswordAdmin from "../pages/adminPage/ForgotPasswordAdmin";
+import CommentPageAdmin from "../pages/adminPage/CommentPageAdmin";
 // import HomeAdmin from "../layout/adminLayout/HomeAdmin";
 const HomeAdmin = lazy(() => import("../pages/adminPage/HomeAdmin"));
 
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
+      { path: "comments", element: <CommentPageAdmin /> },
       { path: "feedBack", element: <FeedBackPageAdmin /> },
       { path: "manage", element: <PageAdmin /> },
       // { path: "edit-post/:slug", element: <EditPost /> },

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { format } from "timeago.js";
 import useTimeSince from "../../hooks/useTimeSince";
 
 const Message = ({ own, message }) => {
@@ -20,7 +19,7 @@ const Message = ({ own, message }) => {
       >
         <NavLink
           to={`/info/${user?.slug}`}
-          className={"cursor-pointer flex-1 w-8 h-8"}
+          className={"cursor-pointer w-8 h-8"}
         >
           <img
             src={user?.image}

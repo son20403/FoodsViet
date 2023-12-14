@@ -4,6 +4,7 @@ import {
   Square3Stack3DIcon,
   UserIcon,
   EnvelopeOpenIcon,
+  ChatBubbleLeftIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
@@ -34,17 +35,22 @@ const routes = [
         path: "/customers",
       },
       {
+        icon: <ChatBubbleLeftIcon {...icon} />,
+        name: "Bình luận",
+        path: "/comments",
+      },
+      {
         icon: <EnvelopeOpenIcon {...icon} />,
         name: "Phản hồi",
         path: "/feedBack",
       },
       {
-        icon: <ShieldCheckIcon  {...icon} />,
+        icon: <ShieldCheckIcon {...icon} />,
         name: "Quản lý",
         path: "/manage",
       },
     ],
-  }
+  },
 ];
 
 export default routes;
