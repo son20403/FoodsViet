@@ -34,7 +34,7 @@ const AddPostAdmin = () => {
   const handleClosePost = () => {
     dispatch(closeAddPost())
   }
-  const { showAddPost } = useSelector((state) => state.global);
+  const { showAddPost, isUploadImage } = useSelector((state) => state.global);
   const {
     handleSubmit,
     formState: { errors, }, reset,
@@ -78,7 +78,8 @@ const AddPostAdmin = () => {
                 </InputTextarea>
               </Field>
               <Field>
-                <Select data={categories} control={control} name={"category"} errors={errors} />
+                <Select data={categories} control={control} name={"category"} errors={errors}
+                  title={'Danh mục'} />
               </Field>
               <div className=" mb-10">
                 <Label htmlFor={"image"}>Hình ảnh</Label>
@@ -100,7 +101,7 @@ const AddPostAdmin = () => {
                 </Field>
               </div>
             </div>
-            <Button type="submit" className="mx-auto ">
+            <Button type="submit" isLoading={isUploadImage} className="mx-auto ">
               Thêm bài viết
             </Button>
           </form>

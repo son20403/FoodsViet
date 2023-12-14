@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   categories: [],
+  detailCategory: {},
   loading: false,
   error: null,
 };
@@ -25,6 +26,21 @@ const categoriesSlice = createSlice({
         error: null,
       };
     },
+    detailCategoriesRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    getDetailCategoriesSuccess: (state, action) => {
+      return {
+        ...state,
+        detailCategory: action.payload,
+        loading: false,
+        error: null,
+      };
+    },
     requestFailure: (state, action) => {
       return {
         ...state,
@@ -35,6 +51,6 @@ const categoriesSlice = createSlice({
   },
 });
 
-export const { getCategoriesSuccess, categoriesRequest, requestFailure } =
+export const { getCategoriesSuccess, categoriesRequest, requestFailure, detailCategoriesRequest, getDetailCategoriesSuccess } =
   categoriesSlice.actions;
 export default categoriesSlice.reducer;

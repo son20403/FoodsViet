@@ -5,6 +5,7 @@ import useTimeSince from '../../hooks/useTimeSince';
 import { useSelector } from 'react-redux';
 import { Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react';
 import { Link } from 'react-router-dom';
+import { PopoverDrop } from '../Popover';
 
 const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '', isDetail = false }) => {
     const timeSince = useTimeSince()
@@ -15,8 +16,11 @@ const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '', is
     const isLiked = likes?.some((id) => id === infoAuth?._id)
     useEffect(() => {
         const extractedInfo = likes?.map(userId => {
-            return customers.find(u => u._id === userId);
-        });
+            const info = customers.find(u => u._id === userId && u.status === 'approved');
+            if (info) {
+                return info;
+            }
+        }).filter(Boolean);
         setListCus(extractedInfo)
     }, [likes, customers]);
     return (
@@ -27,35 +31,24 @@ const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '', is
             {isDetail ? <a href="#commentPost">
                 <IconWrap><CommentIcon /> <p className="text-[11px] lg:text-xs">{comments}</p></IconWrap>
             </a> : <IconWrap><CommentIcon /> <p className="text-[11px] lg:text-xs">{comments}</p></IconWrap>}
-            <Popover
-                animate={{
-                    mount: { scale: 1, x: 0 },
-                    unmount: { scale: 0, x: 0 },
-                }}
-                placement="top"
-            >
-                <PopoverHandler>
-                    <div className="cursor-pointer ">
-                        <IconWrap><HeartIcon isLiked={isLiked} />
-                            <p className="text-[11px] lg:text-xs">{countLikes}</p></IconWrap>
-                    </div>
-                </PopoverHandler>
-                <PopoverContent>
-                    <div className=' flex flex-col gap-y-3'>
-                        {listCus?.map((cus) => {
-                            const isAuth = infoAuth?._id === cus?._id
-                            if (cus?._id) {
-                                return (
-                                    <Link to={`/info/${cus?.slug}`}
-                                        className={`w-full block min-w-[150px] outline-none 
+            <PopoverDrop x={80} icon={<div className="cursor-pointer ">
+                <IconWrap><HeartIcon isLiked={isLiked} />
+                    <p className="text-[11px] lg:text-xs">{listCus?.length}</p></IconWrap>
+            </div>}>
+                <div className=' flex flex-col gap-y-3'>
+                    {listCus?.length > 0 ? listCus?.map((cus) => {
+                        const isAuth = infoAuth?._id === cus?._id
+                        if (cus?._id) {
+                            return (
+                                <Link to={`/info/${cus?.slug}`}
+                                    className={`w-full  !text-xs block min-w-[150px] outline-none 
                                         ${isAuth && 'text-primary'}`}
-                                        key={cus?._id + Date.now()}>{isAuth ? 'Bạn' : cus?.full_name}</Link>
-                                )
-                            }
-                        })}
-                    </div>
-                </PopoverContent>
-            </Popover>
+                                    key={cus?._id + Date.now()}>{isAuth ? 'Bạn' : cus?.full_name}</Link>
+                            )
+                        }
+                    }) : (<>Chưa có </>)}
+                </div>
+            </PopoverDrop>
         </div>
     );
 };

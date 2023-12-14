@@ -9,8 +9,10 @@ const initialState = {
   showNotification: false,
   showSearch: false,
   isRequest: false,
+  isUploadImage: false,
   errorGlobal: "",
   notifyGlobal: "",
+  breadcrumb: "",
   showDetailPost: false,
   showDetailCustomer: false,
   showDetailCategory: false,
@@ -306,6 +308,18 @@ export const globalSlice = createSlice({
         showSearchAdmin: false,
       };
     },
+    setUploadImage: (state, action) => {
+      return {
+        ...state,
+        isUploadImage: action.payload,
+      };
+    },
+    setBreadcrumb: (state, action) => {
+      return {
+        ...state,
+        breadcrumb: action.payload,
+      };
+    },
   },
 });
 
@@ -355,5 +369,7 @@ export const {
   setSocketAdmin,
   closeSearchAdmin,
   toggleSearchAdmin,
+  setUploadImage,
+  setBreadcrumb,
 } = globalSlice.actions;
 export default globalSlice.reducer;

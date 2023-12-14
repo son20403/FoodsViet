@@ -96,7 +96,7 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
                     <Link to={`/info/${customerByComment?.slug}`}>
                         <Heading className='text-sm md:text-base font-semibold'>{customerByComment?.full_name}
                             <span className='font-normal text-gray-500 text-sm'>
-                                {isAuth ? ' (bạn)' : comment?.id_customer === id_customer_post ? ' (người tạo)' : ''}
+                                {isAuth ? ' (bạn)' : comment?.id_customer === id_customer_post ? ' (tác giả)' : ''}
                             </span>
                         </Heading>
                     </Link>

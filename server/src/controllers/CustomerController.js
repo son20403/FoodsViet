@@ -28,17 +28,17 @@ class CustomerController extends BaseController {
     search = async (req, res) => {
         try {
             const value = req.query.key;
-            const {infoId} = req.query;
+            const { infoId } = req.query;
             const keyRegex = new RegExp(value, 'i')
             const query = {
-                    $or: [
-                { full_name: { $regex: keyRegex } },
-                { slug: { $regex: keyRegex } },
-                            ],
-                    status: 'approved',
+                $or: [
+                    { full_name: { $regex: keyRegex } },
+                    { slug: { $regex: keyRegex } },
+                ],
+                status: 'approved',
             };
             const dataCustomers = await Customer.find(query);
-           const filterAccount = dataCustomers.filter(data => data._id != infoId)
+            const filterAccount = dataCustomers.filter(data => data._id != infoId)
             if (!dataCustomers)
                 return res.status(400).json({
                     message: "Có lỗi xảy ra",

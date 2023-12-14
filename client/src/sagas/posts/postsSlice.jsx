@@ -102,7 +102,7 @@ const postsSlice = createSlice({
       return {
         ...state,
         error: null,
-        loading: true,
+        loading: false,
       };
     },
     likePostSuccess: (state) => {

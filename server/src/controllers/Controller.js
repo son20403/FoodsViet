@@ -334,7 +334,7 @@ class BaseController {
   detailBySlug = async (req, res) => {
     try {
       const slug = req.query.slug;
-      const data = await this.model.findOne({ slug });
+      const data = await this.model.findOne({ slug, status: 'approved' });
       if (!data)
         return res.status(400).json({
           message: "Không có nội dung này",

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link } from "react-router-dom";
-
+import { useSelector } from 'react-redux';
 const Breadcrumb = () => {
 
     const { pathname } = useLocation();
@@ -12,7 +12,7 @@ const Breadcrumb = () => {
             nameLayout = 'Bài Viết'
             break;
         case 'detail':
-            nameLayout = 'Chi tiết bài viết'
+            nameLayout = 'Nội dung bài viết'
             break;
         case 'categories':
             nameLayout = 'Danh mục'
@@ -33,6 +33,7 @@ const Breadcrumb = () => {
             break;
     }
     const className = " flex items-center last:after:content-[''] after:content-['/'] after:px-3 last:after:px-0"
+    const { breadcrumb } = useSelector((state) => state.global)
     return (
         <div
             className={`bg-transparent uppercase !text-white flex items-center text-[11px] md:text-sm
@@ -58,7 +59,7 @@ const Breadcrumb = () => {
 
                     className="text-white font-bold"
                 >
-                    {page.replace(/-/g, ' ').slice(0, 50)}{page.length > 50 ? ' ...' : ''}
+                    {breadcrumb?.slice(0, 50)}{breadcrumb?.length > 50 ? ' ...' : ''}
                 </p>
             }
 

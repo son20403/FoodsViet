@@ -2,6 +2,7 @@ import { call, put } from "redux-saga/effects";
 import { getAllCustomers, getDetailCustomer, updateCustomer } from "./request";
 import { customerDetailRequest, customerDetailSuccess, customersRequest, customersSuccess, requestFailure, updateCustomerSuccess } from "./customersSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
+import { setInfoAuth } from "../auth/authSlice";
 
 export function* handleGetDetailCustomer({ payload }) {
     try {
@@ -36,10 +37,13 @@ export function* handleUpdateCustomers({ payload }) {
         yield put(setErrorGlobal(''))
         const response = yield call(updateCustomer, payload?.id, payload?.info)
         if (response?.data) {
+            const { message, ...info } = response.data
             yield put(updateCustomerSuccess())
             yield put(customersRequest());
-            yield put(customerDetailRequest({ slug: payload?.slug }))
-            yield put(setNotifyGlobal(response.data?.message));
+            yield put(customerDetailRequest({ slug: info?.slug }))
+            yield put(setInfoAuth(info))
+            yield put(setNotifyGlobal(message));
+            yield payload?.handleSetURL(info?.slug)
         } else {
             yield put(requestFailure('Có lỗi xảy ra!'));
         }
