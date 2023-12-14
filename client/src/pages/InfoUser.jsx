@@ -20,6 +20,8 @@ import EditCustomer from "../layout/customers/EditCustomer";
 import LoadingRequest from "../layout/loading/LoadingRequest";
 import BannerCommon from "../layout/common/BannerCommon";
 import { getPostsByCustomerRequest } from "../sagas/posts/postsSlice";
+import { categoriesRequest } from "../sagas/categories/categoriesSlice";
+import { setBreadcrumb } from "../sagas/global/globalSlice";
 
 const InfoUser = () => {
   const { slug } = useParams();
@@ -49,7 +51,11 @@ const InfoUser = () => {
     }
   }, [loading, error]);
   useEffect(() => {
+    dispatch(categoriesRequest())
+  }, []);
+  useEffect(() => {
     document.title = customer_detail?.full_name
+    dispatch(setBreadcrumb(customer_detail?.full_name))
   }, [customer_detail]);
   return (
     <div className="relative bg-gray-50">

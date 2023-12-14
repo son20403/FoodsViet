@@ -28,6 +28,7 @@ import { addNotificationRequest } from '../sagas/notification/notificationSlice'
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import Breadcrumb from '../layout/Breadcumb';
 import useSetTitle from '../hooks/useSetTitle';
+import { setBreadcrumb } from '../sagas/global/globalSlice';
 
 
 const schemaValidate = Yup.object({
@@ -158,6 +159,7 @@ const DetailPage = () => {
     }, [loading, error]);
     useEffect(() => {
         document.title = detail_post?.title
+        dispatch(setBreadcrumb(detail_post?.title))
     }, [detail_post]);
     return (
         <>

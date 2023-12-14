@@ -117,9 +117,11 @@ export function* handleUpdatePost({ payload }) {
         yield put(setErrorGlobal(''))
         const response = yield call(updatePost, payload?.id, payload?.post);
         if (response?.data) {
+            const { slug } = response.data
             yield put(updatePostSuccess());
-            yield put(postDetailRequest({ slug: payload?.slug }));
+            yield put(postDetailRequest({ slug: slug }));
             yield put(setNotifyGlobal(response.data?.message));
+            yield payload?.handleSetURL(slug)
         }
     } catch (error) {
         yield handleCommonError(error)

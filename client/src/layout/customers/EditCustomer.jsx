@@ -13,6 +13,8 @@ import { customersRequest, setLoadingCustomer, updateCustomerRequest } from '../
 import { setNotifyGlobal } from '../../sagas/global/globalSlice';
 import { useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
+import { useNavigate } from "react-router-dom";
+
 const schemaValidate = Yup.object().shape({
     address: Yup.string().required("Vui lòng nhập địa chỉ!"),
     image: Yup.mixed(),
@@ -24,15 +26,19 @@ const schemaValidate = Yup.object().shape({
 
 const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const slug = data?.slug
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
+    const handleSetURL = (URL) => {
+        navigate(`/info/${URL}`, { replace: true })
+    }
     const handleEditUser = (value) => {
         try {
             dispatch(setLoadingCustomer(true))
             const info = { ...value };
             const id = data?._id
-            dispatch(updateCustomerRequest({ id, info, slug }));
+            dispatch(updateCustomerRequest({ id, info, slug, handleSetURL }));
             onClick()
             resetImageField()
         } catch (error) {

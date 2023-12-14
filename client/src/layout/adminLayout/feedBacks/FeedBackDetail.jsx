@@ -13,7 +13,6 @@ import {
   CardFooter,
   Avatar,
   Typography,
-  Button,
 } from "@material-tailwind/react";
 import {
   ArchiveBoxXMarkIcon,
@@ -44,6 +43,7 @@ import { Field } from "../../../components/field";
 import { Label } from "../../../components/label";
 import { Textarea } from "../../../components/textarea";
 import { sendFeedbacksRequest } from "../../../sagas/feedbackMail/feedbacksSlice";
+import { Button } from "../../../components/button";
 const schemaValidate = Yup.object({
   message: Yup.string().required("Vui lòng nhập số nội dung!"),
 });
@@ -54,7 +54,7 @@ const CustomerDetailAdmin = () => {
     control,
     reset,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
-  const { showFeedback } = useSelector((state) => state.global);
+  const { showFeedback, isUploadImage } = useSelector((state) => state.global);
   const { feedbackDetail } = useSelector((state) => state.feedback);
   const dispatch = useDispatch();
   const handleSubmits = (value) => {
@@ -148,10 +148,10 @@ const CustomerDetailAdmin = () => {
                     </Field>
                     <div className="w-full flex justify-center items-center mt-10">
                       <Button
-                        className="bg-primary w-full lg:w-auto"
+                        className="bg-primary w-full lg:w-auto" isLoading={isUploadImage}
                         type="submit"
                       >
-                        Lưu
+                        Gửi phản hồi
                       </Button>
                     </div>
                   </form>

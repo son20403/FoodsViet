@@ -175,7 +175,41 @@ class AdminController extends BaseController {
       });
     }
   };
+  updatePostByCategory = async (req, res) => {
+    const id_category = req.query.id;
+    try {
+      const category = await this.categoryModel.findOne({ _id: id_category });
+      if (!category) {
+        return res.status(400).json({
+          message: "Category này không tồn tại",
+        });
+      }
+      // Tìm tất cả các bài viết trong category này
+      const posts = await this.postModel.find({ id_category });
+      // Xóa tất cả comment liên quan và bài viết
+      let deleteTasks = posts.map(async (post) => {
+        // Xóa comments và post
+        await Promise.all([
+          this.commentModel.deleteMany({ id_post: post._id }),
+          this.postModel.findByIdAndDelete(post._id),
+        ]);
+        // Xóa hình ảnh nếu có
+        if (post.id_image) {
+          await cloudinary.uploader.destroy(post.id_image);
+        }
+      });
+      await Promise.all(deleteTasks);
+      // Xóa category
+      await this.categoryModel.findByIdAndDelete(id_category);
 
+      return res.status(200).json({ message: "Xóa category thành công" });
+    } catch (error) {
+      console.log("err", error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  };
   updateStatus = async (req, res) => {
     const customer = req.customer
     const id = req.query?.id;
@@ -233,6 +267,24 @@ class AdminController extends BaseController {
           return res.status(400).json({
             message: "Bạn không có quyền hạn để chỉnh sửa người này",
           });
+        }
+      }
+      if (modelType === 'category') {
+        if (status === 'destroy') {
+          await this.postModel.updateMany({ category: id, status: 'approved' }, { $set: { status: 'pending' } })
+        }
+        if (status === 'approved') {
+          await this.postModel.updateMany({ category: id, status: 'pending' }, { $set: { status } })
+        }
+      }
+      if (modelType === 'customer') {
+        if (status === 'destroy') {
+          await this.postModel.updateMany({ id_customer: id, status: 'approved' },
+            { $set: { status: 'pending' } })
+        }
+        if (status === 'approved') {
+          await this.postModel.updateMany({ id_customer: id, status: 'pending' },
+            { $set: { status } })
         }
       }
       const dataModelStatus = await model.findByIdAndUpdate(
