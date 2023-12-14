@@ -184,7 +184,7 @@ const MessagePage = () => {
               placeholder="search ..."
               className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
               onFocus={handleFocus}
-            // onBlur={handleBlur}
+              // onBlur={handleBlur}
             />
           </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">
@@ -203,11 +203,7 @@ const MessagePage = () => {
         {id ? (
           <div className="flex items-center justify-between h-16 text-black border-b-[1px] px-2.5 ">
             <div className="flex-1">
-              <Conversation
-                conversation={currentChat}
-                online={true}
-                userId={id}
-              >
+              <Conversation conversation={currentChat} userId={id}>
                 Đang hoạt động
               </Conversation>
             </div>
