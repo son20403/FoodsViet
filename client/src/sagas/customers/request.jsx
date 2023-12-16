@@ -4,6 +4,9 @@ const COLLECTION_NAME = 'customer'
 export function getDetailCustomer(slug) {
     return axios.get(`/${COLLECTION_NAME}/detailBySlug?slug=${slug}`)
 }
+export function getDetailInfoAdmin(id) {
+    return axios.get(`/${COLLECTION_NAME}/detailAdmin?id=${id}`)
+}
 export function getAllCustomers() {
     return axios.get(`/${COLLECTION_NAME}/getAll`)
 }

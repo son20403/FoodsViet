@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../jwt";
 import Role from "../models/Role";
 import Admin from "../models/Admin";
+import Customer from "../models/Customer";
 const middlewareAuth = {
   verifyToken: (req, res, next) => {
     const token = req.headers.token;
@@ -10,7 +11,14 @@ const middlewareAuth = {
     const accessToken = token.split(" ")[1];
     if (accessToken === 'null' || accessToken === '' || accessToken === 'undefined')
       return res.status(401).json({ message: "Bạn chưa đăng nhập để sử dụng dịch vụ!" });
-    jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, customer) => {
+    jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, async (err, customer) => {
+      if (usertype === 'customer') {
+        if (customer) {
+          const dataCustomer = await Customer.findOne({ _id: customer.id })
+          if (!dataCustomer || dataCustomer.status !== 'approved')
+            return res.status(401).json({ message: `Bạn đã bị vô hiệu hóa tài khoản!` })
+        }
+      }
       if (err && err.name === 'TokenExpiredError') {
         let chosenRefreshToken = null
         const refreshToken = req.cookies.refreshToken;

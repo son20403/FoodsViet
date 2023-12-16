@@ -13,6 +13,8 @@ import {
   conversationsRequest,
   messagesRequest,
 } from "../sagas/messenger/messengerSlice";
+import { categoriesRequest } from "../sagas/categories/categoriesSlice";
+import useLoadingImage from "../hooks/useLoadingImage";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -21,15 +23,17 @@ function MainLayout() {
   const { token, infoAuth } = useSelector((state) => state.auth);
   const tokenLocal = localStorage.getItem("authToken");
   const { socket } = useSelector((state) => state.global);
+  const { posts } = useSelector((state) => state.posts);
+  const { customers } = useSelector((state) => state.customers);
+  const { categories } = useSelector((state) => state.categories);
 
   useEffect(() => {
     dispatch(customersRequest());
+    dispatch(categoriesRequest());
     dispatch(postsRequest());
     dispatch(setNotify());
     dispatch(setErrorGlobal(""));
     dispatch(setNotifyGlobal(""));
-    // dispatch(messagesRequest());
-    // dispatch(conversationsRequest());
   }, [token, dispatch, tokenLocal, location?.pathname]);
   useEffect(() => {
     const handleTabClose = () => {
@@ -40,6 +44,9 @@ function MainLayout() {
       window.removeEventListener('beforeunload', handleTabClose);
     };
   }, [socket]);
+  useLoadingImage(posts)
+  useLoadingImage(customers)
+  useLoadingImage(categories)
   return (
     <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col overflow-hidden ">
       <Header />

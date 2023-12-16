@@ -2,15 +2,12 @@ import React, { useEffect } from 'react';
 import Section from '../layout/common/Section';
 import { Heading } from '../components/heading';
 import ListSlide from '../layout/slide/ListSlide';
-import ListCustomer from '../layout/customers/ListCustomer';
 import ListPostHome from '../layout/posts/ListPostHome';
 import ListPost from '../layout/posts/ListPost';
 import { useDispatch, useSelector } from 'react-redux';
 import Banner from '../layout/Banner';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { postsRequest } from '../sagas/posts/postsSlice';
-import { categoriesRequest } from '../sagas/categories/categoriesSlice';
-import { customersRequest } from '../sagas/customers/customersSlice';
 import { Link } from 'react-router-dom';
 import useSetTitle from '../hooks/useSetTitle';
 
@@ -26,8 +23,6 @@ const HomePage = () => {// Gửi dữ liệu đến server
     const tokenLocal = localStorage.getItem('authToken')
     useEffect(() => {
         dispatch(postsRequest())
-        dispatch(categoriesRequest())
-        dispatch(customersRequest())
     }, [token, dispatch, tokenLocal]);
 
     return (

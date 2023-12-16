@@ -1,5 +1,5 @@
 import { call, put } from "redux-saga/effects";
-import { getAllCustomers, getDetailCustomer, updateCustomer } from "./request";
+import { getAllCustomers, getDetailCustomer, getDetailInfoAdmin, updateCustomer } from "./request";
 import { customerDetailRequest, customerDetailSuccess, customersRequest, customersSuccess, requestFailure, updateCustomerSuccess } from "./customersSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import { setInfoAuth } from "../auth/authSlice";
@@ -9,6 +9,18 @@ export function* handleGetDetailCustomer({ payload }) {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
         const response = yield call(getDetailCustomer, payload?.slug);
+        if (response) {
+            yield put(customerDetailSuccess(response.data))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleGetInfoAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getDetailInfoAdmin, payload?.id);
         if (response) {
             yield put(customerDetailSuccess(response.data))
         }

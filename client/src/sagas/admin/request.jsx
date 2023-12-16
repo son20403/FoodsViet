@@ -6,8 +6,8 @@ export function loginAdmin(entity) {
 export function registerAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/register`, entity);
 }
-export function logoutAdmin() {
-  return axios.post(`/${COLLECTION_NAME}/logoutAdmin`);
+export function logoutAdmin(id) {
+  return axios.post(`/${COLLECTION_NAME}/logoutAdmin?id=${id}`);
 }
 export function getAllPostAdmin() {
   return axios.get(`/${COLLECTION_NAME}/getAllPostByAdmin`);

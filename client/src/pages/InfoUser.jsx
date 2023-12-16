@@ -22,6 +22,7 @@ import BannerCommon from "../layout/common/BannerCommon";
 import { getPostsByCustomerRequest } from "../sagas/posts/postsSlice";
 import { categoriesRequest } from "../sagas/categories/categoriesSlice";
 import { setBreadcrumb } from "../sagas/global/globalSlice";
+import useLoadingImage from "../hooks/useLoadingImage";
 
 const InfoUser = () => {
   const { slug } = useParams();
@@ -57,6 +58,7 @@ const InfoUser = () => {
     document.title = customer_detail?.full_name
     dispatch(setBreadcrumb(customer_detail?.full_name))
   }, [customer_detail]);
+  useLoadingImage(postsCustomer)
   return (
     <div className="relative bg-gray-50">
       <LoadingRequest show={loading}></LoadingRequest>

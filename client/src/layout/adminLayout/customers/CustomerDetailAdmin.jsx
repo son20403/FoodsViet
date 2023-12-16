@@ -119,7 +119,7 @@ const CustomerDetailAdmin = () => {
                         </CardBody>
                     </Card>
                     <SpeedDialAdmin
-                        detail={customerDetail} handleEdit={handleEditCustomer} handleUpdateStatus={handleUpdateStatus} />
+                        detail={customerDetail} handleEdit={handleEditCustomer} handleUpdateStatus={handleUpdateStatus} idEntity={customerDetail?._id} />
                 </LayoutAdminModel>
             </ModalBase>
             {/* <PostEditAdmin

@@ -81,7 +81,7 @@ export function* handleLogoutAdmin({ payload }) {
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
-    const response = yield call(logoutAdmin, payload);
+    const response = yield call(logoutAdmin, payload?.id);
     if (response) {
       yield put(setErrorGlobal(""));
       yield put(setNotifyGlobal(response.data?.message));
@@ -347,7 +347,7 @@ export function* handleCreateAdmin({ payload }) {
     yield handleCommonError(error);
   }
 }
-function* handleCommonError(error) {
+export function* handleCommonError(error) {
   console.log("error admin:", error);
   if (error?.code === "ERR_NETWORK") {
     yield put(requestAdminFailure(error));

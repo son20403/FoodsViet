@@ -85,6 +85,9 @@ const CommentItem = ({ comment, replies = () => { }, countR = 0, id_post, id_cus
         setShowEdit(!showEdit)
         setShowReply(false)
     }
+    if (customerByComment?.status !== 'approved') {
+        return (<></>)
+    }
     return (
         <div className='relative' id={comment?._id}>
             <DiaLog open={toggle} handleOpen={handleToggle} header='Bạn có muốn xóa bình luận không!' title='Bình luận đã xóa sẽ không thể khôi phục' onClick={handleDeleteComment}></DiaLog>

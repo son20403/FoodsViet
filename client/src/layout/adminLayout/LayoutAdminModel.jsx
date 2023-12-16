@@ -2,7 +2,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-const LayoutAdminModel = ({ children, onClick = () => { }, className = '', z = 990 }) => {
+const LayoutAdminModel = ({ children, onClick = () => { }, className = '', z = 999 }) => {
   return (
     <div
       className={` fixed top-1/2 -translate-y-1/2  left-1/2 -translate-x-1/2  

@@ -13,6 +13,7 @@ import {
   getCategoriesAdminRequest,
   getCategoriesAdminSuccess,
 } from "../admin/adminSlice";
+import { handleCommonError } from "../admin/handles";
 
 export function* handleGetAllCategories({ payload }) {
   try {
@@ -23,7 +24,7 @@ export function* handleGetAllCategories({ payload }) {
       yield put(getCategoriesSuccess(response.data));
     }
   } catch (error) {
-    yield handleCommonError(error);
+    yield handleCommonErrorCategory(error);
   }
 }
 export function* handleGetDetailCategories({ payload }) {
@@ -35,7 +36,7 @@ export function* handleGetDetailCategories({ payload }) {
       yield put(getDetailCategoriesSuccess(response.data));
     }
   } catch (error) {
-    yield handleCommonError(error);
+    yield handleCommonErrorCategory(error);
   }
 }
 export function* handleGetAllCategoriesAdmin({ payload }) {
@@ -86,7 +87,7 @@ export function* handleUpdateCategoryAdmin({ payload }) {
   }
 }
 
-function* handleCommonError(error) {
+function* handleCommonErrorCategory(error) {
   console.log("error:", error);
   if (error?.code === "ERR_NETWORK") {
     yield put(requestFailure(error));

@@ -3,6 +3,7 @@ import argon2 from "argon2";
 import { generateAccessToken, generateRefreshToken } from "../jwt";
 import Post from "../models/Post";
 import Customer from "../models/Customer";
+import Categories from "../models/Category";
 class BaseController {
   constructor(model) {
     this.model = model;
@@ -156,7 +157,7 @@ class BaseController {
       const data = await this.model.findById(id);
       if (!data)
         return res.status(400).json({
-          message: "Có lỗi xảy ra",
+          message: "Không tìm thấy dữ liệu",
         });
       return res.status(200).json(data);
     } catch (error) {
@@ -176,9 +177,17 @@ class BaseController {
     const fileData = req.file;
     const image = fileData?.path || "";
     const id_image = fileData?.filename || "";
+    const { category } = formData;
     if (isAdmin) {
       id_admin = req.customer.id;
       authorType = "admin";
+    }
+    const dataCategory = await Categories.findById(category);
+    if (!dataCategory || dataCategory?.status !== 'approved') {
+      if (fileData) cloudinary.uploader.destroy(id_image);
+      return res.status(400).json({
+        message: id_admin ? 'Danh mục chưa được duyệt hoặc đã bị vô hiệu hóa!' : 'Không có danh mục này!',
+      });
     }
     try {
       const modelPost = {
@@ -219,6 +228,12 @@ class BaseController {
     const fileData = req.file;
     const id_customer = req.customer?.id;
     const id_admin = req.customer.id;
+    if (!formData) {
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+      return res.status(400).json({
+        message: "Không có dữ liệu!",
+      });
+    }
     try {
       const hasPost = await Post.findOne({ _id: id });
       if (!hasPost) {
@@ -227,11 +242,26 @@ class BaseController {
           message: "Không tồn tại bài viết này",
         });
       }
+      const dataCategory = await Categories.findById(formData.category);
+      if (!dataCategory || dataCategory?.status !== 'approved') {
+        if (fileData) cloudinary.uploader.destroy(id_image);
+        return res.status(400).json({
+          message: 'Không có danh mục này!',
+        });
+      }
+      if (hasPost?.status !== 'approved') {
+        if (fileData) cloudinary.uploader.destroy(fileData.filename);
+        return res.status(400).json({
+          message: "Bài viết của bạn đã bị vô hiệu hóa!",
+        });
+      }
       const isValid = hasPost.id_customer === id_customer;
-      if (!isValid)
+      if (!isValid) {
+        if (fileData) cloudinary.uploader.destroy(fileData.filename);
         return res.status(400).json({
           message: "Bạn không có quyền để sửa bài viết này",
         });
+      }
       let newImage = hasPost.image;
       let newIdImage = hasPost.id_image;
 

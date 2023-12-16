@@ -29,7 +29,6 @@ import {
   getCustomersAdminRequest,
   getPostsAdminRequest,
   roleAdminRequest,
-  searchAdminRequest,
 } from "../sagas/admin/adminSlice";
 import {
   setSocketAdmin,

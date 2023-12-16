@@ -4,7 +4,7 @@ import store from '../sagas/configureStore';
 import { setErrorGlobal } from '../sagas/global/globalSlice';
 import { getObjectFromLocalStorage } from '../utils/localstorage';
 import { logoutAdmin, refreshAccessTokenAdminSuccess } from '../sagas/admin/adminSlice';
-
+const infoAdmin = getObjectFromLocalStorage('infoAdmin')
 const admin = axios.create({
     baseURL: BASE_URL,
 });
@@ -27,7 +27,7 @@ admin.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     if (error.response && error.response.data.status === 'notAuth') {
-        store.dispatch(logoutAdmin());
+        store.dispatch(logoutAdmin({ id: infoAdmin?._id }));
         store.dispatch(setErrorGlobal('Phiên bản đăng nhập đã hết hạn!'))
     }
     return Promise.reject(error);

@@ -287,6 +287,33 @@ class AdminController extends BaseController {
             { $set: { status } })
         }
       }
+      if (modelType === 'post' && status === 'approved') {
+        const dataPost = await model.findOne({ _id: id });
+        if (dataPost) {
+          const dataCategory = await this.categoryModel.findOne({ _id: dataPost?.category });
+          const dataCustomer = await this.customerModel.findOne({ _id: dataPost?.id_customer });
+          if (!dataCategory) return res.status(400).json({
+            message: "Danh mục không tồn tại!",
+          });
+          if (dataCategory?.status !== 'approved') {
+            return res.status(400).json({
+              message: `Danh mục ${dataCategory?.title} không khả dụng!`,
+            });
+          }
+          if (!dataCustomer) return res.status(400).json({
+            message: "Người dùng không tồn tại!",
+          });
+          if (dataCustomer?.status !== 'approved') {
+            return res.status(400).json({
+              message: `Người dùng ${dataCustomer?.full_name} không khả dụng!`,
+            });
+          }
+        } else {
+          return res.status(400).json({
+            message: "Bài viết không tồn tại",
+          });
+        }
+      }
       const dataModelStatus = await model.findByIdAndUpdate(
         dataModel._id,
         { status, id_admin },

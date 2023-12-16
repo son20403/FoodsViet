@@ -55,14 +55,19 @@ const SpeedDialAdmin = ({
                 </SpeedDialAction>
               </div>
             )}
-            {idEntity === infoAdmin?._id && (
+            {idEntity ? idEntity === infoAdmin?._id && (
               <SpeedDialAction
                 className="bg-primary text-white"
                 onClick={handleEdit}
               >
                 <PencilSquareIcon {...icon} />
               </SpeedDialAction>
-            )}
+            ) : <SpeedDialAction
+              className="bg-primary text-white"
+              onClick={handleEdit}
+            >
+              <PencilSquareIcon {...icon} />
+            </SpeedDialAction>}
           </SpeedDialContent>
         </SpeedDial>
       </div>

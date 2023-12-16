@@ -62,6 +62,21 @@ const authSlice = createSlice({
                 error: null,
             }
         },
+        adminInfoRequest: (state) => {
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            }
+        },
+        adminInfoSuccess: (state, action) => {
+            return {
+                ...state,
+                customer_detail: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
         setLoadingCustomer: (state, action) => {
             return {
                 ...state,
@@ -72,5 +87,5 @@ const authSlice = createSlice({
     }
 })
 
-export const { customersRequest, customersSuccess, requestFailure, customerDetailRequest, customerDetailSuccess, updateCustomerRequest, updateCustomerSuccess, setLoadingCustomer } = authSlice.actions
+export const { customersRequest, customersSuccess, requestFailure, customerDetailRequest, customerDetailSuccess, updateCustomerRequest, updateCustomerSuccess, setLoadingCustomer, adminInfoRequest, adminInfoSuccess } = authSlice.actions
 export default authSlice.reducer

@@ -51,7 +51,7 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     }, []);
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <LayoutAdminModel onClick={onClick} z={992}>
+            <LayoutAdminModel onClick={onClick} z={9999}>
                 <Heading isHeading>Chỉnh sửa bài viết </Heading>
                 <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
                     <div className='grid grid-cols-1 gap-y-10 pt-10 mb-10'>
@@ -77,7 +77,7 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
                             </Field>
                         </div>
                     </div>
-                    <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
+                    <Button type='submit' className=' mx-auto'>Sửa bài viết</Button>
                 </form>
             </LayoutAdminModel>
         </ModalBase>

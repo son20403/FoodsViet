@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Link } from "react-router-dom"
 import { Heading } from "../../components/heading"
 import DataPost from "./DataPost"
@@ -30,18 +31,17 @@ const PostItem = ({ data = {}, isSingle }) => {
                 : 'md:even:flex-row-reverse'}
         `}>
             <Link to={`/detail/${data.slug}`}
-                className={`w-full overflow-hidden h-full max-h-[350px]
+                className={`w-full overflow-hidden h-full max-h-[350px] bg-primary bg-opacity-25
                     ${isSingle
-                        ? 'lg:max-w-full md:max-h-[190px] '
-                        : ''}`}>
-                <img src={data?.image} alt={data.title} className=' w-full h-full object-cover
+                        ? 'lg:max-w-full md:max-h-[190px] min-h-[190px] '
+                        : 'lg:min-h-[350px] md:min-h-[270px] min-h-[200px]'}`}>
+                <img lazy-src={data?.image} className=' w-full h-full object-cover
                 group-hover:scale-105 transition-all duration-500'/>
             </Link>
             <div className={` flex justify-center w-full md:h-full 
                 ${isSingle
                     ? ''
                     : '  bg-primary !bg-opacity-80 '} `}>
-
                 <div className={`flex flex-col  w-full gap-y-3   
                     ${isSingle
                         ? 'flex-1 h-full lg:p-2 '
