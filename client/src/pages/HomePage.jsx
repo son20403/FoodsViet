@@ -43,7 +43,7 @@ const HomePage = () => {// Gửi dữ liệu đến server
                         <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 gap-y-10 md:gap-10 mb-14 '>
                             {categories?.length > 0 && categories?.slice(0, 4).map(item => (
                                 <Link to={`/categories/${item?.slug}`} key={item._id} className='h-[300px] shadow-2xl md:h-[394px] relative rounded-md'>
-                                    <img src={item?.image} alt="" className='w-full h-full object-cover rounded-md' />
+                                    <img lazy-src={item?.image} alt="" className='w-full h-full object-cover rounded-md' />
                                     <div className='absolute bottom-0 translate-y-1/2 w-auto min-w-[80%]  
                                     rounded-md px-2 py-1 left-1/2 -translate-x-2/4 bg-primary text-white
                                     font-medium text-center text-xs md:text-base'>{item?.title}</div>

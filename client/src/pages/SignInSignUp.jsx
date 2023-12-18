@@ -8,6 +8,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { toggleSignin } from "../sagas/global/globalSlice";
 import { icon } from "../ADMIN/routes";
 import useSetTitle from "../hooks/useSetTitle";
+import { saveObjectToLocalStorage } from "../utils/localstorage";
+import { getInfoAuth, setInfoAuth } from "../sagas/auth/authSlice";
+import useCheckAuth from "../hooks/useCheckAuth";
 const SignInSignUp = () => {
   useSetTitle('Đăng nhập/Đăng ký')
   const dispatch = useDispatch();
@@ -20,6 +23,7 @@ const SignInSignUp = () => {
   useEffect(() => {
     if (token) navigate("/");
   }, [token]);
+  useCheckAuth()
   return (
     <div
       className={`container-main ${showSignin ? "sign-up-mode" : ""

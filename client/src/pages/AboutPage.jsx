@@ -23,7 +23,7 @@ const teamMembers = [
     position: "Thành viên",
   },
   {
-    id: 1,
+    id: 4,
     img: "../src/assets/image/banner-post.jpg",
     name: "Nguyễn Văn Hoài",
     position: "Thành viên",
@@ -121,7 +121,7 @@ const AboutPage = () => {
           </h5>
           <h1 className="mb-12 text-4xl font-bold">Thành viên nhóm Blog</h1>
         </div>
-        <div className="grid grid-cols-1 mx-6 md:grid-cols-4 gap-x-5">
+        <div className="grid grid-cols-1 mx-6 md:grid-cols-2 lg:grid-cols-4 gap-x-5">
           {teamMembers.map((item, index) => (
             <div
               key={item.id}

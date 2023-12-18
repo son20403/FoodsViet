@@ -4,6 +4,9 @@ const COLLECTION_NAME = 'notification'
 export function addNotification(entity) {
     return axios.post(`/${COLLECTION_NAME}/addNotification`, entity)
 }
+export function addNotificationAdmin(entity) {
+    return admin.post(`/${COLLECTION_NAME}/addNotification`, entity)
+}
 export function getAllNotification() {
     return axios.get(`/${COLLECTION_NAME}/getAllNotification`,)
 }

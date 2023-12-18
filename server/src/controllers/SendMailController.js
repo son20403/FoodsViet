@@ -76,6 +76,26 @@ class SendEmailController {
       });
     }
   };
+  checkToken = async (req, res) => {
+    const token = req.query.token;
+    try {
+      const decoded = await jwtVerifyAsync(token, process.env.JWT_ACCESS_KEY);
+      if (decoded) {
+        return res.status(200).json();
+      } else {
+        return res.status(401).json({ message: "Hết thời gian đổi mật khẩu!" });
+      }
+    } catch (error) {
+      console.log("err", error);
+      if (error && error.name === "TokenExpiredError")
+        return res.status(401).json({
+          message: "Liên kết đã hết hạn!",
+        });
+      return res.status(500).json({
+        message: "Có lỗi xảy ra",
+      });
+    }
+  };
   forgotPasswordAdmin = async (req, res) => {
     try {
       const { user_name } = req.body;

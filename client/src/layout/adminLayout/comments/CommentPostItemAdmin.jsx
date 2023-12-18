@@ -1,6 +1,6 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { Avatar, Chip, Typography } from "@material-tailwind/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { icon } from "../../../ADMIN/routes";
 import useTimeSince from "../../../hooks/useTimeSince";
@@ -9,9 +9,9 @@ import {
   detailCategoriesAdminSuccess,
   postDetailAdminSuccess,
 } from "../../../sagas/admin/adminSlice";
-import { toggleDetaiPost } from "../../../sagas/global/globalSlice";
+import { toggleShowComment } from "../../../sagas/global/globalSlice";
 
-const PostItemAdmin = ({ data }) => {
+const CommentPostItemAdmin = ({ data }) => {
   const className = "px-5 py-3";
   const { admin, customers, categories } = useSelector((state) => state.admin);
   const timeSince = useTimeSince();
@@ -26,8 +26,8 @@ const PostItemAdmin = ({ data }) => {
   const authorType = data?.authorType;
   const dataAuthor = dataCustomer || dataAdmin;
 
-  function handleShowPostDetail() {
-    dispatch(toggleDetaiPost());
+  function handleShowCommentPostDetail() {
+    dispatch(toggleShowComment());
     dispatch(postDetailAdminSuccess({ ...data }));
     dispatch(customerDetailAdminSuccess({ ...dataAuthor }));
     dispatch(detailCategoriesAdminSuccess({ ...dataCategory }));
@@ -99,11 +99,11 @@ const PostItemAdmin = ({ data }) => {
         className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}
       >
         <Typography className="text-xs font-semibold cursor-pointer text-blue-gray-600">
-          <EyeIcon {...icon} onClick={handleShowPostDetail}></EyeIcon>
+          <EyeIcon {...icon} onClick={handleShowCommentPostDetail}></EyeIcon>
         </Typography>
       </td>
     </tr>
   );
 };
 
-export default PostItemAdmin;
+export default CommentPostItemAdmin;

@@ -14,8 +14,14 @@ export function sendPasswordAdmin(entity) {
   return axios.post(`/${COLLECTION_NAME}/admin/forgot-password`, entity);
 }
 export function resetPassword(token, entity) {
-  return admin.post(
+  return axios.post(
     `/${COLLECTION_NAME}/reset-password?token=${token}`,
+    entity
+  );
+}
+export function checkToken(token, entity) {
+  return axios.post(
+    `/${COLLECTION_NAME}/checkToken?token=${token}`,
     entity
   );
 }

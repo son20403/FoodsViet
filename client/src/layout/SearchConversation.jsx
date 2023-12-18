@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Heading } from "../components/heading";
 import Overlay from "./common/Overlay";
 import { SearchIcon } from "../components/Icon";
@@ -8,17 +6,13 @@ import { Input } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { Link, useLocation } from "react-router-dom";
-import { searchPostsRequest } from "../sagas/posts/postsSlice";
-import Loading from "./loading/Loading";
 import { closeSearch } from "../sagas/global/globalSlice";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import axios from "axios";
 import { query } from "../axios-interceptor/query-api";
 
 const SearchConversation = ({ onClick }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { customers, loading } = useSelector((state) => state.customers);
+  useSelector((state) => state.customers);
   const { infoAuth } = useSelector((state) => state.auth);
   const [filterCustomers, setFilterCustomers] = useState(null);
   const [showSearch, setShowSearch] = useState(true);
@@ -35,10 +29,6 @@ const SearchConversation = ({ onClick }) => {
         infoId: infoAuth?._id,
         query: name,
       });
-      console.log("🚀 --> res --> res:", res);
-      // const res = await axios.get(
-      //   `http://localhost:8989/customer/search?key=${name}`
-      // );
       if (res) {
         setFilterCustomers(res.data);
       }

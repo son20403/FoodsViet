@@ -11,10 +11,14 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  allowedFormats: ["jpg", "png"],
   params: {
     folder: "React_Blogger",
-  },
+    allowed_formats: ["jpg", "png"],
+    transformation: [
+      { width: 1200, height: 800, crop: 'fill' }, // Kích thước sau khi cắt
+      { quality: 'auto' } // Giảm chất lượng tự động
+    ]
+  }
 });
 
 const uploadCloud = multer({ storage });

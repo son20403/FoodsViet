@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
-import { CommentIcon, EditIcon, EllipsisIcon, HeartIcon, TrashIcon } from '../components/Icon';
+import { CommentIcon, EditIcon, EllipsisIcon, HeartIcon } from '../components/Icon';
 import ListPostsSidebar from '../layout/posts/ListPostsSidebar';
 import SlideWrap from '../layout/slide/SlideWrap';
 import PostItem from '../layout/posts/PostItem';
@@ -27,7 +27,6 @@ import { PopoverDrop } from '../layout/Popover';
 import { addNotificationRequest } from '../sagas/notification/notificationSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import Breadcrumb from '../layout/Breadcumb';
-import useSetTitle from '../hooks/useSetTitle';
 import { setBreadcrumb } from '../sagas/global/globalSlice';
 import { adminInfoRequest } from '../sagas/customers/customersSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -130,7 +129,9 @@ const DetailPage = () => {
     useEffect(() => {
         if (socket && id_post) {
             socket.on('update', () => {
-                dispatch(getcommentsByPostRequest({ id_post }))
+                setTimeout(() => {
+                    dispatch(getcommentsByPostRequest({ id_post }))
+                }, 200);
             })
         }
     }, [socket, id_post]);
@@ -156,10 +157,10 @@ const DetailPage = () => {
         }
     }, [hash]);
     useEffect(() => {
-        if (!loading && error?.message) {
+        if (!loading && error?.message && Object.keys(detail_post).length < 1) {
             navigate('/not-found')
         }
-    }, [loading, error]);
+    }, [loading, error, detail_post]);
     useEffect(() => {
         document.title = detail_post?.title
         dispatch(setBreadcrumb(detail_post?.title))
@@ -224,7 +225,7 @@ const DetailPage = () => {
                             <div className=' flex gap-10 items-center'>
                                 <DataPost isDetail timestamps={detail_post?.timestamps}
                                     comments={commentsPost?.length} likes={listLikes}></DataPost>
-                                {isAuth && <PopoverDrop x={80} icon={<EllipsisIcon />}>
+                                {isAuth && typeAuthor === 'customer' && <PopoverDrop x={80} icon={<EllipsisIcon />}>
                                     <div className='flex items-center gap-5'>
                                         <div onClick={handleToggle} className='flex items-center'>
                                             <IconWrap className='cursor-pointer'><EditIcon />

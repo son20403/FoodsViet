@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -7,7 +7,7 @@ import { UserIcon } from "../components/Icon";
 import { Button } from "../components/button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
+import { checkTokenRequest, resetPasswordRequest } from "../sagas/feedbackMail/feedbacksSlice";
 import useSetTitle from "../hooks/useSetTitle";
 
 const schemaValidate = Yup.object({
@@ -31,10 +31,6 @@ const PasswordReset = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const tokenParams = new URLSearchParams(location.search).get("token");
-  console.log(
-    "🚀 ~ file: PasswordReset.jsx:31 ~ PasswordReset ~ tokenParams:",
-    tokenParams
-  );
   const handleBack = () => {
     navigate("/signin");
   };
@@ -46,10 +42,6 @@ const PasswordReset = () => {
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onChange" });
 
   const handleSubmits = (value) => {
-    console.log(
-      "🚀 ~ file: PasswordReset.jsx:37 ~ handleSubmits ~ value:",
-      value
-    );
     try {
       if (isValid) {
         dispatch(
@@ -64,6 +56,9 @@ const PasswordReset = () => {
       console.log("err", error);
     }
   };
+  useEffect(() => {
+    dispatch(checkTokenRequest({ token: tokenParams, handleBack }))
+  }, [tokenParams]);
   return (
     <div className="">
       <div

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ModalBase from "../../modal/ModalBase";
 import {
   Typography,
@@ -21,23 +21,34 @@ import { updateStatusRequest } from "../../../sagas/admin/adminSlice";
 import { WrapInfo } from "../../../pages/InfoUser";
 import { closeDetailPost, toggleUpdatePost } from "../../../sagas/global/globalSlice";
 import SpeedDialAdmin from "../SpeedDialAdmin";
+import { getcommentsByPostRequest } from "../../../sagas/comments/commentsSlice";
 
 const PostDetailAdmin = () => {
   const dispatch = useDispatch();
   const { postDetail, customerDetail, categoryDetail } = useSelector((state) => state.admin)
-  const { showDetailPost } = useSelector((state) => state.global)
+  const { showDetailPost, socketAdmin } = useSelector((state) => state.global)
+  const id_post = postDetail?._id
+  const { commentsPost } = useSelector((state) => state.comments);
+  const totalComment = commentsPost?.length || 0
   const handleEditPost = () => {
     dispatch(toggleUpdatePost());
   };
   const handleClose = () => {
     dispatch(closeDetailPost())
   }
+  const handleSendNotification = (id_receiver) => {
+    if (socketAdmin)
+      socketAdmin.emit('receiverNotify', { id_receiver });
+  }
   const handleUpdateStatus = (status) => {
     const model = "post";
     const id = postDetail?._id;
-    dispatch(updateStatusRequest({ id, model, status }));
+    dispatch(updateStatusRequest({ id, model, status, handleSendNotification }));
     handleClose()
   };
+  useEffect(() => {
+    dispatch(getcommentsByPostRequest({ id_post }))
+  }, [id_post]);
   return (
     <>
       <ModalBase onClose={handleClose} visible={showDetailPost}>
@@ -73,8 +84,8 @@ const PostDetailAdmin = () => {
                 </div>
               </div>
               <div className=' flex-auto h-auto bg-white rounded-xl p-5 flex gap-x-10 flex-col md:flex-row
-                         gap-y-5 md:gap-y-10'>
-                <div className='text-base md:text-sm flex-1'>
+                         md:gap-y-10'>
+                <div className='text-xs md:text-sm flex-1'>
                   <WrapInfo>
                     <UserCircleIcon {...icon} /> <p>{customerDetail?.full_name} </p>
                   </WrapInfo>
@@ -85,7 +96,7 @@ const PostDetailAdmin = () => {
                     <TagIcon {...icon} />  <p>{customerDetail?.admin ? 'Quản trị viên' : 'Người dùng'}</p>
                   </WrapInfo>
                 </div>
-                <div className='text-base md:text-sm flex-1'>
+                <div className='text-xs md:text-sm flex-1'>
                   <WrapInfo>
                     <Squares2X2Icon {...icon} /> <p>{categoryDetail?.title}</p>
                   </WrapInfo>
@@ -93,7 +104,7 @@ const PostDetailAdmin = () => {
                     <HeartIcon {...icon} /> <p>{postDetail?.likes?.length} lượt thích</p>
                   </WrapInfo>
                   <WrapInfo>
-                    <ChatBubbleLeftRightIcon  {...icon} /> <p>{0} bình luận</p>
+                    <ChatBubbleLeftRightIcon  {...icon} /> <p>{totalComment} bình luận</p>
                   </WrapInfo>
                 </div>
               </div>

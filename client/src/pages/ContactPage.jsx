@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { Field } from "../components/field";
@@ -15,7 +15,6 @@ import { Label } from "../components/label";
 
 import { Textarea } from "../components/textarea";
 import {
-  FeedbackRequest,
   createFeedbacksRequest,
 } from "../sagas/feedbackMail/feedbacksSlice";
 import BannerCommon from "../layout/common/BannerCommon";
@@ -28,9 +27,6 @@ const schemaValidate = Yup.object({
     .email("Vui lòng nhập đúng định dạng email!"),
   phone: Yup.string().required("Vui lòng nhập số điện thoại!"),
   message: Yup.string().required("Vui lòng nhập số nội dung!"),
-
-  // image: Yup.mixed().required("Vui lòng nhập ảnh!"),
-  // .min(6, 'Tên đăng nhập phải lớn hơn 6 kí tự'),
 });
 const ContactPage = () => {
   useSetTitle('Liên hệ')
@@ -38,7 +34,7 @@ const ContactPage = () => {
   const { infoAuth } = useSelector((state) => state.auth);
   const {
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
     control,
     reset,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onBlur" });
@@ -59,44 +55,41 @@ const ContactPage = () => {
     <div className="bg-white">
       <BannerCommon
         image={"./src/assets/image/banner-post.jpg"}
-        title="Liên hệ"
+        title="Liên hệ với chúng tôi"
       />
       <div className="w-full pt-12 pb-4 mx-auto">
         <div className="text-center ">
-          <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
+          <h5 className="relative inline-block mb-2 text-3xl font-extrabold text-primary font-dancing">
             <span className="absolute right-full border w-[80px] top-1/2 -translate-x-1/2 h-[1px] border-primary"></span>
             Liên hệ với chúng tôi{" "}
-            <span className="absolute left-full border w-[80px] top-1/2 -translate-y-1/2 h-[1px] border-primary"></span>
+            <span className="absolute left-[120%] border  w-[80px] top-1/2 -translate-y-1/2 h-[1px] border-primary"></span>
           </h5>
           <h1 className="mb-12 text-4xl font-bold">
             Liên hệ nếu có bất kỳ câu hỏi nào
           </h1>
         </div>
         <div className="page-content ">
-          <div className="grid w-full grid-cols-3">
+          <div className="grid w-full grid-cols-1 md:grid-cols-3 text-center">
             <div className="">
-              <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
-                Booking
-                <span className="absolute left-full border w-[80px] top-1/2 -translate-y-1/2 h-[1px] border-primary"></span>
+              <h5 className="relative inline-block  mb-2 text-3xl font-extrabold text-primary font-dancing">
+                Facebook
+
               </h5>
 
-              <p className="mb-4 text-base">book@example.com</p>
+              <p className="mb-4 text-base">facebook.com/foodsvietblog_203</p>
             </div>
             <div className="">
-              <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
-                General
-                <span className="absolute left-full border w-[80px] top-1/2 -translate-y-1/2 h-[1px] border-primary"></span>
+              <h5 className="relative inline-block  mb-2 text-3xl font-extrabold text-primary font-dancing">
+                Email
               </h5>
 
-              <p className="mb-4 text-base">book@example.com</p>
+              <p className="mb-4 text-base">foodsvietblog203@gmail.com</p>
             </div>
-            <div className="">
-              <h5 className="relative inline-block pr-8 mb-2 text-3xl font-extrabold text-primary font-dancing">
-                Technical
-                <span className="absolute left-full border w-[80px] top-1/2 -translate-y-1/2 h-[1px] border-primary"></span>
+            <div className=" text-center">
+              <h5 className="relative inline-block  mb-2 text-3xl font-extrabold text-primary font-dancing">
+                Hotline
               </h5>
-
-              <p className="mb-4 text-base">book@example.com</p>
+              <p className="mb-4 text-base">032 884 6202</p>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-5 mx-5 mt-10 md:grid-cols-2">
@@ -113,8 +106,8 @@ const ContactPage = () => {
                 className="flex flex-col"
                 onSubmit={handleSubmit(handleSubmits)}
               >
-                <div className="flex">
-                  <div className="w-2/4 px-4 py-3">
+                <div className="flex flex-col w-full lg:flex-row">
+                  <div className="w-full lg:w-2/4 px-4 py-3">
                     <div className="">
                       <Field>
                         <Input
@@ -131,7 +124,7 @@ const ContactPage = () => {
                       </Field>
                     </div>
                   </div>
-                  <div className="w-2/4 px-4 py-3">
+                  <div className="w-full lg:w-2/4 px-4 py-3">
                     <div className="">
                       <Field>
                         <Input

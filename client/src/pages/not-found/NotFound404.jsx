@@ -12,7 +12,6 @@ const NotFound404 = () => {
         <div>
             <div className=''>
                 <div className="h-screen w-full flex justify-center items-center bg-white flex-col">
-                    {/* <img src="../src/assets/log.svg" alt="" /> */}
                     <h1 className="font-extrabold text-9xl text-[#1A2238] tracking-wide">
                         404
                     </h1>
@@ -21,20 +20,20 @@ const NotFound404 = () => {
                     </div>
                     <div className='flex gap-x-10'>
                         <button className="mt-5" onClick={handleBackPage}>
-                            <a className="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring">
+                            <div className="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring">
                                 <span className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#FF6A3D] group-hover:translate-y-0 group-hover:translate-x-0" />
                                 <span className="relative block px-8 py-3 bg-white border border-current">
                                     <div>Quay lại</div>
                                 </span>
-                            </a>
+                            </div>
                         </button>
                         <Link to="/" className="mt-5">
-                            <a className="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring">
+                            <div className="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring">
                                 <span className="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#FF6A3D] group-hover:translate-y-0 group-hover:translate-x-0" />
                                 <span className="relative block px-8 py-3 bg-white border border-current">
                                     <>Quay về trang chủ</>
                                 </span>
-                            </a>
+                            </div>
                         </Link>
                     </div>
                 </div>

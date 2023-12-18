@@ -15,6 +15,8 @@ import {
 } from "../sagas/messenger/messengerSlice";
 import { categoriesRequest } from "../sagas/categories/categoriesSlice";
 import useLoadingImage from "../hooks/useLoadingImage";
+import useCheckAuth from "../hooks/useCheckAuth";
+import { getAllAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -32,6 +34,8 @@ function MainLayout() {
     dispatch(categoriesRequest());
     dispatch(postsRequest());
     dispatch(setNotify());
+    dispatch(getPostsAdminRequest())
+    dispatch(getAllAdminRequest());
     dispatch(setErrorGlobal(""));
     dispatch(setNotifyGlobal(""));
   }, [token, dispatch, tokenLocal, location?.pathname]);
@@ -47,6 +51,7 @@ function MainLayout() {
   useLoadingImage(posts)
   useLoadingImage(customers)
   useLoadingImage(categories)
+  useCheckAuth()
   return (
     <div className="relative min-h-[1000px] max-w-[1600px] m-auto flex flex-col overflow-hidden ">
       <Header />

@@ -83,8 +83,15 @@ const authSlice = createSlice({
                 infoAuth: action.payload
             }
         },
+        getInfoAuth: (state) => {
+            return {
+                ...state,
+                token: getObjectFromLocalStorage('authToken') || null,
+                infoAuth: getObjectFromLocalStorage('infoAuth') || null,
+            }
+        },
     }
 })
 
-export const { loginRequest, loginSuccess, logout, registerRequest, requestFailure, registerSuccess, refreshAccessTokenRequest, refreshAccessTokenSuccess, setInfoAuth } = authSlice.actions
+export const { loginRequest, loginSuccess, logout, registerRequest, requestFailure, registerSuccess, refreshAccessTokenRequest, refreshAccessTokenSuccess, setInfoAuth, getInfoAuth } = authSlice.actions
 export default authSlice.reducer

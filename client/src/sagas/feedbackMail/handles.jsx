@@ -10,8 +10,10 @@ import {
   forgotPasswordAdminSuccess,
   forgotPasswordSuccess,
   resetPasswordAdminSuccess,
+  checkTokenSuccess,
 } from "./feedbacksSlice";
 import {
+  checkToken,
   createFeedBack,
   getAllFeedBack,
   resetPassword,
@@ -109,6 +111,24 @@ export function* handleResetPasswordAdmin({ payload }) {
       yield put(setNotifyGlobal(response?.data?.message));
     }
   } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleCheckToken({ payload }) {
+  const { token, handleBack } = payload;
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(checkToken, token);
+
+    if (response?.data) {
+      yield put(checkTokenSuccess());
+      yield put(setNotifyGlobal(response?.data?.message));
+    }
+  } catch (error) {
+    if (error) {
+      yield handleBack();
+    }
     yield handleCommonError(error);
   }
 }

@@ -17,6 +17,7 @@ import ItemAdmin from "../../layout/adminLayout/admins/ItemAdmin";
 import DetailAdmin from "../../layout/adminLayout/admins/DetailAdmin";
 import EditAdmin from "../../layout/adminLayout/admins/EditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
+import useLoadingImage from "../../hooks/useLoadingImage";
 
 const PageAdmin = () => {
   const { loading, admin, tokenAdmin } = useSelector((state) => state.admin);
@@ -28,6 +29,7 @@ const PageAdmin = () => {
   useEffect(() => {
     handLoad()
   }, []);
+  useLoadingImage(admin)
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

@@ -44,8 +44,8 @@ const TopCustomerInteract = () => {
     };
     return (
         <div>
-            <h2>Thống kê lượt xem bài viết</h2>
-            <div>
+            <h2>Top bài viết nhiều tương tác</h2>
+            <div className='w-full'>
                 <Bar data={data} options={options} />
             </div>
         </div>

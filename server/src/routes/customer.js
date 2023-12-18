@@ -13,8 +13,10 @@ router.get('/detailAdmin?:id', adminController.detail)
 router.get('/detail?:id', customerController.detail)
 // router.get('/detail', middlewareAuth.verifyToken, customerController.detail)
 router.put('/updateCustomer', middlewareAuth.verifyToken, uploadCloud.single("image"), customerController.updateCustomer)
+router.put('/changePassword', middlewareAuth.verifyToken, customerController.changePassword)
 router.post('/createCustomer', middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), customerController.register)
-router.get('/search?:key', customerController.search)
+router.get('/search', customerController.search)
+router.get('/searchCustomer', customerController.searchCustomer)
 
 
 module.exports = router;

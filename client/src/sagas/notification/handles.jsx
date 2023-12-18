@@ -1,6 +1,6 @@
 import { call, put } from "redux-saga/effects";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { addNotification, deleteAllNotificationByCustomer, deleteNotificationByCustomer, getAllNotification, getNotificationByAdmin, getNotificationByCustomer, updateAllNotificationByCustomer, updateNotificationByAdmin, updateNotificationByCustomer } from "./request";
+import { addNotification, addNotificationAdmin, deleteAllNotificationByCustomer, deleteNotificationByCustomer, getAllNotification, getNotificationByAdmin, getNotificationByCustomer, updateAllNotificationByCustomer, updateNotificationByAdmin, updateNotificationByCustomer } from "./request";
 import { addNotificationSuccess, deleteAllNotificationSuccess, deleteNotificationSuccess, getAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationSuccess, updateNotificationAdminSuccess, updateNotificationSuccess } from "./notificationSlice";
 
 
@@ -16,7 +16,18 @@ export function* handleAddNotification({ payload }) {
         yield handleCommonError(error)
     }
 }
-
+export function* handleAddNotificationAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(addNotificationAdmin, payload);
+        if (response) {
+            yield put(addNotificationSuccess())
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
 export function* handleGetNotificationByCustomer({ payload }) {
     try {
         yield put(setNotifyGlobal(''))

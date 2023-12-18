@@ -27,6 +27,7 @@ import {
   conversationsRequest,
   messageUnReadRequest,
 } from "../sagas/messenger/messengerSlice";
+import { postsRequest } from "../sagas/posts/postsSlice";
 
 const Header = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ const Header = () => {
   const dataAuth = customers.filter((cus) => cus._id === infoAuth?._id)[0];
   const handleGetNotification = () => {
     if (token) {
+      dispatch(postsRequest());
       dispatch(getNotificationByCustomerRequest());
     }
   };

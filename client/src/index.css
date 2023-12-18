@@ -75,6 +75,10 @@
     .content_post.post_item {
         @apply !mt-0
     }
+
+    .content_post img {
+        @apply !text-center !block !mx-auto
+    }
 }
 
 

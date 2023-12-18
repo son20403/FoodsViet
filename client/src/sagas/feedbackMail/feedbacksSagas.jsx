@@ -1,5 +1,6 @@
 import { takeLatest } from "redux-saga/effects";
 import {
+  handleCheckToken,
   handleCreateFeedback,
   handleGetAllFeedBack,
   handleResetPassword,
@@ -10,6 +11,7 @@ import {
 } from "./handles";
 import {
   FeedbackRequest,
+  checkTokenRequest,
   createFeedbacksRequest,
   forgotPassworAdmindRequest,
   forgotPasswordRequest,
@@ -26,4 +28,5 @@ export default function* feedSagas() {
   yield takeLatest(resetPasswordRequest.type, handleResetPassword);
   yield takeLatest(forgotPassworAdmindRequest.type, handleSendPasswordAdmin);
   yield takeLatest(resetPasswordAdminRequest.type, handleResetPasswordAdmin);
+  yield takeLatest(checkTokenRequest.type, handleCheckToken);
 }

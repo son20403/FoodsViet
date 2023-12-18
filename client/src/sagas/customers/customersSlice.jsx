@@ -3,6 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     customers: [],
     customer_detail: {},
+    customers_search: [],
+    categories_search: [],
+    posts_search: [],
     loading: false,
     error: null,
 }
@@ -77,15 +80,73 @@ const authSlice = createSlice({
                 error: null,
             }
         },
+        changePasswordRequest: (state) => {
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            }
+        },
+        changePasswordSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
+        },
         setLoadingCustomer: (state, action) => {
             return {
                 ...state,
                 loading: action.payload
             }
-        }
-
+        },
+        searchPostsRequest: (state) => {
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            }
+        },
+        searchPostsSuccess: (state, action) => {
+            return {
+                ...state,
+                posts_search: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
+        searchCategoriesRequest: (state) => {
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            }
+        },
+        searchCategoriesSuccess: (state, action) => {
+            return {
+                ...state,
+                categories_search: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
+        searchCustomersRequest: (state) => {
+            return {
+                ...state,
+                error: null,
+                loading: true,
+            }
+        },
+        searchCustomersSuccess: (state, action) => {
+            return {
+                ...state,
+                customers_search: action.payload,
+                loading: false,
+                error: null,
+            }
+        },
     }
 })
 
-export const { customersRequest, customersSuccess, requestFailure, customerDetailRequest, customerDetailSuccess, updateCustomerRequest, updateCustomerSuccess, setLoadingCustomer, adminInfoRequest, adminInfoSuccess } = authSlice.actions
+export const { customersRequest, customersSuccess, requestFailure, customerDetailRequest, customerDetailSuccess, updateCustomerRequest, updateCustomerSuccess, setLoadingCustomer, adminInfoRequest, adminInfoSuccess, changePasswordRequest, changePasswordSuccess, searchCategoriesRequest, searchCategoriesSuccess, searchCustomersRequest, searchCustomersSuccess, searchPostsRequest, searchPostsSuccess } = authSlice.actions
 export default authSlice.reducer
