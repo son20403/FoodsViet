@@ -16,6 +16,10 @@ import {
   searchCategoriesRequest,
   searchCustomersRequest,
   searchPostsRequest,
+  statisticalCategoriesRequest,
+  statisticalCustomersRequest,
+  statisticalFeedbacksRequest,
+  statisticalPostsRequest,
   updateAdminRequest,
   updateCategoriesAdminRequest,
   updateCustomerAdminRequest,
@@ -38,6 +42,10 @@ import {
   handleSearchCategories,
   handleSearchCustomer,
   handleSearchPosts,
+  handleStatisticalCategory,
+  handleStatisticalCustomer,
+  handleStatisticalFeedbacks,
+  handleStatisticalPosts,
   handleUpdateAdmin,
   handleUpdateCustomerAdmin,
   handleUpdatePostAdmin,
@@ -73,4 +81,8 @@ export default function* adminSagas() {
   yield takeLatest(searchCustomersRequest.type, handleSearchCustomer);
   yield takeLatest(searchPostsRequest.type, handleSearchPosts);
   yield takeLatest(searchCategoriesRequest.type, handleSearchCategories);
+  yield takeLatest(statisticalCustomersRequest.type, handleStatisticalCustomer);
+  yield takeLatest(statisticalFeedbacksRequest.type, handleStatisticalFeedbacks);
+  yield takeLatest(statisticalPostsRequest.type, handleStatisticalPosts);
+  yield takeLatest(statisticalCategoriesRequest.type, handleStatisticalCategory);
 }

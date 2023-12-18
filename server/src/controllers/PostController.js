@@ -61,7 +61,7 @@ class PostController extends BaseController {
     getAllPostByCustomer = async (req, res) => {
         const id = req.query.id;
         try {
-            const dataPost = await this.model.find({ id_customer: id, status: 'approved' });
+            const dataPost = await this.model.find({ id_customer: id, });
             if (!dataPost) {
                 return res.status(400).json({
                     message: "Có lỗi xảy ra",

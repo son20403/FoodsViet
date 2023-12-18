@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 function useImagePreview(onChange = () => { }) {
     const [preview, setPreview] = useState(null);
     const validImageTypes = ["image/gif", "image/jpeg", "image/png"];
-    const maxFileSize = 3 * 1024 * 1024;
+    const maxFileSize = 4 * 1024 * 1024;
     const handleFileChange = (e) => {
         const files = e.target.files;
         if (!files || files.length === 0) {

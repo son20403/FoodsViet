@@ -10,6 +10,7 @@ router.get(
   sendEmailController.getAllFeedBack
 );
 router.post("/addFeedBack", sendEmailController.createFeedBack);
+router.post("/checkToken", sendEmailController.checkToken);
 router.post("/forgot-password", sendEmailController.forgotPassword);
 router.post("/reset-password", sendEmailController.resetPassword);
 router.post("/admin/forgot-password", sendEmailController.forgotPasswordAdmin);

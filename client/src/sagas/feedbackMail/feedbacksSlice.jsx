@@ -120,6 +120,20 @@ const feedbacksSlice = createSlice({
         error: null,
       };
     },
+    checkTokenRequest: (state) => {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    },
+    checkTokenSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
 
     resetPasswordAdminSuccess: (state) => {
       return {
@@ -155,5 +169,7 @@ export const {
   forgotPasswordAdminSuccess,
   resetPasswordAdminRequest,
   resetPasswordAdminSuccess,
+  checkTokenRequest,
+  checkTokenSuccess,
 } = feedbacksSlice.actions;
 export default feedbacksSlice.reducer;

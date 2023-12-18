@@ -21,11 +21,12 @@ router.put("/updateCustomer", middlewareAuth.verifyTokenStaff, uploadCloud.singl
 router.put("/updateAdmin", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updateAdmin);
 router.put("/updateRoleAdmin", middlewareAuth.verifyTokenAdmin, uploadCloud.single("image"), adminController.updateRoleAdmin);
 router.put("/updatePost", middlewareAuth.verifyTokenStaff, uploadCloud.single("image"), adminController.updatePost);
-router.get("/getListAdmin", middlewareAuth.verifyTokenStaff, adminController.getListAdmin);
-router.get("/getAllPostByAdmin", middlewareAuth.verifyTokenStaff, adminController.getAllPostByAdmin);
+router.get("/getListAdmin", adminController.getListAdmin);
+router.get("/getAllPostByAdmin", adminController.getAllPostByAdmin);
 router.get("/getDetailAdmin", middlewareAuth.verifyTokenStaff, adminController.detail);
 router.get("/getRole", middlewareAuth.verifyTokenStaff, adminController.getRole);
 router.get("/searchAdmin", middlewareAuth.verifyTokenStaff, adminController.searchAdmin);
+router.get("/statistical", adminController.statistical);
 // router.get('/getDataCustomer', middlewareAuth.verifyToken, AdminAuthController.getDataCustomer)
 
 module.exports = router;

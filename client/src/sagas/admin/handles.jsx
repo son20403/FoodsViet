@@ -6,6 +6,7 @@ import {
   getListAdmin,
   getRole,
   getSearchAdmin,
+  getStatistical,
   loginAdmin,
   logoutAdmin,
   registerAdmin,
@@ -36,6 +37,10 @@ import {
   searchCustomersSuccess,
   searchPostsSuccess,
   setInfoAdmin,
+  statisticalCategoriesSuccess,
+  statisticalCustomersSuccess,
+  statisticalFeedbacksSuccess,
+  statisticalPostsSuccess,
   updateAdminSuccess,
   updateCustomerAdminSuccess,
   updatePostAdminSuccess,
@@ -47,6 +52,7 @@ import {
   createCustomerAdmin,
   getAllCustomersByAdmin,
 } from "../customers/request";
+import { addNotificationRequest } from "../notification/notificationSlice";
 
 export function* handleLoginAdmin({ payload }) {
   try {
@@ -133,6 +139,62 @@ export function* handleSearchCustomer({ payload }) {
     yield handleCommonError(error);
   }
 }
+export function* handleStatisticalCustomer({ payload }) {
+  const { model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getStatistical, model);
+    if (response?.data) {
+      const data = response.data
+      yield put(statisticalCustomersSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleStatisticalPosts({ payload }) {
+  const { model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getStatistical, model);
+    if (response?.data) {
+      const data = response.data
+      yield put(statisticalPostsSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleStatisticalFeedbacks({ payload }) {
+  const { model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getStatistical, model);
+    if (response?.data) {
+      const data = response.data
+      yield put(statisticalFeedbacksSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
+export function* handleStatisticalCategory({ payload }) {
+  const { model } = payload
+  try {
+    yield put(setNotifyGlobal(""));
+    yield put(setErrorGlobal(""));
+    const response = yield call(getStatistical, model);
+    if (response?.data) {
+      const data = response.data
+      yield put(statisticalCategoriesSuccess(data));
+    }
+  } catch (error) {
+    yield handleCommonError(error);
+  }
+}
 export function* handleSearchCategories({ payload }) {
   const { key, model } = payload
   try {
@@ -200,16 +262,23 @@ export function* handleGetAllCustomersByAdmin({ payload }) {
   }
 }
 export function* handleUpdateStatus({ payload }) {
-  const { id, model, status } = payload;
+  const { id, model, status, handleSendNotification } = payload;
   try {
     yield put(setNotifyGlobal(""));
     yield put(setErrorGlobal(""));
     const response = yield call(updateStatus, id, model, { status });
     if (response?.data) {
+      const data = response.data
       yield put(updateStatusSuccess());
       switch (model) {
         case "post":
           yield put(getPostsAdminRequest());
+          yield put(addNotificationRequest({
+            id_post: data?._id,
+            id_customer: data?.id_customer,
+            typeNotify: status
+          }))
+          yield handleSendNotification(data?.id_customer)
           break;
         case "category":
           yield put(getCategoriesAdminRequest());

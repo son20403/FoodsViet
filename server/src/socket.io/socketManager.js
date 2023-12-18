@@ -51,6 +51,7 @@ const socketManager = (server) => {
         })
         socket.on('receiverNotify', ({ id_receiver }) => {
             const receiver = getUser(id_receiver)
+            console.log("🚀 ~ file: socketManager.js:54 ~ socket.on ~ receiver:", receiver)
             if (receiver) {
                 io.to(receiver.socketId).emit('sendNotify');
             }
@@ -60,8 +61,10 @@ const socketManager = (server) => {
             io.emit('update')
         });
         socket.on('notificationAdmin', () => {
-            console.log('nhận');
             io.emit('notificationAdmin')
+        });
+        socket.on('updateNotificationAdmin', () => {
+            io.emit('updateNotificationAdmin')
         });
         socket.on("sendMessage", ({ senderId, receiverId, text, messageId }) => {
             console.log("🚀 ~ file: socketManager.js:66 ~ socket.on ~ senderId:", senderId)

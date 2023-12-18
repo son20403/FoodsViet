@@ -24,6 +24,10 @@ export function DashboardNavbar() {
   const { notificationsAdmin } = useSelector((state) => state.notification)
   const { socketAdmin } = useSelector((state) => state.global)
   const [notificationIsActive, setNotificationIsActive] = useState(0);
+  let totalNotificationActive = 0;
+  if (notificationsAdmin?.length > 0) {
+    totalNotificationActive = notificationsAdmin.filter((noti) => noti.status === true).length;
+  }
   const setOpenSidenav = () => {
     dispatch(toggleSideBar())
   }
@@ -35,7 +39,7 @@ export function DashboardNavbar() {
   }
   useEffect(() => {
     handleGetNotification()
-  }, [pathname]);
+  }, [page]);
 
   useEffect(() => {
     if (socketAdmin) {
@@ -44,15 +48,39 @@ export function DashboardNavbar() {
           handleGetNotification();
         }, 500);
       });
+      socketAdmin.on('updateNotificationAdmin', () => {
+        setTimeout(() => {
+          dispatch(handleGetNotification())
+        }, 200);
+      })
     }
-    if (notificationsAdmin?.length > 0) {
-      const total = notificationsAdmin.filter((noti) => noti.status === true).length;
-      if (total)
-        setNotificationIsActive(total);
-    } else {
-      setNotificationIsActive(0);
-    }
-  }, [socketAdmin, notificationsAdmin]);
+  }, [socketAdmin]);
+  let pages = "Thống kê"
+  switch (page) {
+    case 'posts':
+      pages = 'Bài viết'
+      break;
+    case 'categories':
+      pages = 'Danh mục'
+      break;
+    case 'customers':
+      pages = 'Người dùng'
+      break;
+    case 'feedBack':
+      pages = 'Phản hồi'
+      break;
+    case 'manage':
+      pages = 'Quản lý'
+      break;
+    case 'comments':
+      pages = 'Bình luận'
+      break;
+    case 'statistical':
+      pages = 'Thống kê'
+      break;
+    default:
+      break;
+  }
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
@@ -69,7 +97,7 @@ export function DashboardNavbar() {
             className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-1" : ""
               }`}
           >
-            <Link to={`/${layout}`}>
+            <Link to={`/${layout}/statistical`}>
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -83,11 +111,11 @@ export function DashboardNavbar() {
               color="blue-gray"
               className="font-normal"
             >
-              {page || 'Home'}
+              {pages}
             </Typography>
           </Breadcrumbs>
           <Typography variant="h6" color="blue-gray">
-            {page || 'Home'}
+            {pages}
           </Typography>
         </div>
         <div className="flex items-center">
@@ -103,16 +131,17 @@ export function DashboardNavbar() {
                 <div className="absolute text-xs p-3 z-10 flex items-center justify-center bg-red-500 
                 text-white -right-1 -top-2 rounded-full">
                   <span className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-                    {notificationIsActive}</span>
+                    {totalNotificationActive}</span>
                 </div>
                 <IconButton variant="text" color="blue-gray" className="mx-1">
                   <BellIcon className="h-5 w-5 text-blue-gray-500" />
                 </IconButton>
               </div>
             </MenuHandler>
-            <MenuList className="w-max border-0 flex flex-col gap-y-3 max-h-[400px] overflow-y-auto overscroll-none">
+            <MenuList
+              className="w-max border-0 flex flex-col gap-y-3 max-h-[400px] overflow-y-auto overscroll-none">
               {notificationsAdmin && notificationsAdmin?.length > 0 ? notificationsAdmin?.map((notify) => (
-                <NotifyItem key={notify?._id} notify={notify}></NotifyItem>
+                <NotifyItem key={notify?._id + notify} notify={notify}></NotifyItem>
               ))
                 : <div className='text-center'>Không có thông báo nào</div>
               }
@@ -139,10 +168,14 @@ const NotifyItem = ({ notify }) => {
   const timeSince = useTimeSince()
   const dispatch = useDispatch()
   const { customers } = useSelector((state) => state.admin);
+  const { socketAdmin } = useSelector((state) => state.global);
   const infoCustomer = customers.find((cus) => cus._id === notify?.id_sender)
   const handleUpdateNotification = () => {
     if (notify?.status === true) {
       dispatch(updateNotificationAdminRequest(notify?._id))
+      if (socketAdmin) {
+        socketAdmin.emit('updateNotificationAdmin')
+      }
     }
   }
 

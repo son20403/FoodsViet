@@ -5,7 +5,7 @@ import Overlay from './common/Overlay';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeNotification } from '../sagas/global/globalSlice';
 import { Avatar, Badge } from '@material-tailwind/react';
-import { ChatBubbleLeftRightIcon, ChatBubbleOvalLeftEllipsisIcon, Cog6ToothIcon, EllipsisVerticalIcon, HeartIcon, NoSymbolIcon } from '@heroicons/react/24/solid';
+import { ChatBubbleLeftRightIcon, ChatBubbleOvalLeftEllipsisIcon, Cog6ToothIcon, EllipsisVerticalIcon, HeartIcon, NoSymbolIcon, ArrowUpTrayIcon, ArchiveBoxXMarkIcon } from '@heroicons/react/24/solid';
 import useTimeSince from '../hooks/useTimeSince';
 import { deleteAllNotificationRequest, deleteNotificationRequest, updateAllNotificationRequest, updateNotificationRequest } from '../sagas/notification/notificationSlice';
 import { PopoverDrop } from './Popover';
@@ -72,10 +72,12 @@ const ItemNotifiction = ({ notify }) => {
     const timeSince = useTimeSince()
     const dispatch = useDispatch()
     const { customers } = useSelector((state) => state.customers)
-    const { posts } = useSelector((state) => state.posts)
+    const { admin, posts } = useSelector((state) => state.admin)
     const infoCusSend = customers?.filter((cus) => cus._id === notify?.id_sender)[0]
+    const infoADSend = admin?.filter((cus) => cus._id === notify?.id_sender)[0]
     const infoPost = posts?.filter((post) => post._id === notify?.id_post)[0]
     const className = 'h-5 w-5 text-white'
+    const infoAuth = infoCusSend || infoADSend
     let typeNotify = {
         icon: <></>,
         className: '',
@@ -107,14 +109,30 @@ const ItemNotifiction = ({ notify }) => {
                     <span className='font-bold text-primary'> {infoPost?.title}</span></span>
             }
             break;
+        case 'approved':
+            typeNotify = {
+                icon: <ArrowUpTrayIcon className={className} />,
+                className: 'bg-primary',
+                content: <span>đã duyệt bài viết
+                    <span className='font-bold text-primary'> {infoPost?.title}</span> của bạn</span>
+            }
+            break;
+        case 'destroy':
+            typeNotify = {
+                icon: <ArchiveBoxXMarkIcon className={className} />,
+                className: 'bg-red-600',
+                content: <span>đã vô hiệu hóa bài viết
+                    <span className='font-bold text-primary'> {infoPost?.title} </span> của bạn</span>
+            }
+            break;
         case 'like':
             typeNotify = {
                 icon: <HeartIcon className={className} />,
                 className: 'bg-red-400',
-                content: <span>đã thích bài viết <span className='font-bold text-primary'>{infoPost?.title}</span></span>
+                content: <span>đã thích bài viết <span className='font-bold text-primary'>
+                    {infoPost?.title}</span></span>
             }
             break;
-
         default:
             typeNotify = {
                 icon: <NoSymbolIcon className={className} />,
@@ -123,6 +141,7 @@ const ItemNotifiction = ({ notify }) => {
             }
             break;
     }
+    const toLink = notify?.typeNotify === 'destroy' ? '#' : `/detail/${infoPost?.slug}#${notify?.id_comment}`;
     return (
         <div
             className={`px-5 py-3 rounded-lg flex gap-x-5 items-center transition-all
@@ -136,12 +155,12 @@ const ItemNotifiction = ({ notify }) => {
                         border-white shadow-lg shadow-black/20`}
                         placement="bottom-end"
                     >
-                        <Avatar size='lg' className='border shadow-2xl' src={infoCusSend?.image}></Avatar>
+                        <Avatar size='lg' className='border shadow-2xl' src={infoAuth?.image}></Avatar>
                     </Badge>
                 </div>
-                <Link to={`/detail/${infoPost?.slug}#${notify?.id_comment}`} className='flex-1 flex flex-col gap-y-2  '>
+                <Link to={toLink} className='flex-1 flex flex-col gap-y-2  '>
                     <div className='flex-1 line-clamp-3'>
-                        <span className='font-bold'>{infoCusSend?.full_name} </span>
+                        <span className='font-bold'>{infoAuth?.full_name} </span>
                         {typeNotify.content}
                     </div>
                     <div className='text-gray-700 text-xs'>

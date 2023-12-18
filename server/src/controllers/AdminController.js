@@ -28,6 +28,7 @@ class AdminController extends BaseController {
     this.roleModel = roleModel;
   }
 
+
   deleteRelatedData = async (id, userType) => {
     const posts = await this.postModel.find({ id_customer: id });
     let deleteTasks = posts.map((post) => {
@@ -292,6 +293,7 @@ class AdminController extends BaseController {
         if (dataPost) {
           const dataCategory = await this.categoryModel.findOne({ _id: dataPost?.category });
           const dataCustomer = await this.customerModel.findOne({ _id: dataPost?.id_customer });
+          const dataAdmin = await this.model.findOne({ _id: dataPost?.id_customer });
           if (!dataCategory) return res.status(400).json({
             message: "Danh mục không tồn tại!",
           });
@@ -300,12 +302,16 @@ class AdminController extends BaseController {
               message: `Danh mục ${dataCategory?.title} không khả dụng!`,
             });
           }
-          if (!dataCustomer) return res.status(400).json({
+          if (!(dataCustomer || dataAdmin)) return res.status(400).json({
             message: "Người dùng không tồn tại!",
           });
-          if (dataCustomer?.status !== 'approved') {
+          if (dataCustomer && dataCustomer?.status !== 'approved') {
             return res.status(400).json({
               message: `Người dùng ${dataCustomer?.full_name} không khả dụng!`,
+            });
+          } else if (dataAdmin && dataAdmin?.status !== 'approved') {
+            return res.status(400).json({
+              message: `Người dùng ${dataAdmin?.full_name} không khả dụng!`,
             });
           }
         } else {
@@ -321,12 +327,14 @@ class AdminController extends BaseController {
           new: true,
         }
       );
+      const dataModal = dataModelStatus?._doc
       if (!dataModelStatus) {
         return res.status(400).json({
           message: "Có lỗi xảy ra",
         });
       }
       return res.status(200).json({
+        ...dataModal,
         message: `Cập nhật thành công`,
       });
     } catch (error) {
@@ -366,6 +374,7 @@ class AdminController extends BaseController {
               { slug: { $regex: keyRegex } },
               { full_name: { $regex: keyRegex } },
               { user_name: { $regex: keyRegex } },
+              { email: { $regex: keyRegex } },
             ],
           },
         ],
@@ -450,6 +459,88 @@ class AdminController extends BaseController {
       });
     }
   };
+  statistical = async (req, res) => {
+    async function countModelByTimePeriod(period, type) {
+      try {
+        const aggregationPipeline = [];
+        let dateGroupingFormat = '';
+
+        switch (period) {
+          case 'day':
+            dateGroupingFormat = '%Y-%m-%d';
+            break;
+          case 'week':
+            dateGroupingFormat = '%Y-%U';
+            break;
+          case 'month':
+            dateGroupingFormat = '%Y-%m';
+            break;
+          default:
+            throw new Error('Định dạng không hợp lệ!');
+        }
+        let model = ''
+        switch (type) {
+          case 'customer':
+            model = Customer;
+            break;
+          case 'category':
+            model = Categories;
+            break;
+          case 'post':
+            model = Post;
+            break;
+          case 'feedback':
+            model = FeedBack;
+            break;
+          default:
+            throw new Error('Model không hợp lệ!');
+        }
+        aggregationPipeline.push({
+          $group: {
+            _id: { $dateToString: { format: dateGroupingFormat, date: { $toDate: '$timestamps' } } },
+            count: { $sum: 1 }
+          }
+        });
+        aggregationPipeline.push({ $sort: { '_id': 1 } });
+        const result = await model.aggregate(aggregationPipeline);
+
+        if (period === 'month') {
+          const allMonths = Array.from({ length: 12 }, (_, index) => {
+            const month = index + 1 < 10 ? `0${index + 1}` : `${index + 1}`;
+            return `2023-${month}`;
+          });
+
+          // Lọc các tháng không có trong kết quả aggregation
+          const existingMonths = result.map((item) => item._id);
+          const missingMonths = allMonths.filter((month) => !existingMonths.includes(month));
+
+          const missingMonthsData = missingMonths.map((month) => ({
+            _id: month,
+            count: 0
+          }));
+
+          const finalResult = [...result, ...missingMonthsData];
+
+          finalResult.sort((a, b) => (a._id > b._id ? 1 : -1));
+          return finalResult;
+        }
+        return result;
+      } catch (error) {
+        return res.status(500).json({ message: "Có lỗi xảy ra!" });
+      }
+    }
+    const model = req.query.model
+    try {
+      const statisticalByDay = await countModelByTimePeriod('day', model);
+      const statisticalByWeek = await countModelByTimePeriod('week', model);
+      const statisticalByMonth = await countModelByTimePeriod('month', model);
+      return res.status(200).json({ statisticalByDay, statisticalByWeek, statisticalByMonth });
+    } catch (error) {
+      console.log("Error:", error);
+      return res.status(500).json({ message: "Lỗi Server" });
+    }
+  };
+
   getAllCategoryByAdmin = async (req, res) => {
     try {
       const data = await this.categoryModel.find({});

@@ -31,7 +31,7 @@ const ItemAdmin = ({ data }) => {
             <tr className='border-b border-blue-gray-50 last:border-b-0' id={data?._id}>
                 <td className={`${className} max-w-[500px] min-w-[250px]`}>
                     <div className="flex items-center gap-4">
-                        <Avatar src={data?.image} alt={data?.full_name} size="lg" />
+                        <Avatar lazy-src={data?.image} className='bg-primary bg-opacity-5' size="lg" />
                         <div className='flex-1'>
                             <Typography className="text-xs font-normal text-blue-gray-500">
                                 {data?.user_name || ''}

@@ -25,11 +25,14 @@ const PostItem = ({ data = {}, isSingle }) => {
         });
     }, []);
     return (
-        <div className={`overflow-hidden col-span-2 flex flex-col md:flex-row group  h-full pb-0 gap-
+        <div className={`overflow-hidden relative col-span-2 flex flex-col md:flex-row group  h-full pb-0 gap-
             ${isSingle
                 ? 'md:flex-col !col-span-1 gap-5'
-                : 'md:even:flex-row-reverse'}
+                : 'md:even:flex-row-reverse'} ${data?.status !== 'approved' && 'select-none'}
         `}>
+            {data?.status !== 'approved' &&
+                <div className="absolute inset-0 bg-white bg-opacity-40 z-[99]"></div>
+            }
             <Link to={`/detail/${data.slug}`}
                 className={`w-full overflow-hidden h-full max-h-[350px] bg-primary bg-opacity-25
                     ${isSingle

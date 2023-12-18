@@ -404,6 +404,7 @@ class BaseController {
       });
     }
   };
+
 }
 
 // const adminController = new BaseController(Admin);

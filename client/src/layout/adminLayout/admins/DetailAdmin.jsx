@@ -115,9 +115,8 @@ const DetailAdmin = () => {
               </div>
               <div
                 className=" flex-auto h-auto bg-white rounded-xl p-5 flex gap-x-10 flex-col md:flex-row
-                                gap-y-5 md:gap-y-10"
-              >
-                <div className="text-base md:text-sm flex-1">
+                gap-y-0 md:gap-y-10">
+                <div className="text-xs md:text-sm flex-1">
                   <WrapInfo>
                     <UserIcon /> <p>{adminDetail?.full_name}</p>
                   </WrapInfo>
@@ -129,20 +128,17 @@ const DetailAdmin = () => {
                     <LocationIcon /> <p>{adminDetail?.address || "Chưa có"}</p>
                   </WrapInfo>
                 </div>
-                <div className="text-base md:text-sm flex-1">
+                <div className="text-xs md:text-sm flex-1">
                   <WrapInfo>
                     <ShieldCheckIcon {...icon} />
                     <div className="flex gap-4 items-center">
                       <Typography
-                        className={`text-xs flex items-center gap-x-2
-                                                font-semibold text-blue-600 min-w-[60px]
-                                                ${typeRole?.title === "Admin"
+                        className={`text-xs flex items-center gap-x-2 font-semibold 
+                        text-blue-600 min-w-[60px] ${typeRole?.title === "Admin"
                             ? "text-primary"
-                            : ""
-                          }
-                                                ${adminDetail?.boss &&
-                          "text-red-500"
-                          }`}
+                            : ""}
+                          ${adminDetail?.boss &&
+                          "text-red-500"}`}
                       >
                         {typeRole?.title === "Admin"
                           ? "Quản Trị viên"

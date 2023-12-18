@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
-import { getAllCustomers, getDetailCustomer, getDetailInfoAdmin, updateCustomer } from "./request";
-import { customerDetailRequest, customerDetailSuccess, customersRequest, customersSuccess, requestFailure, updateCustomerSuccess } from "./customersSlice";
-import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
+import { changePassword, getAllCustomers, getDetailCustomer, getDetailInfoAdmin, getSearch, updateCustomer } from "./request";
+import { changePasswordSuccess, customerDetailRequest, customerDetailSuccess, customersRequest, customersSuccess, requestFailure, searchCategoriesSuccess, searchCustomersSuccess, searchPostsSuccess, updateCustomerSuccess } from "./customersSlice";
+import { closeChangePassword, setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import { setInfoAuth } from "../auth/authSlice";
 
 export function* handleGetDetailCustomer({ payload }) {
@@ -36,6 +36,58 @@ export function* handleGetAllCustomers({ payload }) {
         const response = yield call(getAllCustomers, payload);
         if (response) {
             yield put(customersSuccess(response.data))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleSearchCustomers({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getSearch, payload?.key, payload?.model);
+        if (response) {
+            yield put(searchCustomersSuccess(response.data))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleSearchCategories({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getSearch, payload?.key, payload?.model);
+        if (response) {
+            yield put(searchCategoriesSuccess(response.data))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleSearchPosts({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getSearch, payload?.key, payload?.model);
+        if (response) {
+            yield put(searchPostsSuccess(response.data))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleChangePassword({ payload }) {
+    const { dataPassword, reset } = payload
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(changePassword, dataPassword);
+        if (response) {
+            yield put(changePasswordSuccess())
+            yield put(setNotifyGlobal(response?.data.message));
+            yield reset()
+            yield put(closeChangePassword())
         }
     } catch (error) {
         yield handleCommonError(error)

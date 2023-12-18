@@ -18,7 +18,7 @@ export const query = () => ({
         key: query,
         infoId,
       };
-      return axios.get(`/customer/search`, {
+      return axios.get(`/customer/searchCustomer`, {
         params,
       });
     },
