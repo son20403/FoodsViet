@@ -14,6 +14,7 @@ import CategoryItemAdmin from "../../layout/adminLayout/categories/CategoryItemA
 import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDetailAdmin";
 import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
+import useLoadingImage from "../../hooks/useLoadingImage";
 
 const CategoryPageAdmin = () => {
   const { loading, categories } = useSelector((state) => state.admin);
@@ -25,6 +26,7 @@ const CategoryPageAdmin = () => {
   useEffect(() => {
     handLoad()
   }, []);
+  useLoadingImage(categories)
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

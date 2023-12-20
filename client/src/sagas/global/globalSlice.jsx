@@ -9,8 +9,10 @@ const initialState = {
   showNotification: false,
   showSearch: false,
   isRequest: false,
+  isUploadImage: false,
   errorGlobal: "",
   notifyGlobal: "",
+  breadcrumb: "",
   showDetailPost: false,
   showDetailCustomer: false,
   showDetailCategory: false,
@@ -30,6 +32,7 @@ const initialState = {
   showSignin: false,
   showSignup: false,
   showSearchAdmin: false,
+  showChangePassword: false,
 };
 export const globalSlice = createSlice({
   name: "global",
@@ -155,7 +158,24 @@ export const globalSlice = createSlice({
         showAddPost: !state.showAddPost,
       };
     },
-
+    toggleChangePassword: (state) => {
+      return {
+        ...state,
+        showChangePassword: !state.showChangePassword,
+      };
+    },
+    toggleShowComment: (state) => {
+      return {
+        ...state,
+        showDetailComment: !state.showDetailComment,
+      };
+    },
+    closeShowComment: (state) => {
+      return {
+        ...state,
+        showDetailComment: false,
+      };
+    },
     closeNavbar: (state) => {
       return {
         ...state,
@@ -306,6 +326,25 @@ export const globalSlice = createSlice({
         showSearchAdmin: false,
       };
     },
+    closeChangePassword: (state) => {
+      return {
+        ...state,
+        showChangePassword: false,
+      };
+    },
+    setUploadImage: (state, action) => {
+      return {
+        ...state,
+        isUploadImage: action.payload,
+      };
+    },
+    setBreadcrumb: (state, action) => {
+      return {
+        ...state,
+        breadcrumb: action.payload,
+      };
+    },
+
   },
 });
 
@@ -355,5 +394,11 @@ export const {
   setSocketAdmin,
   closeSearchAdmin,
   toggleSearchAdmin,
+  setUploadImage,
+  setBreadcrumb,
+  closeChangePassword,
+  toggleChangePassword,
+  closeShowComment,
+  toggleShowComment,
 } = globalSlice.actions;
 export default globalSlice.reducer;

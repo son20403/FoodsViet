@@ -2,9 +2,7 @@ import { EyeIcon } from '@heroicons/react/24/outline';
 import { Avatar, Chip, Typography } from '@material-tailwind/react';
 import React from 'react';
 import { icon } from '../../../ADMIN/routes';
-import useToggle from '../../../hooks/useToggle';
 import useTimeSince from '../../../hooks/useTimeSince';
-import CustomerDetailAdmin from './CustomerDetailAdmin';
 import { useDispatch } from 'react-redux';
 import { customerDetailAdminSuccess } from '../../../sagas/admin/adminSlice';
 import { toggleDetailCustomer } from '../../../sagas/global/globalSlice';
@@ -22,7 +20,7 @@ const CustomerItemAdmin = ({ data }) => {
             <tr className='border-b border-blue-gray-50 last:border-b-0' id={data?._id}>
                 <td className={`${className} max-w-[500px]`}>
                     <div className="flex items-center gap-4">
-                        <Avatar src={data?.image} alt={data?.full_name} size="lg" />
+                        <Avatar className='bg-primary bg-opacity-5' lazy-src={data?.image} size="lg" />
                         <div className='flex-1'>
                             <Typography className="text-xs font-normal text-blue-gray-500">
                                 {data?.user_name || ''}

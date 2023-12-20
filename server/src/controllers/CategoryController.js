@@ -117,7 +117,14 @@ class CategoryController extends BaseController {
     const id = req.query.id;
     const formData = req.body;
     const fileData = req.file;
+    const { title } = formData
     const id_author = req.customer?.id;
+    if (!title) {
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+      return res.status(400).json({
+        message: "Không được để trống",
+      });
+    }
     try {
       const hasCategory = await this.model.findOne({ _id: id });
       if (!hasCategory) {
@@ -126,6 +133,11 @@ class CategoryController extends BaseController {
           message: "Không tồn tại loại này",
         });
       }
+      const hasTitle = await this.model.findOne({ title });
+      if (hasTitle)
+        return res.status(401).json({
+          message: "Đã tồn tại loại này",
+        });
       // const isValid = hasCategory.id_author === id_author;
       // if (!isValid)
       //   return res.status(400).json({

@@ -3,14 +3,20 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import React, { useEffect, useRef } from 'react';
 import { useController } from 'react-hook-form';
 import { Typography } from '../typography';
-import { uploadPlugin } from './plugin';
+import { useDispatch } from 'react-redux';
 import './style.css'
+import { uploadImage } from '../../sagas/posts/request';
+import { CustomUploadAdapter } from './plugin';
 const Textarea = ({ name, control, value = '', errors }) => {
     const { field } = useController({ name, control, defaultValue: value, rules: { required: true } });
-
+    const dispatch = useDispatch()
+    function uploadPlugin(editor) {
+        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+            return new CustomUploadAdapter(loader, uploadImage, dispatch);
+        };
+    }
     const isErr = !!errors?.[name]
     const editorRef = useRef(null);
-
     useEffect(() => {
         if (editorRef.current) {
             const editorElement = editorRef.current.querySelector(".ck.ck-editor");

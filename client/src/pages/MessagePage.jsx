@@ -7,6 +7,7 @@ import {
   useParams,
   Navigate,
   useLocation,
+  Link,
 } from "react-router-dom";
 import {
   InformationCircleIcon,
@@ -168,6 +169,9 @@ const MessagePage = () => {
           <h1 className="hidden font-bold md:block">
             <Logo>FOOSVIET</Logo>
           </h1>
+          <Link to={'/'} className=" md:hidden text-center flex items-center justify-center">
+            <img src="../src/assets/image/logo/fv-1.png" className="w-10 h-10" />
+          </Link>
         </div>
 
         {search ? (
@@ -184,7 +188,7 @@ const MessagePage = () => {
               placeholder="search ..."
               className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
               onFocus={handleFocus}
-              // onBlur={handleBlur}
+            // onBlur={handleBlur}
             />
           </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import Heading from '../components/heading/Heading';
 import Avatar from '../layout/customers/Avatar';
-import { CommentIcon, EditIcon, EllipsisIcon, HeartIcon, TrashIcon } from '../components/Icon';
+import { CommentIcon, EditIcon, EllipsisIcon, HeartIcon } from '../components/Icon';
 import ListPostsSidebar from '../layout/posts/ListPostsSidebar';
 import SlideWrap from '../layout/slide/SlideWrap';
 import PostItem from '../layout/posts/PostItem';
@@ -27,7 +27,11 @@ import { PopoverDrop } from '../layout/Popover';
 import { addNotificationRequest } from '../sagas/notification/notificationSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import Breadcrumb from '../layout/Breadcumb';
-import useSetTitle from '../hooks/useSetTitle';
+import { setBreadcrumb } from '../sagas/global/globalSlice';
+import { adminInfoRequest } from '../sagas/customers/customersSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCrown } from '@fortawesome/free-solid-svg-icons';
+import useLoadingImage from '../hooks/useLoadingImage';
 
 
 const schemaValidate = Yup.object({
@@ -37,15 +41,15 @@ const schemaValidate = Yup.object({
 const DetailPage = () => {
     const { slug } = useParams()
     const navigate = useNavigate();
-    const [titlePost, setTitlePost] = useState('');
     const dispatch = useDispatch()
     const { detail_post, loading, postsCategory, postsCustomer, error } = useSelector((state) => state.posts);
     const { token, infoAuth } = useSelector((state) => state.auth);
-    const { customers } = useSelector((state) => state.customers);
+    const { posts } = useSelector((state) => state.posts);
+    const { customers, customer_detail } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
     const { socket } = useSelector((state) => state.global);
 
-    const { comments, commentsPost } = useSelector((state) => state.comments);
+    const { commentsPost } = useSelector((state) => state.comments);
     const { handleToggle, toggle } = useToggle(false);
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
@@ -69,7 +73,6 @@ const DetailPage = () => {
     const getReplies = (commentId) => {
         return commentsPost?.filter(commentByPost => commentByPost?.parent_comment_id === commentId)
     }
-
     const handleLikePost = () => {
         if (!token) return toast.warning("Bạn chưa đăng nhập!")
         if (isLiked) {
@@ -126,7 +129,9 @@ const DetailPage = () => {
     useEffect(() => {
         if (socket && id_post) {
             socket.on('update', () => {
-                dispatch(getcommentsByPostRequest({ id_post }))
+                setTimeout(() => {
+                    dispatch(getcommentsByPostRequest({ id_post }))
+                }, 200);
             })
         }
     }, [socket, id_post]);
@@ -152,13 +157,20 @@ const DetailPage = () => {
         }
     }, [hash]);
     useEffect(() => {
-        if (!loading && error?.message) {
+        if (!loading && error?.message && Object.keys(detail_post).length < 1) {
             navigate('/not-found')
         }
-    }, [loading, error]);
+    }, [loading, error, detail_post]);
     useEffect(() => {
         document.title = detail_post?.title
+        dispatch(setBreadcrumb(detail_post?.title))
     }, [detail_post]);
+    useEffect(() => {
+        if (typeAuthor === 'admin') {
+            dispatch(adminInfoRequest({ id: id_customer }))
+        }
+    }, [typeAuthor]);
+    useLoadingImage(postByCategories)
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
@@ -181,7 +193,7 @@ const DetailPage = () => {
                             {typeAuthor === 'customer' ? <Link to={`/info/${customerByPosts?.slug}`}
                                 className='px-2 border-r last:border-none'>{customerByPosts?.full_name}</Link>
                                 : typeAuthor === 'admin'
-                                    ? <div className='px-2 border-r last:border-none'>Quản Trị Viên</div>
+                                    ? <div className='px-2 border-r last:border-none'>{customer_detail?.full_name}</div>
                                     : ''}
                             <div className='px-2 border-r last:border-none'>{detail_post?.date} </div>
                             <Link to={`/categories/${dataCategory?.slug}`}
@@ -204,20 +216,21 @@ const DetailPage = () => {
                                 )
                                 : typeAuthor === 'admin'
                                     ? <div className='flex gap-3 items-center'>
-                                        <Avatar image='../src/assets/image/admin-avatar.png'></Avatar>
-                                        <h2 className='text-xs md:text-sm font-bold'>Quản Trị Viên</h2>
+                                        <Avatar image={customer_detail?.image}></Avatar>
+                                        <h2 className='text-xs md:text-sm font-bold'>
+                                            {customer_detail?.full_name}
+                                            <span className='text-primary'> <FontAwesomeIcon icon={faCrown} /></span></h2>
                                     </div>
                                     : ''}
                             <div className=' flex gap-10 items-center'>
                                 <DataPost isDetail timestamps={detail_post?.timestamps}
                                     comments={commentsPost?.length} likes={listLikes}></DataPost>
-                                {isAuth && <PopoverDrop x={80} icon={<EllipsisIcon />}>
+                                {isAuth && typeAuthor === 'customer' && <PopoverDrop x={80} icon={<EllipsisIcon />}>
                                     <div className='flex items-center gap-5'>
                                         <div onClick={handleToggle} className='flex items-center'>
                                             <IconWrap className='cursor-pointer'><EditIcon />
                                                 <p className='text-[10px] md:text-xs'>Chỉnh sửa</p></IconWrap>
                                         </div>
-                                        <IconWrap><TrashIcon /> <p className='text-[10px] md:text-xs'>Xóa</p></IconWrap>
                                     </div>
                                 </PopoverDrop>}
                             </div>

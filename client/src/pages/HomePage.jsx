@@ -2,15 +2,12 @@ import React, { useEffect } from 'react';
 import Section from '../layout/common/Section';
 import { Heading } from '../components/heading';
 import ListSlide from '../layout/slide/ListSlide';
-import ListCustomer from '../layout/customers/ListCustomer';
 import ListPostHome from '../layout/posts/ListPostHome';
 import ListPost from '../layout/posts/ListPost';
 import { useDispatch, useSelector } from 'react-redux';
 import Banner from '../layout/Banner';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { postsRequest } from '../sagas/posts/postsSlice';
-import { categoriesRequest } from '../sagas/categories/categoriesSlice';
-import { customersRequest } from '../sagas/customers/customersSlice';
 import { Link } from 'react-router-dom';
 import useSetTitle from '../hooks/useSetTitle';
 
@@ -26,8 +23,6 @@ const HomePage = () => {// Gửi dữ liệu đến server
     const tokenLocal = localStorage.getItem('authToken')
     useEffect(() => {
         dispatch(postsRequest())
-        dispatch(categoriesRequest())
-        dispatch(customersRequest())
     }, [token, dispatch, tokenLocal]);
 
     return (
@@ -48,7 +43,7 @@ const HomePage = () => {// Gửi dữ liệu đến server
                         <div className='grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 gap-y-10 md:gap-10 mb-14 '>
                             {categories?.length > 0 && categories?.slice(0, 4).map(item => (
                                 <Link to={`/categories/${item?.slug}`} key={item._id} className='h-[300px] shadow-2xl md:h-[394px] relative rounded-md'>
-                                    <img src={item?.image} alt="" className='w-full h-full object-cover rounded-md' />
+                                    <img lazy-src={item?.image} alt="" className='w-full h-full object-cover rounded-md' />
                                     <div className='absolute bottom-0 translate-y-1/2 w-auto min-w-[80%]  
                                     rounded-md px-2 py-1 left-1/2 -translate-x-2/4 bg-primary text-white
                                     font-medium text-center text-xs md:text-base'>{item?.title}</div>

@@ -9,8 +9,9 @@ import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 import PasswordReset from "../pages/PasswordReset";
 import ForgotPassword from "../pages/ForgotPassword";
 import ForgotPasswordAdmin from "../pages/adminPage/ForgotPasswordAdmin";
-import CommentPageAdmin from "../pages/adminPage/CommentPageAdmin";
-// import HomeAdmin from "../layout/adminLayout/HomeAdmin";
+const CommentPostPageAdmin = lazy(() =>
+  import("../pages/adminPage/CommentPostPageAdmin")
+);
 const HomeAdmin = lazy(() => import("../pages/adminPage/HomeAdmin"));
 
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));
@@ -40,7 +41,6 @@ const ListPostsByCategory = lazy(() => import("../pages/ListPostsByCategory"));
 const CategoryPage = lazy(() => import("../pages/CategoryPage"));
 const HomePage = lazy(() => import("../pages/HomePage"));
 const AddNewPosts = lazy(() => import("../pages/AddNewPosts"));
-// const MessagePage = lazy(() => import("../pages/MessagePage"));
 
 export const router = createBrowserRouter([
   {
@@ -70,24 +70,13 @@ export const router = createBrowserRouter([
     element: <AppAdmin />,
     children: [
       { path: "", element: <HomeAdmin /> },
-      { path: "home", element: <HomeAdmin /> },
+      { path: "statistical", element: <HomeAdmin /> },
       { path: "posts", element: <PostPageAdmin /> },
       { path: "categories", element: <CategoryPageAdmin /> },
       { path: "customers", element: <CustomersPageAdmin /> },
-      { path: "comments", element: <CommentPageAdmin /> },
+      { path: "comments", element: <CommentPostPageAdmin /> },
       { path: "feedBack", element: <FeedBackPageAdmin /> },
       { path: "manage", element: <PageAdmin /> },
-      // { path: "edit-post/:slug", element: <EditPost /> },
-      // { path: "edit-customer/:id", element: <EditCustomer /> },
-      // { path: "edit-admin/:id", element: <EditAdmin /> },
-      // { path: "edit-category/:slug", element: <EditCategory /> },
-      // { path: "list-category", element: <ListCategory /> },
-      // { path: "list-customer", element: <ListCustomer /> },
-      // { path: "list-admin", element: <ListAdmin /> },
-      // { path: "add-post", element: <AddPost /> },
-      // { path: "add-category", element: <AddCategory /> },
-      // { path: "add-customer", element: <AddCustomer /> },
-      // { path: "add-admin", element: <AddAdmin /> },
     ],
   },
   { path: "admin/signin", element: <SignInPageAdmin /> },

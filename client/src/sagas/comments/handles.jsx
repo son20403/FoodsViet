@@ -1,8 +1,8 @@
 import { call, put } from "redux-saga/effects";
-import { createComments, deleteComment, getAllComments, getAllCommentsByPost, updateComments } from "./request";
-import { commentsRequest, createCommentsSuccess, deleteCommentSuccess, getCommentsSuccess, getcommentsByPostRequest, getcommentsByPostSuccess, requestFailure, updateCommentSuccess } from "./commentsSlice";
+import { createComments, createCommentsAdmin, deleteComment, deleteCommentAdmin, getAllComments, getAllCommentsByPost, updateComments, updateCommentsAdmin } from "./request";
+import { commentsRequest, createCommentsAdminSuccess, createCommentsSuccess, deleteCommentSuccess, getCommentsSuccess, getcommentsByPostRequest, getcommentsByPostSuccess, requestFailure, updateCommentSuccess } from "./commentsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { addNotificationRequest } from "../notification/notificationSlice";
+import { addNotificationAdminRequest, addNotificationRequest } from "../notification/notificationSlice";
 
 export function* handleGetAllComments({ payload }) {
     try {
@@ -52,7 +52,29 @@ export function* handleCreateComments({ payload }) {
         yield handleCommonError(error)
     }
 }
-
+export function* handleCreateCommentsAdmin({ payload }) {
+    const { comment, id_post, id_receiver, id_sender, typeNotify, id_customer_post } = payload
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(createCommentsAdmin, comment);
+        if (response) {
+            yield put(createCommentsAdminSuccess(response.data.message))
+            yield put(getcommentsByPostRequest({ id_post }))
+            if (typeNotify === 'reply' && id_sender !== id_customer_post && id_receiver !== id_customer_post) {
+                yield put(addNotificationAdminRequest(
+                    { id_post, id_comment: response.data._id, id_customer: id_customer_post, typeNotify: 'comment' }))
+            }
+            if (id_sender !== id_receiver) {
+                yield put(addNotificationAdminRequest(
+                    { id_post, id_comment: response.data._id, id_customer: id_receiver, typeNotify }))
+            }
+            yield put(commentsRequest())
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
 export function* handleUpdateComment({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
@@ -68,11 +90,41 @@ export function* handleUpdateComment({ payload }) {
         yield handleCommonError(error)
     }
 }
+export function* handleUpdateCommentAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(updateCommentsAdmin, payload?.id, payload?.comment);
+        if (response) {
+            yield put(updateCommentSuccess())
+            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
+            yield put(commentsRequest())
+            yield put(setNotifyGlobal(response.data?.message))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
 export function* handleDeleteComment({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
         const response = yield call(deleteComment, payload?.id);
+        if (response) {
+            yield put(deleteCommentSuccess())
+            yield put(commentsRequest())
+            yield put(getcommentsByPostRequest({ id_post: payload?.id_post }))
+            yield put(setNotifyGlobal(response.data?.message))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleDeleteCommentAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(deleteCommentAdmin, payload?.id);
         if (response) {
             yield put(deleteCommentSuccess())
             yield put(commentsRequest())

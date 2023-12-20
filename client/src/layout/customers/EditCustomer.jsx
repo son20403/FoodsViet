@@ -10,9 +10,11 @@ import { Field } from '../../components/field';
 import ModalBase from '../modal/ModalBase';
 import { useDispatch, useSelector } from 'react-redux';
 import { customersRequest, setLoadingCustomer, updateCustomerRequest } from '../../sagas/customers/customersSlice';
-import { setNotifyGlobal } from '../../sagas/global/globalSlice';
+import { setNotifyGlobal, toggleChangePassword } from '../../sagas/global/globalSlice';
 import { useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
+import { useNavigate } from "react-router-dom";
+
 const schemaValidate = Yup.object().shape({
     address: Yup.string().required("Vui lòng nhập địa chỉ!"),
     image: Yup.mixed(),
@@ -24,15 +26,19 @@ const schemaValidate = Yup.object().shape({
 
 const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const slug = data?.slug
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
+    const handleSetURL = (URL) => {
+        navigate(`/info/${URL}`, { replace: true })
+    }
     const handleEditUser = (value) => {
         try {
             dispatch(setLoadingCustomer(true))
             const info = { ...value };
             const id = data?._id
-            dispatch(updateCustomerRequest({ id, info, slug }));
+            dispatch(updateCustomerRequest({ id, info, slug, handleSetURL }));
             onClick()
             resetImageField()
         } catch (error) {
@@ -42,6 +48,9 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
     const resetImageField = () => {
         setValue('image', '');
     };
+    const handleShowChangePassword = () => {
+        dispatch(toggleChangePassword())
+    }
     return (
         <ModalBase onClose={onClick} visible={show}>
             <div className={`content absolute md:fixed w-full top-20  transition-all bg-white z-[99] p-10 pb-20`}>
@@ -88,6 +97,10 @@ const EditCustomer = ({ data, show, onClick = () => { } }) => {
                         </Field>
                     </div>
                 </form>
+                <div className='flex justify-end w-full'>
+                    <span onClick={handleShowChangePassword}
+                        className='text-sm text-primary cursor-pointer mr-2 mt-5 lg:mt-0'>Đổi mật khẩu</span>
+                </div>
             </div>
         </ModalBase>
 

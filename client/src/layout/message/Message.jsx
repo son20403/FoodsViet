@@ -28,11 +28,10 @@ const Message = ({ own, message }) => {
           />
         </NavLink>
         <div
-          className={`p-2.5 text-white md:max-w-[350px] max-w-[300px] my-2.5 ${
-            own
-              ? "bg-[#1877f2] rounded-tl-xl rounded-tr-xl rounded-bl-xl"
-              : "bg-gray-500 rounded-tl-xl rounded-tr-xl rounded-br-xl"
-          }`}
+          className={`p-2.5 text-white md:max-w-[350px] max-w-[300px] my-2.5 ${own
+            ? "bg-[#1877f2] rounded-tl-xl rounded-tr-xl rounded-bl-xl"
+            : "bg-gray-500 rounded-tl-xl rounded-tr-xl rounded-br-xl"
+            }`}
         >
           <p className="pb-2 text-base break-words">
             {message?.text.length > 200 ? (

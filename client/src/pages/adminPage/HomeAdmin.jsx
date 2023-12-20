@@ -1,23 +1,208 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+
 import {
     Typography,
 } from "@material-tailwind/react";
 import {
-    ClockIcon,
-    BanknotesIcon,
-    UserPlusIcon,
+    NewspaperIcon,
+    Square3Stack3DIcon,
     UserIcon,
-    ChartBarIcon,
+    ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import StatisticsCard from '../../layout/adminLayout/chart/statistics-card';
 import StatisticsChart from '../../layout/adminLayout/chart/statistics-chart';
 import TopCustomerInteract from '../../layout/adminLayout/chart/TopCustomerInteract';
+import { statisticalCategoriesRequest, statisticalCustomersRequest, statisticalFeedbacksRequest, statisticalPostsRequest } from '../../sagas/admin/adminSlice';
 const HomeAdmin = () => {
+    const { statistical_customers, statistical_feedbacks, statistical_posts,
+        statistical_categories, posts, categories, customers } =
+        useSelector((state) => state.admin);
+    const { feedback } = useSelector((state) => state.feedback)
+    const statisticalByDayCustomer = statistical_customers?.statisticalByMonth
+    const statisticalByDayFeedback = statistical_feedbacks?.statisticalByMonth
+    const statisticalByDayPost = statistical_posts?.statisticalByMonth
+    const statisticalByDayCategory = statistical_categories?.statisticalByMonth
+    const totalPosts = posts?.length || 0
+    const totalCategories = categories?.length || 0
+    const totalFeedbacks = feedback?.length || 0
+    const totalCustomers = customers?.length || 0
+    let dayByCustomer = []
+    let dataByCustomer = []
+    let dayByFeedback = []
+    let dataByFeedback = []
+    let dayByPost = []
+    let dataByPost = []
+    let dayByCategory = []
+    let dataByCategory = []
+    const months = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12']
+    pushData(statisticalByDayCustomer, dayByCustomer, dataByCustomer)
+    pushData(statisticalByDayFeedback, dayByFeedback, dataByFeedback)
+    pushData(statisticalByDayPost, dayByPost, dataByPost)
+    pushData(statisticalByDayCategory, dayByCategory, dataByCategory)
+    function pushData(statiscal, day, data) {
+        statiscal?.map((item) => {
+            day.push(item?._id.slice(5))
+        })
+        statiscal?.map((item) => {
+            data.push(item?.count)
+        })
+    }
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(statisticalCustomersRequest({ model: 'customer' }))
+        dispatch(statisticalFeedbacksRequest({ model: 'feedback' }))
+        dispatch(statisticalPostsRequest({ model: 'post' }))
+        dispatch(statisticalCategoriesRequest({ model: 'category' }))
+    }, []);
+    const feedbackChart = {
+        type: "line",
+        height: 220,
+        series: [
+            {
+                name: "Phản hồi",
+                data: dataByFeedback,
+            },
+        ],
+        options: {
+            ...chartsConfig,
+            colors: ["#fff"],
+            stroke: {
+                lineCap: "round",
+            },
+            markers: {
+                size: 5,
+            },
+            xaxis: {
+                ...chartsConfig.xaxis,
+                categories: months,
+            },
+        },
+    };
+    const customerChart = {
+        type: "line",
+        height: 220,
+        series: [
+            {
+                name: "Người dùng",
+                data: dataByCustomer,
+            },
+        ],
+        options: {
+            ...chartsConfig,
+            colors: ["#fff"],
+            stroke: {
+                lineCap: "round",
+            },
+            markers: {
+                size: 5,
+            },
+            xaxis: {
+                ...chartsConfig.xaxis,
+                categories: months,
+            },
+        },
+    };
+    const postChart = {
+        type: "line",
+        height: 220,
+        series: [
+            {
+                name: "Bài viết",
+                data: dataByPost,
+            },
+        ],
+        options: {
+            ...chartsConfig,
+            colors: ["#fff"],
+            stroke: {
+                lineCap: "round",
+            },
+            markers: {
+                size: 5,
+            },
+            xaxis: {
+                ...chartsConfig.xaxis,
+                categories: months,
+            },
+        },
+    };
+    const categoryChart = {
+        type: "line",
+        height: 220,
+        series: [
+            {
+                name: "Danh mục",
+                data: dataByCategory,
+            },
+        ],
+        options: {
+            ...chartsConfig,
+            colors: ["#fff"],
+            stroke: {
+                lineCap: "round",
+            },
+            markers: {
+                size: 5,
+            },
+            xaxis: {
+                ...chartsConfig.xaxis,
+                categories: months,
+            },
+        },
+    };
+    const statisticsChartsData = [
+        {
+            color: "blue",
+            title: "Thống kê bài viết",
+            chart: postChart,
+        },
+        {
+            color: "pink",
+            title: "Thống kê người dùng",
+            chart: customerChart,
+        },
+        {
+            color: "green",
+            title: "Thống kê danh mục",
+            chart: categoryChart,
+        },
+        {
+            color: "orange",
+            title: "Thống kê phản hồi",
+            chart: feedbackChart,
+        },
+    ];
+    const statisticsCardsData = [
+        {
+            color: "blue",
+            icon: NewspaperIcon,
+            title: "Bài viết",
+            value: totalPosts,
+        },
+        {
+            color: "pink",
+            icon: UserIcon,
+            title: "Người dùng",
+            value: totalCustomers,
+        },
+        {
+            color: "green",
+            icon: Square3Stack3DIcon,
+            title: "Danh mục",
+            value: totalCategories,
+        },
+        {
+            color: "orange",
+            icon: ChatBubbleLeftRightIcon,
+            title: "Phản hồi",
+            value: totalFeedbacks,
+        },
+    ];
     return (
         <div className="mt-12">
-            <TopCustomerInteract></TopCustomerInteract>
             <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-                {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
+                {statisticsCardsData.map(({ icon, title, ...rest }) => (
                     <StatisticsCard
                         key={title}
                         {...rest}
@@ -25,84 +210,23 @@ const HomeAdmin = () => {
                         icon={React.createElement(icon, {
                             className: "w-6 h-6 text-white",
                         })}
-                        footer={
-                            <Typography className="font-normal text-blue-gray-600">
-                                <strong className={footer.color}>{footer.value}</strong>
-                                &nbsp;{footer.label}
-                            </Typography>
-                        }
                     />
                 ))}
             </div>
-            <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 ">
                 {statisticsChartsData.map((props) => (
                     <StatisticsChart
                         key={props.title}
                         {...props}
-                        footer={
-                            <Typography
-                                variant="small"
-                                className="flex items-center font-normal text-blue-gray-600"
-                            >
-                                <ClockIcon strokeWidth={2} className="h-4 w-4 text-inherit" />
-                                &nbsp;{props.footer}
-                            </Typography>
-                        }
                     />
                 ))}
             </div>
+            <TopCustomerInteract></TopCustomerInteract>
         </div>
     );
 };
 
 export default HomeAdmin;
-
-const statisticsCardsData = [
-    {
-        color: "blue",
-        icon: BanknotesIcon,
-        title: "Today's Money",
-        value: "$53k",
-        footer: {
-            color: "text-green-500",
-            value: "+55%",
-            label: "than last week",
-        },
-    },
-    {
-        color: "pink",
-        icon: UserIcon,
-        title: "Today's Users",
-        value: "2,300",
-        footer: {
-            color: "text-green-500",
-            value: "+3%",
-            label: "than last month",
-        },
-    },
-    {
-        color: "green",
-        icon: UserPlusIcon,
-        title: "New Clients",
-        value: "3,462",
-        footer: {
-            color: "text-red-500",
-            value: "-2%",
-            label: "than yesterday",
-        },
-    },
-    {
-        color: "orange",
-        icon: ChartBarIcon,
-        title: "Sales",
-        value: "$103,430",
-        footer: {
-            color: "text-green-500",
-            value: "+5%",
-            label: "than yesterday",
-        },
-    },
-];
 
 const chartsConfig = {
     chart: {
@@ -118,15 +242,15 @@ const chartsConfig = {
     },
     xaxis: {
         axisTicks: {
-            show: false,
+            show: true,
         },
         axisBorder: {
-            show: false,
+            show: true,
         },
         labels: {
             style: {
                 colors: "#fff",
-                fontSize: "13px",
+                fontSize: "12px",
                 fontFamily: "inherit",
                 fontWeight: 300,
             },
@@ -163,99 +287,4 @@ const chartsConfig = {
         theme: "dark",
     },
 };
-
-
-const websiteViewsChart = {
-    type: "bar",
-    height: 220,
-    series: [
-        {
-            name: "Views",
-            data: [50, 20, 10, 22, 50, 10, 40],
-        },
-    ],
-    options: {
-        ...chartsConfig,
-        colors: "#fff",
-        plotOptions: {
-            bar: {
-                columnWidth: "16%",
-                borderRadius: 5,
-            },
-        },
-        xaxis: {
-            ...chartsConfig.xaxis,
-            categories: ["M", "T", "W", "T", "F", "S", "S"],
-        },
-    },
-};
-
-const dailySalesChart = {
-    type: "line",
-    height: 220,
-    series: [
-        {
-            name: "Sales",
-            data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
-        },
-    ],
-    options: {
-        ...chartsConfig,
-        colors: ["#fff"],
-        stroke: {
-            lineCap: "round",
-        },
-        markers: {
-            size: 5,
-        },
-        xaxis: {
-            ...chartsConfig.xaxis,
-            categories: [
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ],
-        },
-    },
-};
-
-const completedTasksChart = {
-    ...dailySalesChart,
-    series: [
-        {
-            name: "Tasks",
-            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-        },
-    ],
-};
-
-export const statisticsChartsData = [
-    {
-        color: "blue",
-        title: "Website View",
-        description: "Last Campaign Performance",
-        footer: "campaign sent 2 days ago",
-        chart: websiteViewsChart,
-    },
-    {
-        color: "pink",
-        title: "Daily Sales",
-        description: "15% increase in today sales",
-        footer: "updated 4 min ago",
-        chart: dailySalesChart,
-    },
-    {
-        color: "green",
-        title: "Completed Tasks",
-        description: "Last Campaign Performance",
-        footer: "just updated",
-        chart: completedTasksChart,
-    },
-];
 

@@ -52,7 +52,7 @@ export function* logoutCustomer({ payload }) {
 }
 
 function* handleCommonError(error) {
-    console.log("error:", error)
+    console.log("error auth:", error)
     if (error?.code === 'ERR_NETWORK') {
         yield put(requestFailure(error));
         yield put(setErrorGlobal(error?.message));

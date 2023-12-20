@@ -40,7 +40,7 @@ export function PopoverDrop({
       <PopoverHandler>
         <div className="cursor-pointer">{icon}</div>
       </PopoverHandler>
-      <PopoverContent className="z-[991]">{children}</PopoverContent>
+      <PopoverContent className="z-[1000]">{children}</PopoverContent>
     </Popover>
   );
 }

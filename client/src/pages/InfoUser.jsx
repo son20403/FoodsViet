@@ -20,6 +20,10 @@ import EditCustomer from "../layout/customers/EditCustomer";
 import LoadingRequest from "../layout/loading/LoadingRequest";
 import BannerCommon from "../layout/common/BannerCommon";
 import { getPostsByCustomerRequest } from "../sagas/posts/postsSlice";
+import { categoriesRequest } from "../sagas/categories/categoriesSlice";
+import { setBreadcrumb } from "../sagas/global/globalSlice";
+import useLoadingImage from "../hooks/useLoadingImage";
+import ChangePassword from "../layout/customers/ChangePassword";
 
 const InfoUser = () => {
   const { slug } = useParams();
@@ -34,9 +38,8 @@ const InfoUser = () => {
   const { infoAuth } = useSelector((state) => state.auth);
   const id_customer = customer_detail?._id;
   const isAuth = id_customer === infoAuth?._id;
-  useEffect(() => {
-    dispatch(customersRequest());
-  }, [token]);
+  const postByAuthActive = postsCustomer.filter((post) => post.status === 'approved')
+  const dataPostCustomer = isAuth ? postsCustomer : postByAuthActive
   useEffect(() => {
     dispatch(getPostsByCustomerRequest({ id_customer }));
   }, [id_customer]);
@@ -44,17 +47,24 @@ const InfoUser = () => {
     dispatch(customerDetailRequest({ slug }));
   }, [slug]);
   useEffect(() => {
-    if (!loading && error?.message) {
+    if (!loading && error?.message && Object?.keys(customer_detail).length < 1) {
       navigate('/not-found')
     }
-  }, [loading, error]);
+  }, [loading, error, customer_detail]);
+  useEffect(() => {
+    dispatch(customersRequest());
+    dispatch(categoriesRequest())
+  }, [token]);
   useEffect(() => {
     document.title = customer_detail?.full_name
+    dispatch(setBreadcrumb(customer_detail?.full_name))
   }, [customer_detail]);
+  useLoadingImage(postsCustomer)
   return (
     <div className="relative bg-gray-50">
       <LoadingRequest show={loading}></LoadingRequest>
       <LoadingRequest show={loadingPost}></LoadingRequest>
+      <ChangePassword />
       <div className="flex flex-col w-full h-auto gap-5 ">
         <BannerCommon
           className="bg-bottom "
@@ -132,7 +142,7 @@ const InfoUser = () => {
               Danh sách bài viết
             </h1>
             <ListPost
-              data={postsCustomer}
+              data={dataPostCustomer}
               message={"Chưa có bài viết nào!"}
               className="!grid-cols-1 md:!grid-cols-1 lg:!grid-cols-2"
             ></ListPost>
@@ -152,7 +162,7 @@ export default InfoUser;
 
 export const WrapInfo = ({ children }) => {
   return (
-    <div className="flex items-center w-full py-4 break-words border-b gap-x-4 last:border-0">
+    <div className="flex items-center w-full py-4 break-words border-b gap-x-4 md:last:border-0">
       {children}
     </div>
   );

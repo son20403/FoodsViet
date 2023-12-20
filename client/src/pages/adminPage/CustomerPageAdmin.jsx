@@ -14,6 +14,7 @@ import CustomerItemAdmin from "../../layout/adminLayout/customers/CustomerItemAd
 import CustomerDetailAdmin from "../../layout/adminLayout/customers/CustomerDetailAdmin";
 import CustomerEditAdmin from "../../layout/adminLayout/customers/CustomerEditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
+import useLoadingImage from "../../hooks/useLoadingImage";
 
 const CustomersPageAdmin = () => {
   const { loading, customers } = useSelector((state) => state.admin);
@@ -25,6 +26,7 @@ const CustomersPageAdmin = () => {
   useEffect(() => {
     handLoad()
   }, []);
+  useLoadingImage(customers)
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

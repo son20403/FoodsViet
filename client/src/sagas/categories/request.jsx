@@ -4,6 +4,9 @@ const COLLECTION_NAME = "category";
 export function getAllCaterories() {
   return axios.get(`/${COLLECTION_NAME}/getAllCategories`);
 }
+export function getDetailCategory(slug) {
+  return axios.get(`/${COLLECTION_NAME}/detailBySlug?slug=${slug}`)
+}
 export function getAllCateroriesAdmin() {
   return admin.get(`/${COLLECTION_NAME}/getAllCategoriesAdmin`);
 }

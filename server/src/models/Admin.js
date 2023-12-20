@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const slug = require('mongoose-slug-plugin');
-
+const slugify = require('slugify');
 
 const Admin = new Schema(
   {
@@ -32,6 +32,27 @@ Admin.plugin(slug, {
   tmpl: '<%=full_name%>',
   alwaysUpdate: true,
   slugPaddingSize: 4
+});
+Admin.pre('findOneAndUpdate', async function () {
+  const Admins = mongoose.model("Admin", Admin);
+  if (this._update.full_name) {
+    try {
+      const updatedFullName = this._update.full_name;
+      const slug = slugify(updatedFullName, { lower: true });
+      let newSlug = slug;
+      let count = Math.floor(Math.random() * 999) + 1;
+      const existingAdminWithSlug = await Admins.find({ slug: newSlug });
+      if (existingAdminWithSlug.length < 1
+        || existingAdminWithSlug[0]._id.toString() === this._conditions._id.toString()) {
+        this.set({ slug: newSlug });
+        return;
+      }
+      newSlug = `${slug}-${count}`;
+      this.set({ slug: newSlug });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 });
 
 module.exports = mongoose.model("Admin", Admin);

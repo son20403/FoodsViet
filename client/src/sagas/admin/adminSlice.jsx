@@ -15,6 +15,10 @@ const initialState = {
   adminDetail: {},
   customers: [],
   customerDetail: {},
+  statistical_customers: {},
+  statistical_categories: {},
+  statistical_posts: {},
+  statistical_feedbacks: {},
   categories: [],
   categoryDetail: {},
   comments: [],
@@ -88,6 +92,67 @@ const adminSlice = createSlice({
       return {
         ...state,
         error: action.payload,
+        loading: false,
+      };
+    },
+    //statistical
+    statisticalCustomersRequest: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalCustomersSuccess: (state, action) => {
+      return {
+        ...state,
+        statistical_customers: action.payload,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalCategoriesRequest: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalCategoriesSuccess: (state, action) => {
+      return {
+        ...state,
+        statistical_categories: action.payload,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalPostsRequest: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalPostsSuccess: (state, action) => {
+      return {
+        ...state,
+        statistical_posts: action.payload,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalFeedbacksRequest: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
+    statisticalFeedbacksSuccess: (state, action) => {
+      return {
+        ...state,
+        statistical_feedbacks: action.payload,
+        error: null,
         loading: false,
       };
     },
@@ -615,6 +680,14 @@ export const {
   searchCustomersRequest,
   searchCustomersSuccess,
   searchPostsRequest,
-  searchPostsSuccess
+  searchPostsSuccess,
+  statisticalCategoriesRequest,
+  statisticalCategoriesSuccess,
+  statisticalCustomersRequest,
+  statisticalCustomersSuccess,
+  statisticalPostsRequest,
+  statisticalPostsSuccess,
+  statisticalFeedbacksRequest,
+  statisticalFeedbacksSuccess,
 } = adminSlice.actions;
 export default adminSlice.reducer;

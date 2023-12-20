@@ -83,11 +83,10 @@ export function* handleCreatePosts({ payload }) {
         yield put(setErrorGlobal(''))
         const response = yield call(createPost, post);
         if (response?.data) {
-            console.log("🚀 ~ file: handles.jsx:86 ~ function*handleCreatePosts ~ response?.data:", response?.data)
             yield put(createPostsSuccess())
             yield put(addNotificationRequest({
                 id_post: response.data?.id, id_customer: 'admin',
-                typeNotity: 'createPost'
+                typeNotify: 'createPost'
             }))
             yield put(setNotifyGlobal(response?.data?.message));
             yield handleSendNotification()
@@ -117,9 +116,11 @@ export function* handleUpdatePost({ payload }) {
         yield put(setErrorGlobal(''))
         const response = yield call(updatePost, payload?.id, payload?.post);
         if (response?.data) {
+            const { slug } = response.data
             yield put(updatePostSuccess());
-            yield put(postDetailRequest({ slug: payload?.slug }));
+            yield put(postDetailRequest({ slug: slug }));
             yield put(setNotifyGlobal(response.data?.message));
+            yield payload?.handleSetURL(slug)
         }
     } catch (error) {
         yield handleCommonError(error)

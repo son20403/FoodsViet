@@ -1,4 +1,5 @@
 import Comment from '../models/Comment'
+import Post from '../models/Post'
 import BaseController from './Controller'
 
 class CommentController extends BaseController {
@@ -11,6 +12,14 @@ class CommentController extends BaseController {
         const comment = req.body
         try {
             if (comment) {
+                const { id_post } = comment;
+                const dataPost = await Post.findById(id_post);
+                if (!dataPost) return res.status(400).json({
+                    message: "Không tồn tại bài viết này",
+                });
+                if (dataPost.status !== 'approved') return res.status(400).json({
+                    message: "Bài viết này đã bị vô hiệu hóa!",
+                });
                 const modelComment = {
                     ...comment,
                     id_customer
@@ -77,8 +86,8 @@ class CommentController extends BaseController {
         const id = req.query.id;
         const formData = req.body;
         try {
-            const hasPost = await this.model.findOne({ _id: id });
-            if (!hasPost) {
+            const hasComment = await this.model.findOne({ _id: id });
+            if (!hasComment) {
                 if (fileData) cloudinary.uploader.destroy(fileData.filename);
                 return res.status(400).json({
                     message: "Không tồn tại bình luận này",

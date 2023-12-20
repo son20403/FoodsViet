@@ -14,8 +14,9 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { icon } from '../../ADMIN/routes';
 import useScrollToCenter from '../../hooks/useScrollToCenter';
 import useLoadingImage from '../../hooks/useLoadingImage';
+import CommentPostItemAdmin from '../../layout/adminLayout/comments/CommentPostItemAdmin';
 
-const PostPageAdmin = () => {
+const CommentPostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
     useScrollToCenter('id_post')
     const dispatch = useDispatch()
@@ -62,7 +63,7 @@ const PostPageAdmin = () => {
                             <tbody>
                                 {posts && posts?.length > 0 && posts?.map(
                                     (data, key) => (
-                                        <PostItemAdmin key={data?._id} data={data} />)
+                                        <CommentPostItemAdmin key={data?._id} data={data} />)
                                 )}
                             </tbody>
                         </table>
@@ -73,5 +74,5 @@ const PostPageAdmin = () => {
     );
 };
 
-export default PostPageAdmin;
+export default CommentPostPageAdmin;
 

@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { updatePostRequest } from '../../sagas/posts/postsSlice';
 import { categoriesRequest } from '../../sagas/categories/categoriesSlice';
 import LayoutAdminModel from '../adminLayout/LayoutAdminModel';
+import { useNavigate } from "react-router-dom";
 
 const schemaValidate = Yup.object({
     title: Yup.string().required("Vui lòng nhập tiêu đề!"),
@@ -24,13 +25,17 @@ const schemaValidate = Yup.object({
 
 const EditPost = ({ data, show, onClick = () => { } }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { handleSubmit, setValue, formState: { errors }, control } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
-    const { categories } = useSelector((state) => state.categories)
+    const { categories } = useSelector((state) => state.categories);
+    const handleSetURL = (URL) => {
+        navigate(`/detail/${URL}`, { replace: true })
+    }
     const handleSubmits = (value) => {
         try {
             const post = { ...value }
-            dispatch(updatePostRequest({ id: data._id, post, slug: data.slug }))
+            dispatch(updatePostRequest({ id: data._id, post, handleSetURL }))
             onClick()
             resetImageField()
         } catch (error) {
@@ -46,7 +51,7 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
     }, []);
     return (
         <ModalBase onClose={onClick} visible={show}>
-            <LayoutAdminModel onClick={onClick}>
+            <LayoutAdminModel onClick={onClick} z={9999}>
                 <Heading isHeading>Chỉnh sửa bài viết </Heading>
                 <form onSubmit={handleSubmit(handleSubmits)} className='mb-10 text-center'>
                     <div className='grid grid-cols-1 gap-y-10 pt-10 mb-10'>
@@ -57,7 +62,8 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
                             </Input>
                         </Field>
                         <Field>
-                            <Select value={data?.category} data={categories} control={control} name={'category'} />
+                            <Select value={data?.category} data={categories} control={control}
+                                name={'category'} />
                         </Field>
                         <div className='mb-10'>
                             <Label htmlFor={"image"}>Hình ảnh</Label>
@@ -71,7 +77,7 @@ const EditPost = ({ data, show, onClick = () => { } }) => {
                             </Field>
                         </div>
                     </div>
-                    <Button type='submit' className=' mx-auto'>Thêm bài viết</Button>
+                    <Button type='submit' className=' mx-auto'>Sửa bài viết</Button>
                 </form>
             </LayoutAdminModel>
         </ModalBase>

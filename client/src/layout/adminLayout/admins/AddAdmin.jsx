@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useEffect } from "react";
 import ModalBase from "../../modal/ModalBase";
 import { Heading } from "../../../components/heading";
 import { Field } from "../../../components/field";
@@ -10,15 +9,10 @@ import { FileInput, Input, InputPassword } from "../../../components/input";
 import LayoutAdminModel from "../LayoutAdminModel";
 import {
   addAdminRequest,
-  addCustomerAdminRequest,
-  updateCustomerAdminRequest,
 } from "../../../sagas/admin/adminSlice";
 import {
   closeAddAdmin,
-  closeAddCustomer,
   closeDetailAdmin,
-  closeDetailCustomer,
-  closeUpdateCustomer,
 } from "../../../sagas/global/globalSlice";
 import {
   AtSymbolIcon,
@@ -29,6 +23,7 @@ import {
 import { icon } from "../../../ADMIN/routes";
 import { Button } from "@material-tailwind/react";
 import { getDate, getTimestamp } from "../../../hooks/useGetTime";
+import { Select } from "../../../components/select";
 
 const schemaValidate = Yup.object({
   user_name: Yup.string()
@@ -51,6 +46,7 @@ const schemaValidate = Yup.object({
     [Yup.ref("password"), null],
     "Mật khẩu không khớp vui lòng nhập lại!"
   ),
+  role: Yup.string().required("Vui lòng chọn chức vụ!"),
   email: Yup.string()
     .required("Vui lòng nhập email!")
     .email("Vui lòng nhập đúng định dạng email!"),
@@ -72,7 +68,7 @@ const AddAdmin = () => {
     dispatch(closeAddAdmin());
   };
   const { showAddAdmin } = useSelector((state) => state.global);
-  const { infoAdmin } = useSelector((state) => state.admin);
+  const { infoAdmin, role } = useSelector((state) => state.admin);
   const handleAddAdmin = (value) => {
     try {
       const date = getDate();
@@ -103,16 +99,16 @@ const AddAdmin = () => {
   return (
     <ModalBase onClose={handleClose} visible={showAddAdmin}>
       <LayoutAdminModel onClick={handleClose}>
-        <div className="p-2 md:p-5 bg-white w-full lg:h-[90%] rounded-xl mt-7  ">
+        <div className="p-2  bg-white w-full lg:h-[100%] rounded-xl  ">
           <form onSubmit={handleSubmit(handleAddAdmin)} className=" px-2">
-            <div className=" flex justify-between items-center border-b border-primary pb-5">
+            <div className=" flex justify-between items-center border-b border-primary py-5">
               <Heading isHeading className="">
                 Thêm quản trị viên
               </Heading>
             </div>
             <div className="flex gap-x-5 items-center my-10"></div>
             <div className="grid grid-cols-1 gap-y-10 md:grid-cols-2 lg:grid-cols-3 gap-x-10">
-              <div className="flex items-center justify-center md:row-span-3 ">
+              <div className="flex items-center justify-center md:row-span-4 ">
                 <div
                   className="relative  rounded-full
                             !h-52 !w-52 md:!h-40 md:!w-40"
@@ -167,6 +163,9 @@ const AddAdmin = () => {
               >
                 <UserIcon />
               </InputPassword>
+              <Field>
+                <Select data={role} control={control} name={"role"} errors={errors} title={'Chức vụ'} />
+              </Field>
               <Field>
                 <Input
                   control={control}

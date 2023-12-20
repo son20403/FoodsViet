@@ -13,6 +13,7 @@ import { SearchIcon } from '../../components/Icon';
 import { Heading } from '../../components/heading';
 import { searchAdminRequest, searchCategoriesRequest, searchCustomersRequest, searchPostsRequest } from '../../sagas/admin/adminSlice';
 import Loading from '../loading/Loading';
+import WrapListSearch from '../WrapListSearch';
 
 const SearchAdmin = () => {
     const dispatch = useDispatch()
@@ -58,46 +59,48 @@ const SearchAdmin = () => {
                         onChange={handleOnChange} icon={<SearchIcon />}></Input>
                     <div className='flex flex-col overflow-y-auto max-h-[500px] overscroll-none'>
                         {loading && <Loading />}
-                        {!loading && query && searchAdmins?.length > 0 && (
-                            <WrapListSearch title={'Quản trị viên'}>
-                                {
-                                    searchAdmins?.slice(0, 5).map((item) => (
-                                        <SearchItem key={item._id} id={item._id} image={item.image}
-                                            name={item.full_name}
-                                            type={'admin'}></SearchItem>
-                                    ))}
-                            </WrapListSearch>
-                        )}
-                        {!loading && query && searchCustomers?.length > 0 && (
-                            <WrapListSearch title={'Người dùng'}>
-                                {!loading && query &&
-                                    searchCustomers?.slice(0, 5).map((item) => (
-                                        <SearchItem key={item._id} id={item._id} image={item.image}
-                                            name={item.full_name}
-                                            type={'customer'}></SearchItem>
-                                    ))}
-                            </WrapListSearch>
-                        )}
-                        {!loading && query && searchCategories?.length > 0 && (
-                            <WrapListSearch title={'Chủ đề bài viết'}>
-                                {!loading && query &&
-                                    searchCategories?.slice(0, 5).map((item) => (
-                                        <SearchItem key={item._id} id={item._id} image={item.image}
-                                            name={item.title}
-                                            type={'category'}></SearchItem>
-                                    ))}
-                            </WrapListSearch>
-                        )}
-                        {!loading && query && searchPosts?.length > 0 && (
-                            <WrapListSearch title={'Bài viết'}>
-                                {!loading && query &&
-                                    searchPosts?.slice(0, 5).map((item) => (
-                                        <SearchItem key={item._id} id={item._id} image={item.image}
-                                            name={item.title}
-                                            type={'post'}></SearchItem>
-                                    ))}
-                            </WrapListSearch>
-                        )}
+                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5'>
+                            {!loading && query && searchAdmins?.length > 0 && (
+                                <WrapListSearch title={'Quản trị viên'}>
+                                    {
+                                        searchAdmins?.slice(0, 5).map((item) => (
+                                            <SearchItem key={item._id} id={item._id} image={item.image}
+                                                name={item.full_name}
+                                                type={'admin'}></SearchItem>
+                                        ))}
+                                </WrapListSearch>
+                            )}
+                            {!loading && query && searchCustomers?.length > 0 && (
+                                <WrapListSearch title={'Người dùng'}>
+                                    {!loading && query &&
+                                        searchCustomers?.slice(0, 5).map((item) => (
+                                            <SearchItem key={item._id} id={item._id} image={item.image}
+                                                name={item.full_name}
+                                                type={'customer'}></SearchItem>
+                                        ))}
+                                </WrapListSearch>
+                            )}
+                            {!loading && query && searchCategories?.length > 0 && (
+                                <WrapListSearch title={'Chủ đề bài viết'}>
+                                    {!loading && query &&
+                                        searchCategories?.slice(0, 5).map((item) => (
+                                            <SearchItem key={item._id} id={item._id} image={item.image}
+                                                name={item.title}
+                                                type={'category'}></SearchItem>
+                                        ))}
+                                </WrapListSearch>
+                            )}
+                            {!loading && query && searchPosts?.length > 0 && (
+                                <WrapListSearch title={'Bài viết'}>
+                                    {!loading && query &&
+                                        searchPosts?.slice(0, 5).map((item) => (
+                                            <SearchItem key={item._id} id={item._id} image={item.image}
+                                                name={item.title}
+                                                type={'post'}></SearchItem>
+                                        ))}
+                                </WrapListSearch>
+                            )}
+                        </div>
                         {searchAdmins?.length < 1 &&
                             searchCategories?.length < 1 &&
                             searchPosts?.length < 1 &&
@@ -145,13 +148,6 @@ const SearchItem = ({ id, image, name, type }) => {
         </Link>
     )
 }
-const WrapListSearch = ({ children, title }) => {
-    return (
-        <div className='border-b w-full border-primary border-opacity-60 last:border-none '>
-            <h1 className='font-bold text-base mt-5 text-primary'>{title}</h1>
-            {children}
-        </div>
-    )
-}
+
 
 export default SearchAdmin;

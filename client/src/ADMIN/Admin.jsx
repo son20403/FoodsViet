@@ -29,7 +29,6 @@ import {
   getCustomersAdminRequest,
   getPostsAdminRequest,
   roleAdminRequest,
-  searchAdminRequest,
 } from "../sagas/admin/adminSlice";
 import {
   setSocketAdmin,
@@ -44,6 +43,8 @@ import PostDetailAdmin from "../layout/adminLayout/posts/PostDetailAdmin";
 import PostEditAdmin from "../layout/adminLayout/posts/PostEditAdmin";
 import BASE_URL from "../connect";
 import SearchAdmin from "../layout/adminLayout/SearchAdmin";
+import { FeedbackRequest } from "../sagas/feedbackMail/feedbacksSlice";
+import CommentPostDetailAdmin from "../layout/adminLayout/comments/CommentPostDetailAdmin";
 export function Dashboard() {
   const navLink = [
     {
@@ -108,6 +109,7 @@ export function Dashboard() {
     dispatch(getCustomersAdminRequest());
     dispatch(getAllAdminRequest());
     dispatch(roleAdminRequest());
+    dispatch(FeedbackRequest());
   }, [tokenAdmin]);
   useEffect(() => {
     if (!tokenAdmin) navigate("/admin/signin");
@@ -170,6 +172,7 @@ export function Dashboard() {
       <AddCustomerAdmin />
       <AddAdmin />
       <PostDetailAdmin />
+      <CommentPostDetailAdmin />
       <PostEditAdmin />
       <SearchAdmin />
     </div>

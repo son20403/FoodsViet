@@ -31,7 +31,8 @@ const AddNewPosts = () => {
     useSetTitle('Tạo bài viết')
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
-    const { socket } = useSelector((state) => state.global)
+    const { socket, isUploadImage } = useSelector((state) => state.global)
+    console.log("🚀 ~ file: AddNewPosts.jsx:35 ~ AddNewPosts ~ isUploadImage:", isUploadImage)
     const { handleSubmit, formState: { errors, isSubmitting, isValid, isSubmitSuccessful }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const { categories, loading } = useSelector((state) => state.categories)
@@ -87,7 +88,7 @@ const AddNewPosts = () => {
                                 </Field>
                             </div>
                         </div>
-                        <Button type='submit' className=' mx-auto'>Tạo bài viết</Button>
+                        <Button type='submit' isLoading={isUploadImage} className=' mx-auto'>Tạo bài viết</Button>
                     </form>
                 </div>
             </PageWrap>

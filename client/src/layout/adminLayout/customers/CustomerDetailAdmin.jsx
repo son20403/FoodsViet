@@ -83,9 +83,8 @@ const CustomerDetailAdmin = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className=' flex-auto h-auto bg-white rounded-xl p-5 flex gap-x-10 flex-col md:flex-row
-                         gap-y-5 md:gap-y-10'>
-                                <div className='text-base md:text-sm flex-1'>
+                            <div className=' flex-auto h-auto bg-white rounded-xl p-5 flex gap-x-10 flex-col md:flex-row md:gap-y-10'>
+                                <div className='text-xs md:text-sm flex-1'>
                                     <WrapInfo>
                                         <UserIcon /> <p>{customerDetail?.full_name}</p>
                                     </WrapInfo>
@@ -96,7 +95,7 @@ const CustomerDetailAdmin = () => {
                                         <LocationIcon /> <p>{customerDetail?.address || 'Chưa có'}</p>
                                     </WrapInfo>
                                 </div>
-                                <div className='text-base md:text-sm flex-1'>
+                                <div className='text-xs md:text-sm flex-1'>
                                     <WrapInfo>
                                         <NewspaperIcon {...icon} /><p>{dataPostsByCustomer?.length} bài viết</p>
                                     </WrapInfo>
@@ -119,7 +118,7 @@ const CustomerDetailAdmin = () => {
                         </CardBody>
                     </Card>
                     <SpeedDialAdmin
-                        detail={customerDetail} handleEdit={handleEditCustomer} handleUpdateStatus={handleUpdateStatus} />
+                        detail={customerDetail} handleEdit={handleEditCustomer} handleUpdateStatus={handleUpdateStatus} idEntity={customerDetail?._id} />
                 </LayoutAdminModel>
             </ModalBase>
             {/* <PostEditAdmin

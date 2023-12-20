@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { Link } from "react-router-dom"
 import { Heading } from "../../components/heading"
 import DataPost from "./DataPost"
@@ -24,24 +25,26 @@ const PostItem = ({ data = {}, isSingle }) => {
         });
     }, []);
     return (
-        <div className={`overflow-hidden col-span-2 flex flex-col md:flex-row group  h-full pb-0 gap-
+        <div className={`overflow-hidden relative col-span-2 flex flex-col md:flex-row group  h-full pb-0 gap-
             ${isSingle
                 ? 'md:flex-col !col-span-1 gap-5'
-                : 'md:even:flex-row-reverse'}
+                : 'md:even:flex-row-reverse'} ${data?.status !== 'approved' && 'select-none'}
         `}>
+            {data?.status !== 'approved' &&
+                <div className="absolute inset-0 bg-white bg-opacity-40 z-[99]"></div>
+            }
             <Link to={`/detail/${data.slug}`}
-                className={`w-full overflow-hidden h-full max-h-[350px]
+                className={`w-full overflow-hidden h-full max-h-[350px] bg-primary bg-opacity-25
                     ${isSingle
-                        ? 'lg:max-w-full md:max-h-[190px] '
-                        : ''}`}>
-                <img src={data?.image} alt={data.title} className=' w-full h-full object-cover
+                        ? 'lg:max-w-full md:max-h-[190px] min-h-[190px] '
+                        : 'lg:min-h-[350px] md:min-h-[270px] min-h-[200px]'}`}>
+                <img lazy-src={data?.image} className=' w-full h-full object-cover
                 group-hover:scale-105 transition-all duration-500'/>
             </Link>
             <div className={` flex justify-center w-full md:h-full 
                 ${isSingle
                     ? ''
                     : '  bg-primary !bg-opacity-80 '} `}>
-
                 <div className={`flex flex-col  w-full gap-y-3   
                     ${isSingle
                         ? 'flex-1 h-full lg:p-2 '
