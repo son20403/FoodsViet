@@ -9,7 +9,9 @@ import FeedBackPageAdmin from "../pages/adminPage/FeedBackPageAdmin";
 import PasswordReset from "../pages/PasswordReset";
 import ForgotPassword from "../pages/ForgotPassword";
 import ForgotPasswordAdmin from "../pages/adminPage/ForgotPasswordAdmin";
-const CommentPostPageAdmin = lazy(() => import("../pages/adminPage/CommentPostPageAdmin"));
+const CommentPostPageAdmin = lazy(() =>
+  import("../pages/adminPage/CommentPostPageAdmin")
+);
 const HomeAdmin = lazy(() => import("../pages/adminPage/HomeAdmin"));
 
 const PostPageAdmin = lazy(() => import("../pages/adminPage/PostPageAdmin"));

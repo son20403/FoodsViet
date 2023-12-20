@@ -4,9 +4,10 @@ import {
   Square3Stack3DIcon,
   UserIcon,
   EnvelopeOpenIcon,
+  ChatBubbleLeftIcon,
   ShieldCheckIcon,
   ChatBubbleOvalLeftEllipsisIcon,
-  ChartBarIcon
+  ChartBarIcon,
 } from "@heroicons/react/24/solid";
 export const icon = {
   className: "w-5 h-5 text-inherit",
@@ -46,12 +47,12 @@ const routes = [
         path: "/feedBack",
       },
       {
-        icon: <ShieldCheckIcon  {...icon} />,
+        icon: <ShieldCheckIcon {...icon} />,
         name: "Quản lý",
         path: "/manage",
       },
     ],
-  }
+  },
 ];
 
 export default routes;

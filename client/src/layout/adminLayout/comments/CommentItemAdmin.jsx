@@ -1,19 +1,19 @@
-import { EyeIcon } from "@heroicons/react/24/outline";
+import React from "react";
 import { Chip, Typography } from "@material-tailwind/react";
-import React, { useEffect } from "react";
-import { icon } from "../../../ADMIN/routes";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleFeedback } from "../../../sagas/global/globalSlice";
-import { feedbackDetailAdminSuccess } from "../../../sagas/feedbackMail/feedbacksSlice";
+import { useSelector } from "react-redux";
 
-const FeedBackItemAdmin = ({ data }) => {
+const CommentItemAdmin = ({ data }) => {
+  const { posts, customers, categories } = useSelector((state) => state.admin);
+  const dataCustomer = customers.filter(
+    (cus) => cus._id === data?.id_customer
+  )[0];
+  const dataPost = posts.filter((cus) => cus._id === data?.id_post)[0];
+  const dataCategory = categories.filter(
+    (cus) => cus._id === dataPost?.category
+  )[0];
+
   const className = "px-5 py-3";
-  const dispatch = useDispatch();
-  function handleShowFeedBackDetail() {
-    console.log("hand");
-    dispatch(toggleFeedback());
-    dispatch(feedbackDetailAdminSuccess({ ...data }));
-  }
+
   return (
     <>
       <tr className="border-b border-blue-gray-50 last:border-b-0">
@@ -21,32 +21,31 @@ const FeedBackItemAdmin = ({ data }) => {
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <Typography className="text-xs font-normal text-blue-gray-500">
-                {data?.user_name || ""}
-              </Typography>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-semibold"
-              >
-                {data?.fullName}
+                {dataCustomer?.full_name || ""}
               </Typography>
             </div>
           </div>
         </td>
         <td className={className}>
           <Typography className="text-xs font-semibold text-blue-gray-600">
-            {data?.email || ""}
+            {dataCategory?.title}
+          </Typography>
+          <Typography
+            variant="small"
+            color="blue-gray"
+            className="font-semibold"
+          >
+            {dataPost?.title}
           </Typography>
         </td>
         <td className={`${className} `}>
           <Typography className="text-xs font-semibold text-blue-gray-600">
-            {data?.phone || ""}
+            {data?.content || ""}
           </Typography>
         </td>
         <td className={className}>
           <Typography className="flex flex-col text-xs font-semibold text-blue-gray-600">
             <span>{data?.date || ""}</span>
-            {/* <span className='font-normal text-gray-500'>({timeSince(data?.timestamps || Date.now())})</span> */}
           </Typography>
         </td>
         <td className={`${className} `}>
@@ -69,16 +68,9 @@ const FeedBackItemAdmin = ({ data }) => {
             className="py-0.5 px-2 text-[11px] font-medium inline-block"
           />
         </td>
-        <td
-          className={`${className} sticky right-0 bg-white shadow-inner md:shadow-none`}
-        >
-          <Typography className="text-xs font-semibold cursor-pointer text-blue-gray-600">
-            <EyeIcon {...icon} onClick={handleShowFeedBackDetail}></EyeIcon>
-          </Typography>
-        </td>
       </tr>
     </>
   );
 };
 
-export default FeedBackItemAdmin;
+export default CommentItemAdmin;
