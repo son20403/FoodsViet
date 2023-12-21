@@ -278,65 +278,66 @@ const HomeAdmin = () => {
             <TopCustomerInteract></TopCustomerInteract>
         </div>
     );
+}
 
 export default HomeAdmin;
 
 const chartsConfig = {
-  chart: {
-    toolbar: {
-      show: false,
+    chart: {
+        toolbar: {
+            show: false,
+        },
     },
-  },
-  title: {
-    show: "",
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    axisTicks: {
-      show: true,
+    title: {
+        show: "",
     },
-    axisBorder: {
-      show: true,
+    dataLabels: {
+        enabled: false,
     },
-    labels: {
-      style: {
-        colors: "#fff",
-        fontSize: "12px",
-        fontFamily: "inherit",
-        fontWeight: 300,
-      },
-    },
-  },
-  yaxis: {
-    labels: {
-      style: {
-        colors: "#fff",
-        fontSize: "13px",
-        fontFamily: "inherit",
-        fontWeight: 300,
-      },
-    },
-  },
-  grid: {
-    show: true,
-    borderColor: "#ffffff40",
-    strokeDashArray: 5,
     xaxis: {
-      lines: {
+        axisTicks: {
+            show: true,
+        },
+        axisBorder: {
+            show: true,
+        },
+        labels: {
+            style: {
+                colors: "#fff",
+                fontSize: "12px",
+                fontFamily: "inherit",
+                fontWeight: 300,
+            },
+        },
+    },
+    yaxis: {
+        labels: {
+            style: {
+                colors: "#fff",
+                fontSize: "13px",
+                fontFamily: "inherit",
+                fontWeight: 300,
+            },
+        },
+    },
+    grid: {
         show: true,
-      },
+        borderColor: "#ffffff40",
+        strokeDashArray: 5,
+        xaxis: {
+            lines: {
+                show: true,
+            },
+        },
+        padding: {
+            top: 5,
+            right: 20,
+        },
     },
-    padding: {
-      top: 5,
-      right: 20,
+    fill: {
+        opacity: 0.8,
     },
-  },
-  fill: {
-    opacity: 0.8,
-  },
-  tooltip: {
-    theme: "dark",
-  },
+    tooltip: {
+        theme: "dark",
+    },
 };

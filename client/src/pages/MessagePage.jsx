@@ -34,7 +34,7 @@ const MessagePage = () => {
   useSetTitle("Trò chuyện");
   let chatted = {};
   const user = customers.find((c) => c._id === id);
-  if (!user) {
+  if (!id) {
     id = ''
   }
   useEffect(() => {
@@ -184,7 +184,6 @@ const MessagePage = () => {
               placeholder="search ..."
               className="pl-10 mb-5 py-2.5 border border-gray-500 rounded-3xl w-full md:block hidden"
               onFocus={handleFocus}
-            // onBlur={handleBlur}
             />
           </div>
           <div className="overflow-y-auto overflow-x-hidden h-[550px]">

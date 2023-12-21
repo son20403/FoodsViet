@@ -90,7 +90,6 @@ const Header = () => {
     if (socket) {
       socket.on("sendNotify", () => {
         setTimeout(() => {
-          console.log('ok')
           handleGetNotification();
         }, 500);
       });
