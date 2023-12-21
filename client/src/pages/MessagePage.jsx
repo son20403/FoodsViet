@@ -5,8 +5,6 @@ import { useSelector } from "react-redux";
 import {
   useNavigate,
   useParams,
-  Navigate,
-  useLocation,
   Link,
 } from "react-router-dom";
 import {
@@ -16,7 +14,6 @@ import {
 import Logo from "../components/logo/Logo";
 import { query } from "../axios-interceptor/query-api";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Header from "../layout/Header";
 import SearchConversation from "../layout/SearchConversation";
 import useSetTitle from "../hooks/useSetTitle";
 
@@ -33,14 +30,13 @@ const MessagePage = () => {
   const scrollRef = useRef();
 
   const navigate = useNavigate();
-  const location = useLocation();
   let { id } = useParams();
   useSetTitle("Trò chuyện");
-  if (!id) {
-    id = "";
-  }
   let chatted = {};
   const user = customers.find((c) => c._id === id);
+  if (!user) {
+    id = ''
+  }
   useEffect(() => {
     chatted = conversations?.filter((conversation) =>
       conversation.members.find((m) => m === id)

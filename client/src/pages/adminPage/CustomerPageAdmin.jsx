@@ -15,6 +15,7 @@ import CustomerDetailAdmin from "../../layout/adminLayout/customers/CustomerDeta
 import CustomerEditAdmin from "../../layout/adminLayout/customers/CustomerEditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
 import useLoadingImage from "../../hooks/useLoadingImage";
+import useSetTitle from "../../hooks/useSetTitle";
 
 const CustomersPageAdmin = () => {
   const { loading, customers } = useSelector((state) => state.admin);
@@ -27,6 +28,7 @@ const CustomersPageAdmin = () => {
     handLoad()
   }, []);
   useLoadingImage(customers)
+  useSetTitle('Quản lý người dùng')
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

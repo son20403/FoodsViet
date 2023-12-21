@@ -53,6 +53,7 @@ import {
   getAllCustomersByAdmin,
 } from "../customers/request";
 import { addNotificationRequest } from "../notification/notificationSlice";
+import { addNotificationAdmin } from "../notification/request";
 
 export function* handleLoginAdmin({ payload }) {
   try {
@@ -272,13 +273,13 @@ export function* handleUpdateStatus({ payload }) {
       yield put(updateStatusSuccess());
       switch (model) {
         case "post":
-          yield put(getPostsAdminRequest());
-          yield put(addNotificationRequest({
+          yield call(addNotificationAdmin, {
             id_post: data?._id,
             id_customer: data?.id_customer,
             typeNotify: status
-          }))
-          yield handleSendNotification(data?.id_customer)
+          })
+          yield call(handleSendNotification, data?.id_customer);
+          yield put(getPostsAdminRequest());
           break;
         case "category":
           yield put(getCategoriesAdminRequest());

@@ -13,12 +13,14 @@ const initialState = {
   errorGlobal: "",
   notifyGlobal: "",
   breadcrumb: "",
+  slug: '',
   showDetailPost: false,
   showDetailCustomer: false,
   showDetailCategory: false,
   showDetailAdmin: false,
   showDetailComment: false,
   showUpdatePost: false,
+  showEditPostCustomer: false,
   showFeedback: false,
   showUpdateCategory: false,
   showUpdateCustomer: false,
@@ -128,6 +130,12 @@ export const globalSlice = createSlice({
         showUpdatePost: !state.showUpdatePost,
       };
     },
+    toggleEditPostCustomer: (state) => {
+      return {
+        ...state,
+        showEditPostCustomer: !state.showEditPostCustomer,
+      };
+    },
     toggleFeedback: (state) => {
       return {
         ...state,
@@ -216,6 +224,12 @@ export const globalSlice = createSlice({
       return {
         ...state,
         showUpdatePost: false,
+      };
+    },
+    closeEditPostCustomer: (state) => {
+      return {
+        ...state,
+        showEditPostCustomer: false,
       };
     },
     closeUpdateAdmin: (state) => {
@@ -344,6 +358,12 @@ export const globalSlice = createSlice({
         breadcrumb: action.payload,
       };
     },
+    setSlug: (state, action) => {
+      return {
+        ...state,
+        slug: action.payload,
+      };
+    },
 
   },
 });
@@ -400,5 +420,8 @@ export const {
   toggleChangePassword,
   closeShowComment,
   toggleShowComment,
+  closeEditPostCustomer,
+  toggleEditPostCustomer,
+  setSlug
 } = globalSlice.actions;
 export default globalSlice.reducer;

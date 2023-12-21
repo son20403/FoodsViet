@@ -134,7 +134,8 @@ class CategoryController extends BaseController {
         });
       }
       const hasTitle = await this.model.findOne({ title });
-      if (hasTitle)
+      const isCategory = id == hasTitle?._id
+      if (hasTitle && !isCategory)
         return res.status(401).json({
           message: "Đã tồn tại loại này",
         });

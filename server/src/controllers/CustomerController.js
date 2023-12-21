@@ -61,7 +61,7 @@ class CustomerController extends BaseController {
                     message: "Không tồn tại người dùng này",
                 });
             }
-            if (!new_password && !password) {
+            if (!new_password || !password) {
                 return res.status(400).json({
                     message: "Không được bỏ trống",
                 })
@@ -85,7 +85,7 @@ class CustomerController extends BaseController {
                 });
             }
             const hashPass = await argon2.hash(new_password);
-            console.log("🚀 ~ file: CustomerController.js:86 ~ CustomerController ~ changePassword= ~ hashPass:", hashPass)
+
             const updatedCustomer = await this.model.findByIdAndUpdate(id, { password: hashPass });
             if (!updatedCustomer) {
                 return res.status(400).json({

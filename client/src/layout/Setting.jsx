@@ -20,7 +20,7 @@ const Setting = () => {
     const handleLogout = () => {
         const id = infoAuth?._id
         startTransition(() => {
-            socket.disconnect()
+            socket.disconnect(id)
             socket.emit('userUnconnect', id);
             dispatch(setNotification())
             dispatch(logout({ id }));

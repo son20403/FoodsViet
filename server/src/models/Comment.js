@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const Comment = new Schema(
     {
-        content: { type: String },
-        date: { type: String },
-        timestamps: { type: Number },
-        id_customer: { type: String },
-        id_post: { type: String },
+        content: { type: String, require },
+        date: { type: String, require },
+        timestamps: { type: Number, require },
+        id_customer: { type: String, require },
+        id_post: { type: String, require },
         parent_comment_id: { type: String, default: '' },
         status: { type: String, default: "approved" },
     },

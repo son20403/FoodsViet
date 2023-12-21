@@ -10,21 +10,20 @@ import {
 export function DiaLog({ open = false, handleOpen = () => { }, onClick = () => { }, header = '', title = '', ...props }) {
     return (
         <>
-            <Dialog open={open} handler={handleOpen} className="pt-14">
+            <Dialog open={open} handler={handleOpen} className="pt-2 rounded-sm">
                 <div className="flex items-center justify-center">
                     <DialogHeader>{header}</DialogHeader>
                 </div>
                 <DialogBody>
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center font-normal">
                         {title}
                     </div>
                 </DialogBody>
-                <DialogFooter>
+                <DialogFooter className="flex gap-5 items-center justify-center">
                     <Button
-                        variant="text"
+                        variant="gradient"
                         color="red"
                         onClick={handleOpen}
-                        className="mr-1"
                     >
                         <span>Hủy</span>
                     </Button>

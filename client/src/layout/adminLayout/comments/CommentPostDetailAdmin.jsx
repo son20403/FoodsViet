@@ -23,7 +23,7 @@ import { icon } from "../../../ADMIN/routes";
 import LayoutAdminModel from "../LayoutAdminModel";
 import { useDispatch, useSelector } from "react-redux";
 import { WrapInfo } from "../../../pages/InfoUser";
-import { closeShowComment } from "../../../sagas/global/globalSlice";
+import { closeShowComment, toggleUpdatePost } from "../../../sagas/global/globalSlice";
 import { createCommentsAdminRequest, getcommentsByPostRequest } from "../../../sagas/comments/commentsSlice";
 import CommentItem from "../../comments/CommentItem";
 import CommentAdminItem from "./CommentAdminItem";
@@ -35,6 +35,8 @@ import { toast } from 'react-toastify';
 import { Input } from "../../../components/input";
 import { CommentIcon } from "../../../components/Icon";
 import { ButtonComment } from "../../../components/button";
+import { updateStatusRequest } from "../../../sagas/admin/adminSlice";
+import SpeedDialAdmin from "../SpeedDialAdmin";
 const schemaValidate = Yup.object({
   content: Yup.string().required("Vui lòng nhập nội dung!"),
 })
@@ -59,6 +61,19 @@ const CommentPostDetailAdmin = () => {
   const handleClose = () => {
     dispatch(closeShowComment())
   }
+  const handleSendNotification = async (id_receiver) => {
+    if (socketAdmin)
+      await socketAdmin.emit('receiverNotify', { id_receiver });
+  }
+  const handleUpdateStatus = (status) => {
+    const model = "post";
+    const id = postDetail?._id;
+    dispatch(updateStatusRequest({ id, model, status, handleSendNotification }));
+    handleClose()
+  };
+  const handleEditPost = () => {
+    dispatch(toggleUpdatePost());
+  };
   const handleComment = (value) => {
     if (isValid) {
       const date = getDate()
@@ -156,16 +171,16 @@ const CommentPostDetailAdmin = () => {
               </div>
               <div className="px-4 pb-4 ">
                 <div className="text-xs leading-6 md:text-sm lg:text-base">
-                  <Tabs value="comment">
+                  <Tabs value="content">
                     <TabsHeader>
-                      <Tab value={'comment'}>
-                        <div className="flex items-center gap-2">
-                          Nội dung bình luận
-                        </div>
-                      </Tab>
                       <Tab value={'content'}>
                         <div className="flex items-center gap-2">
                           Nội dung bài viết
+                        </div>
+                      </Tab>
+                      <Tab value={'comment'}>
+                        <div className="flex items-center gap-2">
+                          Quản lý bình luận
                         </div>
                       </Tab>
                     </TabsHeader>
@@ -205,6 +220,9 @@ const CommentPostDetailAdmin = () => {
               </div>
             </CardBody>
           </Card>
+          <SpeedDialAdmin
+            detail={postDetail} handleEdit={handleEditPost} handleUpdateStatus={handleUpdateStatus}
+            idEntity={postDetail?.id_customer} />
         </LayoutAdminModel>
       </ModalBase>
     </>

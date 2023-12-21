@@ -1,6 +1,6 @@
 import { call, put } from "redux-saga/effects";
-import { createPost, getAllPost, getAllPostsByCategory, getAllPostsByCustomer, getDetailPost, getSearchPost, likePost, updatePost } from "./request";
-import { createPostsSuccess, getDetailPostSuccess, getPostsByCategorySuccess, getPostsByCustomerSuccess, getPostsSuccess, getSearchPostsSuccess, likePostSuccess, postDetailRequest, requestFailure, updatePostSuccess } from "./postsSlice";
+import { createPost, deletePost, getAllPost, getAllPostsByCategory, getAllPostsByCustomer, getDetailPost, getSearchPost, likePost, updatePost } from "./request";
+import { createPostsSuccess, deletePostsSuccess, getDetailPostSuccess, getPostsByCategorySuccess, getPostsByCustomerRequest, getPostsByCustomerSuccess, getPostsSuccess, getSearchPostsSuccess, likePostSuccess, postDetailRequest, postsRequest, requestFailure, updatePostSuccess } from "./postsSlice";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
 import { addNotificationRequest } from "../notification/notificationSlice";
 
@@ -90,6 +90,7 @@ export function* handleCreatePosts({ payload }) {
             }))
             yield put(setNotifyGlobal(response?.data?.message));
             yield handleSendNotification()
+            yield put(postsRequest())
             yield reset()
         }
     } catch (error) {
@@ -111,21 +112,45 @@ export function* handleLikePost({ payload }) {
     }
 }
 export function* handleUpdatePost({ payload }) {
+    const { id, post, handleSetURL, handleSendNotification } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(updatePost, payload?.id, payload?.post);
+        const response = yield call(updatePost, id, post);
         if (response?.data) {
-            const { slug } = response.data
+            const { slug, id_customer, message, _id } = response.data
             yield put(updatePostSuccess());
-            yield put(postDetailRequest({ slug: slug }));
-            yield put(setNotifyGlobal(response.data?.message));
-            yield payload?.handleSetURL(slug)
+            if (response.data?.status === 'approved') {
+                yield put(postDetailRequest({ slug: slug }));
+                yield handleSetURL(slug)
+            } else {
+                yield put(getPostsByCustomerRequest({ id_customer }))
+            }
+            yield put(addNotificationRequest({
+                id_post: _id, id_customer: 'admin',
+                typeNotify: 'createPost'
+            }))
+            yield handleSendNotification()
+            yield put(setNotifyGlobal(message));
         }
     } catch (error) {
         yield handleCommonError(error)
     }
-
+}
+export function* handlehandleDeletePosts({ payload }) {
+    const { id, id_customer } = payload
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(deletePost, id);
+        if (response?.data) {
+            yield put(deletePostsSuccess())
+            yield put(getPostsByCustomerRequest({ id_customer }))
+            yield put(setNotifyGlobal(response.data?.message))
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
 }
 function* handleCommonError(error) {
     console.log("error post:", error)

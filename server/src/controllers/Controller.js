@@ -3,6 +3,7 @@ import argon2 from "argon2";
 import { generateAccessToken, generateRefreshToken } from "../jwt";
 import Post from "../models/Post";
 import Customer from "../models/Customer";
+import Comment from "../models/Comment";
 import Categories from "../models/Category";
 class BaseController {
   constructor(model) {
@@ -249,12 +250,6 @@ class BaseController {
           message: 'Không có danh mục này!',
         });
       }
-      if (hasPost?.status !== 'approved') {
-        if (fileData) cloudinary.uploader.destroy(fileData.filename);
-        return res.status(400).json({
-          message: "Bài viết của bạn đã bị vô hiệu hóa!",
-        });
-      }
       const isValid = hasPost.id_customer === id_customer;
       if (!isValid) {
         if (fileData) cloudinary.uploader.destroy(fileData.filename);
@@ -397,6 +392,34 @@ class BaseController {
       return res.status(200).json({
         message: "Đã ẩn thành công!",
       });
+    } catch (error) {
+      console.log("err", error);
+      return res.status(500).json({
+        message: "Lỗi Server",
+      });
+    }
+  };
+  deletePost = async (req, res) => {
+    const id_post = req.query.id;
+    const id_customer = req.customer.id;
+    try {
+      const post = await Post.findOne({ _id: id_post });
+      if (!post) {
+        return res.status(400).json({
+          message: "Bài viết này không tồn tại",
+        });
+      }
+      if (id_customer !== post.id_customer)
+        return res.status(400).json({
+          message: "Bạn không có quyền xóa bài viết này",
+        });
+      await Comment.deleteMany({ id_post });
+      await Post.findByIdAndDelete(id_post);
+      if (post.id_image) {
+        cloudinary.uploader.destroy(post.id_image);
+      }
+
+      return res.status(200).json({ message: "Xóa bài viết thành công" });
     } catch (error) {
       console.log("err", error);
       return res.status(500).json({

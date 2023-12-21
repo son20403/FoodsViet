@@ -5,13 +5,13 @@ const slugify = require('slugify');
 
 const Categories = new Schema(
     {
-        title: { type: String },
+        title: { type: String, require },
         image: { type: String, default: "", require },
         id_image: { type: String, default: "" },
-        date: { type: String },
-        timestamps: { type: Number },
-        id_author: { type: String },
-        status: { type: String, default: "pending", },
+        date: { type: String, require },
+        timestamps: { type: Number, require },
+        id_author: { type: String, require },
+        status: { type: String, default: "pending" },
     },
     {
         timestamps: true,

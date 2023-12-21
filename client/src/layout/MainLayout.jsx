@@ -17,6 +17,7 @@ import { categoriesRequest } from "../sagas/categories/categoriesSlice";
 import useLoadingImage from "../hooks/useLoadingImage";
 import useCheckAuth from "../hooks/useCheckAuth";
 import { getAllAdminRequest, getPostsAdminRequest } from "../sagas/admin/adminSlice";
+import EditPost from "./posts/EditPost";
 
 function MainLayout() {
   const dispatch = useDispatch();
@@ -57,6 +58,9 @@ function MainLayout() {
       <Header />
       <Outlet />
       <Footer />
+      <>
+        <EditPost />
+      </>
     </div>
   );
 }

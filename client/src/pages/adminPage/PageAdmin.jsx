@@ -18,6 +18,7 @@ import DetailAdmin from "../../layout/adminLayout/admins/DetailAdmin";
 import EditAdmin from "../../layout/adminLayout/admins/EditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
 import useLoadingImage from "../../hooks/useLoadingImage";
+import useSetTitle from "../../hooks/useSetTitle";
 
 const PageAdmin = () => {
   const { loading, admin, tokenAdmin } = useSelector((state) => state.admin);
@@ -30,6 +31,7 @@ const PageAdmin = () => {
     handLoad()
   }, []);
   useLoadingImage(admin)
+  useSetTitle('Quản lý quản trị viên')
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

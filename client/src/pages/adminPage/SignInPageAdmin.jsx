@@ -15,6 +15,7 @@ import { loginAdminRequest } from "../../sagas/admin/adminSlice";
 import { Input, InputPassword } from "../../components/input";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import useSetTitle from "../../hooks/useSetTitle";
 const schemaValidate = Yup.object({
     user_name: Yup.string().required("Vui lòng nhập tên đăng nhập!")
         .max(20, "Tên tài khoản không được dài quá 20 ký tự")
@@ -42,6 +43,7 @@ export function SignInPageAdmin() {
     }
     const { tokenAdmin } = useSelector((state) => state.admin);
     const navigate = useNavigate();
+    useSetTitle('Đăng nhập quản trị viên')
     useEffect(() => {
         if (tokenAdmin) navigate('/admin/')
     }, [tokenAdmin]);

@@ -86,8 +86,10 @@ export function Dashboard() {
     className: `absolute top-2/4 w-[150px] text-white p-1 bg-primary/90 rounded-full
              -translate-y-2/4 -translate-x-3/4 font-normal  `,
   };
-  const { tokenAdmin, infoAdmin, admin } = useSelector((state) => state.admin);
+  const { tokenAdmin, infoAdmin, admin, role } = useSelector((state) => state.admin);
   const dataAdmin = admin?.find((ad) => ad._id === infoAdmin?._id);
+  const roleAdmin = role?.find((ro) => ro.title === 'Admin');
+  const isAdmin = dataAdmin?.role === roleAdmin?._id
   const { socketAdmin } = useSelector((state) => state.global);
   const dispatch = useDispatch();
   const handleToggleAddPost = () => {
@@ -157,7 +159,7 @@ export function Dashboard() {
               <SpeedDialAction
                 onClick={nav.onclick}
                 key={nav.id}
-                className={`relative text-white bg-primary/90 ${!dataAdmin?.boss && nav.id === 4 ? "hidden" : ""
+                className={`relative text-white bg-primary/90 ${!isAdmin && nav.id === 4 ? "hidden" : ""
                   }`}
               >
                 {nav.icon}

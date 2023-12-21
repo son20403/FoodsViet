@@ -16,6 +16,9 @@ export function getNotificationByCustomer() {
 export function getNotificationByAdmin() {
     return admin.get(`/${COLLECTION_NAME}/getNotificationByAdmin`,)
 }
+export function getNotificationByAuthAdmin() {
+    return admin.get(`/${COLLECTION_NAME}/getNotificationByCustomer`,)
+}
 export function deleteNotificationByCustomer(id) {
     return axios.delete(`/${COLLECTION_NAME}/deleteNotification?id=${id}`,)
 }
@@ -25,6 +28,13 @@ export function deleteAllNotificationByCustomer() {
 
 export function updateAllNotificationByCustomer() {
     return axios.put(`/${COLLECTION_NAME}/updateAllNotificationByCustomer`, {})
+}
+export function deleteAllNotificationByAdmin() {
+    return admin.delete(`/${COLLECTION_NAME}/deleteAllNotificationByCustomer`)
+}
+
+export function updateAllNotificationByAdmin() {
+    return admin.put(`/${COLLECTION_NAME}/updateAllNotificationByCustomer`, {})
 }
 export function updateNotificationByCustomer(id) {
     return axios.put(`/${COLLECTION_NAME}/updateNotification?id=${id}`,)

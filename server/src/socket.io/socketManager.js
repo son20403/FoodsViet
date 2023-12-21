@@ -9,7 +9,7 @@ const socketManager = (server) => {
     });
     let users = []
     const addUser = (userId, socketId) => {
-        !users.some(user => user.userId === userId) && users.push({ userId, socketId, unreadMessages: [] })
+        !users.some(user => user.socketId === socketId) && users.push({ userId, socketId, unreadMessages: [] })
     }
     const removeUser = (socketId) => {
         users = users.filter(user => user.socketId !== socketId)
@@ -25,7 +25,6 @@ const socketManager = (server) => {
         socket.on("disconnect", () => {
             removeUser(socket.id)
             io.emit("getUsers", users)
-            console.log("🚀 ~ file: socketManager.js:12 ~ addUser ~ addUser:", users)
         });
         socket.on("userUnconnect", async (id) => {
             console.log("userUnconnect")
@@ -38,7 +37,6 @@ const socketManager = (server) => {
         });
 
         socket.on('addUser', async (id_customer, type) => {
-            console.log("🚀 ~ file: socketManager.js:38 ~ socket.on ~ id_customer:", id_customer)
             if (type === 'customer') {
                 await Customer.findByIdAndUpdate(id_customer, { online: true });
             } else {
@@ -46,12 +44,10 @@ const socketManager = (server) => {
             }
             addUser(id_customer, socket.id)
             io.emit("getUsers", users)
-            console.log("🚀 ~ file: socketManager.js:12 ~ addUser ~ addUser:", users)
-
+            console.log("🚀 ~ file: socketManager.js:47 ~ socket.on ~ users:", users)
         })
         socket.on('receiverNotify', ({ id_receiver }) => {
             const receiver = getUser(id_receiver)
-            console.log("🚀 ~ file: socketManager.js:54 ~ socket.on ~ receiver:", receiver)
             if (receiver) {
                 io.to(receiver.socketId).emit('sendNotify');
             }
@@ -67,9 +63,7 @@ const socketManager = (server) => {
             io.emit('updateNotificationAdmin')
         });
         socket.on("sendMessage", ({ senderId, receiverId, text, messageId }) => {
-            console.log("🚀 ~ file: socketManager.js:66 ~ socket.on ~ senderId:", senderId)
             const user = getUser(receiverId);
-            console.log("🚀 ~ file: socketManager.js:67 ~ socket.on ~ user:", user)
             if (user) {
                 io.to(user.socketId).emit("getMessage", {
                     senderId,

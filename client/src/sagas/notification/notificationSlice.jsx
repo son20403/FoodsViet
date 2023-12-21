@@ -4,6 +4,7 @@ import { getObjectFromLocalStorage, removeObjectFromLocalStorage, saveObjectToLo
 const initialState = {
     notifications: {},
     notificationsAdmin: {},
+    notificationsAuthAdmin: {},
     loading: false,
     error: ''
 }
@@ -26,7 +27,8 @@ const notificationSlice = createSlice({
                 loading: false,
                 error: '',
             }
-        }, getNotificationByAdminRequest: (state) => {
+        },
+        getNotificationByAdminRequest: (state) => {
             return {
                 ...state,
                 loading: true,
@@ -37,6 +39,21 @@ const notificationSlice = createSlice({
             return {
                 ...state,
                 notificationsAdmin: action.payload,
+                loading: false,
+                error: '',
+            }
+        },
+        getNotificationByAuthAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        getNotificationByAuthAdminSuccess: (state, action) => {
+            return {
+                ...state,
+                notificationsAuthAdmin: action.payload,
                 loading: false,
                 error: '',
             }
@@ -84,6 +101,20 @@ const notificationSlice = createSlice({
                 error: '',
             }
         },
+        deleteAllNotificationAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        deleteAllNotificationAdminSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: '',
+            }
+        },
         addNotificationRequest: (state) => {
             return {
                 ...state,
@@ -113,6 +144,20 @@ const notificationSlice = createSlice({
             }
         },
         updateNotificationSuccess: (state) => {
+            return {
+                ...state,
+                loading: false,
+                error: '',
+            }
+        },
+        updateNotificationAuthAdminRequest: (state) => {
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            }
+        },
+        updateNotificationAuthAdminSuccess: (state) => {
             return {
                 ...state,
                 loading: false,
@@ -163,5 +208,5 @@ const notificationSlice = createSlice({
     }
 })
 
-export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification, deleteAllNotificationRequest, deleteAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, updateNotificationAdminRequest, updateNotificationAdminSuccess, addNotificationAdminRequest } = notificationSlice.actions
+export const { addNotificationRequest, addNotificationSuccess, deleteNotificationRequest, deleteNotificationSuccess, getAllNotificationRequest, getAllNotificationSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationRequest, updateAllNotificationSuccess, updateNotificationRequest, updateNotificationSuccess, setNotification, deleteAllNotificationRequest, deleteAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, updateNotificationAdminRequest, updateNotificationAdminSuccess, addNotificationAdminRequest, getNotificationByAuthAdminRequest, getNotificationByAuthAdminSuccess, deleteAllNotificationAdminRequest, deleteAllNotificationAdminSuccess, updateNotificationAuthAdminRequest, updateNotificationAuthAdminSuccess } = notificationSlice.actions
 export default notificationSlice.reducer

@@ -2,16 +2,12 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from "yup";
-import Overlay from '../common/Overlay';
-import { AtIcon, CloseIcon, EmailIcon, LocationIcon, UserIcon } from '../../components/Icon';
 import { Heading } from '../../components/heading';
-import { FileInput, Input, InputPassword } from '../../components/input';
-import { Field } from '../../components/field';
+import { InputPassword } from '../../components/input';
 import ModalBase from '../modal/ModalBase';
 import { useDispatch, useSelector } from 'react-redux';
-import { changePasswordRequest, customersRequest, setLoadingCustomer, updateCustomerRequest } from '../../sagas/customers/customersSlice';
-import { closeChangePassword, setNotifyGlobal } from '../../sagas/global/globalSlice';
-import { useEffect } from 'react';
+import { changePasswordRequest, setLoadingCustomer } from '../../sagas/customers/customersSlice';
+import { closeChangePassword } from '../../sagas/global/globalSlice';
 import { Button } from '@material-tailwind/react';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';

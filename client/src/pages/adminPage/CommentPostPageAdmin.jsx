@@ -15,6 +15,7 @@ import { icon } from '../../ADMIN/routes';
 import useScrollToCenter from '../../hooks/useScrollToCenter';
 import useLoadingImage from '../../hooks/useLoadingImage';
 import CommentPostItemAdmin from '../../layout/adminLayout/comments/CommentPostItemAdmin';
+import useSetTitle from '../../hooks/useSetTitle';
 
 const CommentPostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
@@ -27,6 +28,7 @@ const CommentPostPageAdmin = () => {
         handLoad()
     }, []);
     useLoadingImage(posts)
+    useSetTitle('Quản lý bình luận')
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>

@@ -14,6 +14,8 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { icon } from '../../ADMIN/routes';
 import useScrollToCenter from '../../hooks/useScrollToCenter';
 import useLoadingImage from '../../hooks/useLoadingImage';
+import CommentPostItemAdmin from '../../layout/adminLayout/comments/CommentPostItemAdmin';
+import useSetTitle from '../../hooks/useSetTitle';
 
 const PostPageAdmin = () => {
     const { posts, loading } = useSelector((state) => state.admin)
@@ -26,6 +28,7 @@ const PostPageAdmin = () => {
         handLoad()
     }, []);
     useLoadingImage(posts)
+    useSetTitle('Quản lý bài viết')
     return (
         <div>
             <LoadingRequest show={loading}></LoadingRequest>
