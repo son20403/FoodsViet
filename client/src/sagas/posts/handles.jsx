@@ -128,7 +128,7 @@ export function* handleUpdatePost({ payload }) {
             }
             yield put(addNotificationRequest({
                 id_post: _id, id_customer: 'admin',
-                typeNotify: 'createPost'
+                typeNotify: 'editPost'
             }))
             yield handleSendNotification()
             yield put(setNotifyGlobal(message));

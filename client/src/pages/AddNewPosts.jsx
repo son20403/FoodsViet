@@ -36,8 +36,8 @@ const AddNewPosts = () => {
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const { categories, loading } = useSelector((state) => state.categories)
     const { loading: loadingPost } = useSelector((state) => state.posts)
-    const handleSendNotification = () => {
-        socket.emit('notificationAdmin');
+    const handleSendNotification = async () => {
+        await socket.emit('notificationAdmin');
     }
     const handleSubmits = (value) => {
         const date = getDate()

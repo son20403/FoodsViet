@@ -57,15 +57,15 @@ const FeedBackItemAdmin = ({ data }) => {
               data?.status === "approved"
                 ? "green"
                 : data?.status === "pending"
-                ? "yellow"
-                : "red"
+                  ? "yellow"
+                  : "red"
             }
             value={
               data?.status === "approved"
-                ? "Đã duyệt"
+                ? "Đã phản hồi"
                 : data?.status === "pending"
-                ? "Chờ duyệt"
-                : "vô hiệu hóa"
+                  ? "Chờ phản hồi"
+                  : "vô hiệu hóa"
             }
             className="py-0.5 px-2 text-[11px] font-medium inline-block"
           />

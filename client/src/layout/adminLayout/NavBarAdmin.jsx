@@ -241,8 +241,10 @@ export default DashboardNavbar;
 const NotifyItem = ({ notify }) => {
   const timeSince = useTimeSince()
   const dispatch = useDispatch()
-  const { customers, posts } = useSelector((state) => state.admin);
-  const infoCustomer = customers.find((cus) => cus._id === notify?.id_sender)
+  const { customers, posts, admin } = useSelector((state) => state.admin);
+  const infoCusSend = customers?.filter((cus) => cus._id === notify?.id_sender)[0]
+  const infoADSend = admin?.filter((cus) => cus._id === notify?.id_sender)[0]
+  const infoAuth = infoCusSend || infoADSend
   const handleUpdateNotification = () => {
     if (notify?.status === true) {
       dispatch(updateNotificationAdminRequest(notify?._id))
@@ -315,7 +317,7 @@ const NotifyItem = ({ notify }) => {
             placement="bottom-end"
           >
             <Avatar
-              src={infoCustomer?.image}
+              src={infoAuth?.image}
               alt="item-1"
               size="md"
               variant="circular"
@@ -328,7 +330,7 @@ const NotifyItem = ({ notify }) => {
             color="blue-gray"
             className="mb-1 font-normal max-w-[400px]"
           >
-            <strong>{infoCustomer?.full_name}</strong> {title}
+            <strong>{infoAuth?.full_name}</strong> {title}
           </Typography>
           <Typography
             variant="small"

@@ -35,7 +35,7 @@ const ListPostsByCategory = () => {
     return (
         <>
             <LoadingRequest show={loading}></LoadingRequest>
-            <BannerCommon image={'../src/assets/image/banner-post.jpg'} title='Danh Sách Bài Viết' />
+            <BannerCommon image={detailCategory?.image || '../src/assets/image/banner-post.jpg'} title='Danh Sách Bài Viết' />
             <div className='page-content'>
                 <div className='my-10'>
                     <ListPost message={'Không có dữ liệu!'} data={listPosts}></ListPost>

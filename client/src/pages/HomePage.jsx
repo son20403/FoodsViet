@@ -16,7 +16,8 @@ const HomePage = () => {// Gửi dữ liệu đến server
     const { posts, loading } = useSelector((state) => state.posts)
     const { categories } = useSelector((state) => state.categories);
     const { customers } = useSelector((state) => state.customers);
-
+    const post = [...posts]
+    post.sort((a, b) => a.timestamps - b.timestamps)
     const dispatch = useDispatch()
 
     const { token } = useSelector((state) => state.auth);
@@ -60,7 +61,7 @@ const HomePage = () => {// Gửi dữ liệu đến server
                     - Bài viết mới nhất -
                 </Heading>
                 <Section className='page- '>
-                    <ListPostHome data={posts?.slice(0, 10)} isHome></ListPostHome>
+                    <ListPostHome data={post?.slice(0, 10)} isHome></ListPostHome>
                 </Section>
                 <Heading isHeading className='mb-10 mx-2 text-center'>
                     - Người dùng nỗi bật -
@@ -74,7 +75,7 @@ const HomePage = () => {// Gửi dữ liệu đến server
                     <Heading isHeading className='mb-10 mx-2 text-center'>
                         - Bài viết -
                     </Heading>
-                    <ListPost data={posts?.slice(10)}></ListPost>
+                    <ListPost data={post?.slice(10)}></ListPost>
                 </Section>
             </div>
         </div>

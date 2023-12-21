@@ -64,6 +64,8 @@
     .content_post.post_item h5,
     .content_post.post_item h6,
     .content_post.post_item p,
+    .content_post.post_item tr,
+    .content_post.post_item td,
     .content_post.post_item strong {
         @apply !font-content !font-medium !text-sm !text-gray-500 !m-0;
     }
