@@ -7,7 +7,7 @@ import argon2 from "argon2";
 const util = require("util");
 const jwtVerifyAsync = util.promisify(jwt.verify);
 class SendEmailController {
-  constructor() { }
+  constructor() {}
   send = async (req, res) => {
     const { fullName, email, phone, message } = req.body;
     try {
@@ -68,7 +68,12 @@ class SendEmailController {
       });
       const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
       forgotPass({ email, link });
-      return res.status(200).json({ message: "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!" });
+      return res
+        .status(200)
+        .json({
+          message:
+            "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!",
+        });
     } catch (error) {
       console.log("err", error);
       return res.status(500).json({
@@ -101,15 +106,22 @@ class SendEmailController {
       const { user_name } = req.body;
       const user = await Admin.findOne({ user_name });
       if (!user) {
-        return res.status(401).json({ message: "Không tìm thấy quản trị viên này!" });
+        return res
+          .status(401)
+          .json({ message: "Không tìm thấy quản trị viên này!" });
       }
       const email = user.email;
       const token = jwt.sign({ id: user._id }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: "5s",
+        expiresIn: "5m",
       });
       const link = `${process.env.CLIENT_URL}/admin/reset-password?token=${token}`;
       forgotPass({ email, link });
-      return res.status(200).json({ message: "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!" });
+      return res
+        .status(200)
+        .json({
+          message:
+            "Gửi yêu cầu lấy mật khẩu thành công. Vui lòng kiểm tra email!",
+        });
     } catch (error) {
       console.log("err", error);
       return res.status(500).json({

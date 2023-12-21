@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     NewspaperIcon,
@@ -278,67 +278,65 @@ const HomeAdmin = () => {
             <TopCustomerInteract></TopCustomerInteract>
         </div>
     );
-};
 
 export default HomeAdmin;
 
 const chartsConfig = {
-    chart: {
-        toolbar: {
-            show: false,
-        },
+  chart: {
+    toolbar: {
+      show: false,
     },
-    title: {
-        show: "",
+  },
+  title: {
+    show: "",
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  xaxis: {
+    axisTicks: {
+      show: true,
     },
-    dataLabels: {
-        enabled: false,
+    axisBorder: {
+      show: true,
     },
+    labels: {
+      style: {
+        colors: "#fff",
+        fontSize: "12px",
+        fontFamily: "inherit",
+        fontWeight: 300,
+      },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: "#fff",
+        fontSize: "13px",
+        fontFamily: "inherit",
+        fontWeight: 300,
+      },
+    },
+  },
+  grid: {
+    show: true,
+    borderColor: "#ffffff40",
+    strokeDashArray: 5,
     xaxis: {
-        axisTicks: {
-            show: true,
-        },
-        axisBorder: {
-            show: true,
-        },
-        labels: {
-            style: {
-                colors: "#fff",
-                fontSize: "12px",
-                fontFamily: "inherit",
-                fontWeight: 300,
-            },
-        },
-    },
-    yaxis: {
-        labels: {
-            style: {
-                colors: "#fff",
-                fontSize: "13px",
-                fontFamily: "inherit",
-                fontWeight: 300,
-            },
-        },
-    },
-    grid: {
+      lines: {
         show: true,
-        borderColor: "#ffffff40",
-        strokeDashArray: 5,
-        xaxis: {
-            lines: {
-                show: true,
-            },
-        },
-        padding: {
-            top: 5,
-            right: 20,
-        },
+      },
     },
-    fill: {
-        opacity: 0.8,
+    padding: {
+      top: 5,
+      right: 20,
     },
-    tooltip: {
-        theme: "dark",
-    },
+  },
+  fill: {
+    opacity: 0.8,
+  },
+  tooltip: {
+    theme: "dark",
+  },
 };
-
