@@ -15,6 +15,7 @@ import CategoryDetailAdmin from "../../layout/adminLayout/categories/CategoryDet
 import CategoryEditAdmin from "../../layout/adminLayout/categories/CategoryEditAdmin";
 import useScrollToCenter from "../../hooks/useScrollToCenter";
 import useLoadingImage from "../../hooks/useLoadingImage";
+import useSetTitle from "../../hooks/useSetTitle";
 
 const CategoryPageAdmin = () => {
   const { loading, categories } = useSelector((state) => state.admin);
@@ -27,6 +28,7 @@ const CategoryPageAdmin = () => {
     handLoad()
   }, []);
   useLoadingImage(categories)
+  useSetTitle('Quản lý danh mục')
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

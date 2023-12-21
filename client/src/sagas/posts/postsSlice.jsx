@@ -17,7 +17,7 @@ const postsSlice = createSlice({
     postsRequest: (state) => {
       return {
         ...state,
-        loading: true,
+        loading: false,
       };
     },
     getPostsSuccess: (state, action) => {
@@ -46,6 +46,7 @@ const postsSlice = createSlice({
       return {
         ...state,
         loading: true,
+        error: null
       };
     },
     getPostsByCustomerSuccess: (state, action) => {
@@ -126,6 +127,20 @@ const postsSlice = createSlice({
         loading: false,
       };
     },
+    deletePostsRequest: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: true,
+      };
+    },
+    deletePostsSuccess: (state) => {
+      return {
+        ...state,
+        error: null,
+        loading: false,
+      };
+    },
     requestFailure: (state, action) => {
       return {
         ...state,
@@ -154,5 +169,7 @@ export const {
   getPostsByCategorySuccess,
   getPostsByCustomerRequest,
   getPostsByCustomerSuccess,
+  deletePostsRequest,
+  deletePostsSuccess
 } = postsSlice.actions;
 export default postsSlice.reducer;

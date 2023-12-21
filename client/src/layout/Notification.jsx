@@ -98,7 +98,8 @@ const ItemNotifiction = ({ notify }) => {
             typeNotify = {
                 icon: <ChatBubbleOvalLeftEllipsisIcon className={className} />,
                 className: 'bg-green-400',
-                content: <span>đã bình luận bài viết của bạn</span>
+                content: <span>đã bình luận bài viết  <span className='font-bold text-primary'>
+                    {infoPost?.title}</span> của bạn</span>
             }
             break;
         case 'reply':

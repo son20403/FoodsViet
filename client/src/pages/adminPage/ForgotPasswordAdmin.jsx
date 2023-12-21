@@ -18,6 +18,7 @@ import { UserIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 import { forgotPassworAdmindRequest } from "../../sagas/feedbackMail/feedbacksSlice";
 import { icon } from "../../ADMIN/routes";
+import useSetTitle from "../../hooks/useSetTitle";
 const schemaValidate = Yup.object({
   user_name: Yup.string()
     .required("Vui lòng nhập tên đăng nhập!")
@@ -47,7 +48,7 @@ const ForgotPasswordAdmin = () => {
       // navigate("/admin/signin");
     }
   };
-
+  useSetTitle('Quên mật khẩu')
 
   return (
     <>

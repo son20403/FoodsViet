@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useController } from "react-hook-form";
 import { Input as InputCustom } from "@material-tailwind/react";
 import { Typography } from '../typography';
 const Input = ({ children, control, placeholder = 'Enter your content', type = 'text', name, value, errors, disable = false }) => {
-    const { field, setValue } = useController({ name, control, defaultValue: value });
+    const { field } = useController({ name, control, defaultValue: value });
     const isErr = !!errors?.[name]
     return (
         <div>

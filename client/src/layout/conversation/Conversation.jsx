@@ -76,7 +76,7 @@ const Conversation = ({
         </NavLink>
         <div className="relative flex flex-col flex-1 w-full">
           <span className="font-bold ">{friend?.full_name}</span>
-          {children && <p className="line-clamp-1">{children}</p>}
+          {friend?.online && <p className="line-clamp-1">{children}</p>}
           {!children && (
             <p className="line-clamp-1 ">
               {lastestMessage?.sender === infoAuth?._id ? "Bạn: " : null}

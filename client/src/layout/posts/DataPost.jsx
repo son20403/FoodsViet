@@ -46,7 +46,7 @@ const DataPost = ({ timestamps = 0, comments = 0, likes = [], className = '', is
                                     key={cus?._id + Date.now()}>{isAuth ? 'Bạn' : cus?.full_name}</Link>
                             )
                         }
-                    }) : (<>Chưa có </>)}
+                    }) : (<span className='w-full  !text-xs block outline-none'>Chưa có </span>)}
                 </div>
             </PopoverDrop>
         </div>

@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-    Typography,
-} from "@material-tailwind/react";
 import {
     NewspaperIcon,
     Square3Stack3DIcon,
@@ -14,6 +10,9 @@ import StatisticsCard from '../../layout/adminLayout/chart/statistics-card';
 import StatisticsChart from '../../layout/adminLayout/chart/statistics-chart';
 import TopCustomerInteract from '../../layout/adminLayout/chart/TopCustomerInteract';
 import { statisticalCategoriesRequest, statisticalCustomersRequest, statisticalFeedbacksRequest, statisticalPostsRequest } from '../../sagas/admin/adminSlice';
+import useSetTitle from '../../hooks/useSetTitle';
+import { Typography } from '@material-tailwind/react';
+import { Link } from 'react-router-dom';
 const HomeAdmin = () => {
     const { statistical_customers, statistical_feedbacks, statistical_posts,
         statistical_categories, posts, categories, customers } =
@@ -24,9 +23,21 @@ const HomeAdmin = () => {
     const statisticalByDayPost = statistical_posts?.statisticalByMonth
     const statisticalByDayCategory = statistical_categories?.statisticalByMonth
     const totalPosts = posts?.length || 0
+    const totalPostApproved = posts?.filter((post) => post?.status === 'approved').length
+    const totalPostPending = posts?.filter((post) => post?.status === 'pending').length
+    const totalPostDestroy = posts?.filter((post) => post?.status === 'destroy').length
     const totalCategories = categories?.length || 0
+    const totalCategoriesApproved = categories?.filter((category) => category?.status === 'approved').length
+    const totalCategoriesPending = categories?.filter((category) => category?.status === 'pending').length
+    const totalCategoriesDestroy = categories?.filter((category) => category?.status === 'destroy').length
     const totalFeedbacks = feedback?.length || 0
+    const totalFeedbacksApproved = feedback?.filter((fb) => fb?.status === 'approved').length
+    const totalFeedbacksPending = feedback?.filter((fb) => fb?.status === 'pending').length
+    const totalFeedbacksDestroy = feedback?.filter((fb) => fb?.status === 'destroy').length
     const totalCustomers = customers?.length || 0
+    const totalCustomersApproved = customers?.filter((cus) => cus?.status === 'approved').length
+    const totalCustomersPending = customers?.filter((cus) => cus?.status === 'pending').length
+    const totalCustomersDestroy = customers?.filter((cus) => cus?.status === 'destroy').length
     let dayByCustomer = []
     let dataByCustomer = []
     let dayByFeedback = []
@@ -42,7 +53,7 @@ const HomeAdmin = () => {
     pushData(statisticalByDayCategory, dayByCategory, dataByCategory)
     function pushData(statiscal, day, data) {
         statiscal?.map((item) => {
-            day.push(item?._id.slice(5))
+            day.push(item?._id?.slice(5))
         })
         statiscal?.map((item) => {
             data.push(item?.count)
@@ -175,42 +186,85 @@ const HomeAdmin = () => {
     ];
     const statisticsCardsData = [
         {
+            link: '/admin/posts',
             color: "blue",
             icon: NewspaperIcon,
             title: "Bài viết",
             value: totalPosts,
+            footer: {
+                approved: totalPostApproved,
+                pending: totalPostPending,
+                destroy: totalPostDestroy,
+            },
         },
         {
+            link: '/admin/customers',
             color: "pink",
             icon: UserIcon,
             title: "Người dùng",
             value: totalCustomers,
+            footer: {
+                approved: totalCustomersApproved,
+                pending: totalCustomersPending,
+                destroy: totalCustomersDestroy,
+            },
         },
         {
+            link: '/admin/categories',
             color: "green",
             icon: Square3Stack3DIcon,
             title: "Danh mục",
             value: totalCategories,
+            footer: {
+                approved: totalCategoriesApproved,
+                pending: totalCategoriesPending,
+                destroy: totalCategoriesDestroy,
+            },
         },
         {
+            link: '/admin/feedback',
             color: "orange",
             icon: ChatBubbleLeftRightIcon,
             title: "Phản hồi",
             value: totalFeedbacks,
+            footer: {
+                approved: totalFeedbacksApproved,
+                pending: totalFeedbacksPending,
+                destroy: totalFeedbacksDestroy,
+            },
         },
     ];
+    useSetTitle('Thống kê')
     return (
         <div className="mt-12">
             <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-                {statisticsCardsData.map(({ icon, title, ...rest }) => (
-                    <StatisticsCard
-                        key={title}
-                        {...rest}
-                        title={title}
-                        icon={React.createElement(icon, {
-                            className: "w-6 h-6 text-white",
-                        })}
-                    />
+                {statisticsCardsData.map(({ icon, title, footer, link, ...rest }) => (
+                    <Link key={title} to={link}>
+                        <StatisticsCard
+
+                            {...rest}
+                            title={title}
+                            icon={React.createElement(icon, {
+                                className: "w-6 h-6 text-white",
+                            })}
+                            footer={
+                                <Typography className="font-normal text-xs  text-blue-gray-600">
+                                    <div className='flex items-center justify-between'>
+                                        <div className='flex flex-col gap-y-2'>
+                                            <div>Đã duyệt</div>
+                                            <div>Chờ duyệt</div>
+                                            <div>Vô hiệu hóa</div>
+                                        </div>
+                                        <div className='flex flex-col gap-y-2'>
+                                            <div>{footer?.approved || 0}</div>
+                                            <div>{footer?.pending || 0}</div>
+                                            <div>{footer?.destroy || 0}</div>
+                                        </div>
+                                    </div>
+                                </Typography>
+                            }
+                        />
+                    </Link>
                 ))}
             </div>
             <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 ">

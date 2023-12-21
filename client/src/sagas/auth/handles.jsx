@@ -4,15 +4,17 @@ import { requestFailure, loginSuccess, registerSuccess, setInfoAuth } from "./au
 import { setErrorGlobal, setNotifyGlobal, toggleSignin } from "../global/globalSlice";
 
 export function* authenticateCustomer({ payload }) {
+    const { info, handleBackPage } = payload
     try {
         yield put(setNotifyGlobal(''))
         yield put(setErrorGlobal(''))
-        const response = yield call(loginAuth, payload);
+        const response = yield call(loginAuth, info);
         if (response) {
             const { message, accessToken, ...info } = response.data
             yield put(setNotifyGlobal(message))
             yield put(loginSuccess(accessToken))
             yield put(setInfoAuth(info))
+            yield handleBackPage()
         }
     } catch (error) {
         yield handleCommonError(error)

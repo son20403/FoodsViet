@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { loginRequest } from "../sagas/auth/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const schemaValidate = Yup.object({
   user_name: Yup.string()
     .required("Vui lòng nhập tên đăng nhập!")
@@ -24,15 +24,20 @@ const schemaValidate = Yup.object({
 });
 const SignIn = () => {
   const dispatch = useDispatch();
+  const naviagte = useNavigate()
+  const handleBackPage = () => {
+    naviagte('/')
+  }
   const {
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
     control,
   } = useForm({ resolver: yupResolver(schemaValidate), mode: "onChange" });
   const handleSignIn = (value) => {
+    const info = { ...value }
     try {
       if (isValid) {
-        dispatch(loginRequest(value));
+        dispatch(loginRequest({ info, handleBackPage }));
       }
     } catch (error) {
       console.log("err", error);

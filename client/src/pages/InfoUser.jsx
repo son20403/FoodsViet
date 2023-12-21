@@ -16,6 +16,9 @@ import {
   customerDetailRequest,
   customersRequest,
 } from "../sagas/customers/customersSlice";
+import {
+  NewspaperIcon
+} from "@heroicons/react/24/outline";
 import EditCustomer from "../layout/customers/EditCustomer";
 import LoadingRequest from "../layout/loading/LoadingRequest";
 import BannerCommon from "../layout/common/BannerCommon";
@@ -24,6 +27,7 @@ import { categoriesRequest } from "../sagas/categories/categoriesSlice";
 import { setBreadcrumb } from "../sagas/global/globalSlice";
 import useLoadingImage from "../hooks/useLoadingImage";
 import ChangePassword from "../layout/customers/ChangePassword";
+import PostItem from "../layout/posts/PostItem";
 
 const InfoUser = () => {
   const { slug } = useParams();
@@ -115,37 +119,40 @@ const InfoUser = () => {
       </div>
       <div className="my-5 page-content">
         <div className="flex flex-col gap-5 md:flex-row">
-          <div className="w-full md:w-1/3">
-            <div className="flex flex-col flex-auto h-auto p-5 bg-white rounded-xl gap-y-5 md:gap-y-10">
-              <h1 className="text-xl font-bold text-center text-primary md:text-start">
-                Thông tin cá nhân
-              </h1>
-              <div className="text-base md:text-sm ">
-                <WrapInfo>
-                  <UserIcon /> <p>{customer_detail?.full_name}</p>
-                </WrapInfo>
-                <WrapInfo>
-                  <EmailIcon />{" "}
-                  <p className="w-[80%]">
-                    {customer_detail?.email || "Chưa có"}
-                  </p>
-                </WrapInfo>
-                <WrapInfo>
-                  <LocationIcon />{" "}
-                  <p>{customer_detail?.address || "Chưa có"}</p>
-                </WrapInfo>
-              </div>
-            </div>
-          </div>
           <div className="flex flex-col flex-1 pt-5 bg-white rounded-xl md:p-5 gap-y-10">
-            <h1 className="text-xl font-bold text-center text-primary md:text-start">
-              Danh sách bài viết
-            </h1>
-            <ListPost
-              data={dataPostCustomer}
-              message={"Chưa có bài viết nào!"}
-              className="!grid-cols-1 md:!grid-cols-1 lg:!grid-cols-2"
-            ></ListPost>
+            <div className="grid !grid-cols-1 md:!grid-cols-2 lg:!grid-cols-3  gap-3">
+              <div className="flex flex-col flex-auto h-auto p-5 bg-white rounded-xl gap-y-5">
+                <h1 className="text-xl font-bold text-center text-primary md:text-start">
+                  Thông tin cá nhân
+                </h1>
+                <div className="text-xs md:text-sm ">
+                  <WrapInfo>
+                    <UserIcon /> <p>{customer_detail?.full_name}</p>
+                  </WrapInfo>
+                  <WrapInfo>
+                    <EmailIcon />{" "}
+                    <p className="w-[80%]">
+                      {customer_detail?.email || "Chưa có"}
+                    </p>
+                  </WrapInfo>
+                  <WrapInfo>
+                    <LocationIcon />{" "}
+                    <p>{customer_detail?.address || "Chưa có"}</p>
+                  </WrapInfo>
+                  <WrapInfo>
+                    <NewspaperIcon className="w-3 h-3 md:w-4 md:h-4" />{" "}
+                    <p>{dataPostCustomer?.length || 'Chưa có'} bài viết</p>
+                  </WrapInfo>
+                </div>
+              </div>
+              {dataPostCustomer.length > 0
+                ? dataPostCustomer?.map((item) => (
+                  <PostItem key={item._id} data={item} isSingle isInfo={true} ></PostItem>
+                ))
+                : dataPostCustomer.length < 1
+                && (<div className='text-center pb-10 col-span-2'>{'Không có bài viết nào'}</div>)
+              }
+            </div>
           </div>
         </div>
       </div>

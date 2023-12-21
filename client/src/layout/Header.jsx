@@ -44,7 +44,6 @@ const Header = () => {
   const dataAuth = customers.filter((cus) => cus._id === infoAuth?._id)[0];
   const handleGetNotification = () => {
     if (token) {
-      dispatch(postsRequest());
       dispatch(getNotificationByCustomerRequest());
     }
   };
@@ -91,6 +90,7 @@ const Header = () => {
     if (socket) {
       socket.on("sendNotify", () => {
         setTimeout(() => {
+          console.log('ok')
           handleGetNotification();
         }, 500);
       });

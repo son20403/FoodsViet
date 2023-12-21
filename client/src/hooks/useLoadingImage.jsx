@@ -5,9 +5,7 @@ export default function useLoadingImage(dependencies) {
     useEffect(() => {
         const load = (img) => {
             const url = img.getAttribute('lazy-src')
-            if (!img.getAttribute('src')) {
-                img.setAttribute('src', url)
-            }
+            img.setAttribute('src', url)
         }
         function ready() {
             if ('IntersectionObserver' in window) {

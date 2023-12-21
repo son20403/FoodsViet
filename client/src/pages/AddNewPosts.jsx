@@ -32,7 +32,6 @@ const AddNewPosts = () => {
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth)
     const { socket, isUploadImage } = useSelector((state) => state.global)
-    console.log("🚀 ~ file: AddNewPosts.jsx:35 ~ AddNewPosts ~ isUploadImage:", isUploadImage)
     const { handleSubmit, formState: { errors, isSubmitting, isValid, isSubmitSuccessful }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const { categories, loading } = useSelector((state) => state.categories)

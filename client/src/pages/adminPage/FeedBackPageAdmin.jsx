@@ -12,6 +12,7 @@ import { icon } from "../../ADMIN/routes";
 import FeedBackItemAdmin from "../../layout/adminLayout/feedBacks/FeedBackItemAdmin";
 import FeedBackDetail from "../../layout/adminLayout/feedBacks/FeedBackDetail";
 import { FeedbackRequest } from "../../sagas/feedbackMail/feedbacksSlice";
+import useSetTitle from "../../hooks/useSetTitle";
 
 const FeedBackPageAdmin = () => {
   const { loading, feedback } = useSelector((state) => state.feedback);
@@ -25,6 +26,7 @@ const FeedBackPageAdmin = () => {
   useEffect(() => {
     handLoad()
   }, []);
+  useSetTitle('Quản lý phản hồi')
   return (
     <div>
       <LoadingRequest show={loading}></LoadingRequest>

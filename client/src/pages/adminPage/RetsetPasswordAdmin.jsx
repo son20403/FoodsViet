@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { resetPasswordAdminRequest } from "../../sagas/feedbackMail/feedbacksSlice";
+import useSetTitle from "../../hooks/useSetTitle";
 const schemaValidate = Yup.object({
   // password: Yup.string()
   //   .required("Vui lòng nhập mật khẩu!")
@@ -60,7 +61,7 @@ const RetsetPasswordAdmin = () => {
       console.log("err", error);
     }
   };
-
+  useSetTitle('Đổi mật khẩu')
   return (
     <>
       <img

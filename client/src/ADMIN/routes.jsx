@@ -36,11 +36,6 @@ const routes = [
         path: "/customers",
       },
       {
-        icon: <ChatBubbleOvalLeftEllipsisIcon {...icon} />,
-        name: "Bình luận",
-        path: "/comments",
-      },
-      {
         icon: <EnvelopeOpenIcon {...icon} />,
         name: "Phản hồi",
         path: "/feedBack",

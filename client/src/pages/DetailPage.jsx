@@ -20,14 +20,13 @@ import { getDate, getTimestamp } from '../hooks/useGetTime';
 import { ButtonComment } from '../components/button';
 import { getPostsByCategoryRequest, getPostsByCustomerRequest, likePostRequest, postDetailRequest } from '../sagas/posts/postsSlice';
 import EditPost from '../layout/posts/EditPost';
-import useToggle from '../hooks/useToggle';
 import IconWrap from '../components/Icon/IconWrap';
 import LoadingRequest from '../layout/loading/LoadingRequest';
 import { PopoverDrop } from '../layout/Popover';
 import { addNotificationRequest } from '../sagas/notification/notificationSlice';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import Breadcrumb from '../layout/Breadcumb';
-import { setBreadcrumb } from '../sagas/global/globalSlice';
+import { setBreadcrumb, setSlug, toggleEditPostCustomer } from '../sagas/global/globalSlice';
 import { adminInfoRequest } from '../sagas/customers/customersSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
@@ -44,19 +43,20 @@ const DetailPage = () => {
     const dispatch = useDispatch()
     const { detail_post, loading, postsCategory, postsCustomer, error } = useSelector((state) => state.posts);
     const { token, infoAuth } = useSelector((state) => state.auth);
-    const { posts } = useSelector((state) => state.posts);
     const { customers, customer_detail } = useSelector((state) => state.customers);
     const { categories } = useSelector((state) => state.categories);
     const { socket } = useSelector((state) => state.global);
 
     const { commentsPost } = useSelector((state) => state.comments);
-    const { handleToggle, toggle } = useToggle(false);
     const { handleSubmit, formState: { errors, isSubmitting, isValid }, control, reset } =
         useForm({ resolver: yupResolver(schemaValidate), mode: 'onChange', })
     const handleResetForm = () => {
         reset()
     }
-
+    const handleToggleEditPost = () => {
+        dispatch(toggleEditPostCustomer())
+        dispatch(setSlug(slug))
+    }
     const dataCategory = categories?.filter((cate) => cate._id === detail_post?.category)[0]
     const postByCategories = postsCategory?.filter((post) => post?.slug !== slug);
 
@@ -227,7 +227,7 @@ const DetailPage = () => {
                                     comments={commentsPost?.length} likes={listLikes}></DataPost>
                                 {isAuth && typeAuthor === 'customer' && <PopoverDrop x={80} icon={<EllipsisIcon />}>
                                     <div className='flex items-center gap-5'>
-                                        <div onClick={handleToggle} className='flex items-center'>
+                                        <div onClick={handleToggleEditPost} className='flex items-center'>
                                             <IconWrap className='cursor-pointer'><EditIcon />
                                                 <p className='text-[10px] md:text-xs'>Chỉnh sửa</p></IconWrap>
                                         </div>
@@ -295,16 +295,18 @@ const DetailPage = () => {
                             - Bài viết khác của tác giả -
                         </Heading>
                         <SlideWrap desktop={3} tablet={2} mobile={1} spaceBetween={10}>
-                            {postsCustomer?.length > 0 && postsCustomer.map(item => (
-                                <SwiperSlide key={item._id}>
-                                    <PostItem isSingle data={item}></PostItem>
-                                </SwiperSlide>
-                            ))}
+                            {postsCustomer?.length > 0 && postsCustomer.map(item => {
+                                if (item?.status !== 'approved') return
+                                return (
+                                    <SwiperSlide key={item._id}>
+                                        <PostItem isSingle data={item}></PostItem>
+                                    </SwiperSlide>
+                                )
+                            })}
                         </SlideWrap>
                     </div>
                 </div>
             </div>
-            <EditPost data={detail_post} show={toggle} onClick={handleToggle} ></EditPost>
         </>
     );
 };

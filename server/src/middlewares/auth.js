@@ -36,10 +36,14 @@ const middlewareAuth = {
           if (usertype === 'customer') {
             if (newAccessToken) {
               res.setHeader('new-token', newAccessToken);
+            } else {
+              res.setHeader('new-token', null);
             }
           } else if (usertype === 'admin') {
             if (newAccessToken) {
               res.setHeader('new-token-admin', newAccessToken);
+            } else {
+              res.setHeader('new-token-admin', null);
             }
           }
           req.customer = customer;

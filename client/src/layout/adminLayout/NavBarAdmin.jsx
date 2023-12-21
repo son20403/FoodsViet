@@ -1,18 +1,30 @@
 import { useLocation, Link } from "react-router-dom";
 import {
-  Navbar, Typography, IconButton, Breadcrumbs, Input, Menu, MenuHandler, MenuList, MenuItem, Avatar
+  Navbar, Typography, IconButton, Breadcrumbs, Input, Menu, MenuHandler, MenuList, MenuItem, Avatar, Badge
 } from "@material-tailwind/react";
 import {
   Bars3Icon,
   ClockIcon,
   BellIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  ArrowUpTrayIcon,
+  PencilSquareIcon,
+  NoSymbolIcon,
+  HeartIcon,
+  ArchiveBoxXMarkIcon,
+  ChatBubbleLeftRightIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  Cog6ToothIcon
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleSearchAdmin, toggleSideBar } from "../../sagas/global/globalSlice";
 import { useEffect, useState } from "react";
-import { getNotificationByAdminRequest, updateNotificationAdminRequest } from "../../sagas/notification/notificationSlice";
+import { deleteAllNotificationAdminRequest, getNotificationByAdminRequest, getNotificationByAuthAdminRequest, getNotificationByCustomerRequest, updateNotificationAdminRequest, updateNotificationAuthAdminRequest } from "../../sagas/notification/notificationSlice";
 import useTimeSince from "../../hooks/useTimeSince";
+import { icon } from "../../ADMIN/routes";
+import { PopoverDrop } from "../Popover";
+import IconWrap from "../../components/Icon/IconWrap";
+import { EyeOpenIcon, TrashIcon } from "../../components/Icon";
 
 
 export function DashboardNavbar() {
@@ -20,13 +32,16 @@ export function DashboardNavbar() {
   const fixedNavbar = true
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
-  const { infoAdmin } = useSelector((state) => state.admin)
-  const { notificationsAdmin } = useSelector((state) => state.notification)
+  const { infoAdmin, tokenAdmin } = useSelector((state) => state.admin)
+  const { notificationsAdmin, notificationsAuthAdmin } = useSelector((state) => state.notification)
   const { socketAdmin } = useSelector((state) => state.global)
-  const [notificationIsActive, setNotificationIsActive] = useState(0);
   let totalNotificationActive = 0;
+  let notificationIsActive = 0
   if (notificationsAdmin?.length > 0) {
     totalNotificationActive = notificationsAdmin.filter((noti) => noti.status === true).length;
+  }
+  if (notificationsAuthAdmin?.length > 0) {
+    notificationIsActive = notificationsAuthAdmin.filter((noti) => noti.status === true).length;
   }
   const setOpenSidenav = () => {
     dispatch(toggleSideBar())
@@ -34,13 +49,36 @@ export function DashboardNavbar() {
   const handleGetNotification = () => {
     dispatch(getNotificationByAdminRequest());
   };
+  const handleGetNotificationAuth = () => {
+    if (tokenAdmin) {
+      dispatch(getNotificationByAuthAdminRequest());
+    }
+  };
   const handleShowSearch = () => {
     dispatch(toggleSearchAdmin())
+  }
+  const handleUpdateAllNotification = () => {
+    if (tokenAdmin && notificationsAdmin?.length > 0) {
+      dispatch(updateNotificationAuthAdminRequest())
+    }
+  }
+  const handleDeleteAllNotification = () => {
+    if (tokenAdmin && notificationsAuthAdmin?.length > 0) {
+      dispatch(deleteAllNotificationAdminRequest())
+    }
   }
   useEffect(() => {
     handleGetNotification()
   }, [page]);
-
+  useEffect(() => {
+    if (socketAdmin) {
+      socketAdmin.on("sendNotify", () => {
+        setTimeout(() => {
+          handleGetNotificationAuth();
+        }, 500);
+      });
+    }
+  }, [socketAdmin, notificationsAuthAdmin]);
   useEffect(() => {
     if (socketAdmin) {
       socketAdmin.on("notificationAdmin", () => {
@@ -55,6 +93,9 @@ export function DashboardNavbar() {
       })
     }
   }, [socketAdmin]);
+  useEffect(() => {
+    handleGetNotificationAuth();
+  }, [location?.pathname]);
   let pages = "Thống kê"
   switch (page) {
     case 'posts':
@@ -118,13 +159,46 @@ export function DashboardNavbar() {
             {pages}
           </Typography>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <div className="block mr-4 cursor-pointer" onClick={handleShowSearch}>
             <MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />
           </div>
-          <div>
-            <Avatar src={infoAdmin?.image} size="sm" />
-          </div>
+          <Menu>
+            <MenuHandler>
+              <div className="relative">
+                <div className="absolute text-xs p-3 z-10 flex items-center justify-center bg-red-500 
+                text-white -right-2 -top-3 rounded-full">
+                  <span className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+                    {notificationIsActive}</span>
+                </div>
+                <Avatar
+                  src={infoAdmin?.image} size="sm"
+                />
+              </div>
+            </MenuHandler>
+            <MenuList
+              className="w-max border-0 flex flex-col gap-y-3 max-h-[400px] min-w-[500px] overflow-y-auto overscroll-none">
+              <div className="flex ">
+                <div className=' font-bold text-base flex-1'>Thông báo</div>
+                <div className='flex items-center gap-10'>
+                  <div onClick={handleUpdateAllNotification} className='flex items-center'>
+                    <IconWrap className='cursor-pointer'><EyeOpenIcon />
+                      <p className='text-[10px] md:text-xs'>Đánh dấu xem tất cả</p></IconWrap>
+                  </div>
+                  <div onClick={handleDeleteAllNotification} className='cursor-pointer'>
+                    <IconWrap><TrashIcon /> <p className='text-[10px] md:text-xs'>Xóa tất cả thông báo</p></IconWrap>
+                  </div>
+                </div>
+              </div>
+
+              {notificationsAuthAdmin && notificationsAuthAdmin?.length > 0 ?
+                notificationsAuthAdmin?.map((notify) => (
+                  <NotifyItem key={notify?._id + notify} notify={notify}></NotifyItem>
+                ))
+                : <div className='text-center'>Không có thông báo nào</div>
+              }
+            </MenuList>
+          </Menu>
           <Menu>
             <MenuHandler>
               <div className="relative">
@@ -167,34 +241,94 @@ export default DashboardNavbar;
 const NotifyItem = ({ notify }) => {
   const timeSince = useTimeSince()
   const dispatch = useDispatch()
-  const { customers } = useSelector((state) => state.admin);
-  const { socketAdmin } = useSelector((state) => state.global);
+  const { customers, posts } = useSelector((state) => state.admin);
   const infoCustomer = customers.find((cus) => cus._id === notify?.id_sender)
   const handleUpdateNotification = () => {
     if (notify?.status === true) {
       dispatch(updateNotificationAdminRequest(notify?._id))
-      if (socketAdmin) {
-        socketAdmin.emit('updateNotificationAdmin')
-      }
+      setTimeout(() => {
+        dispatch(getNotificationByAuthAdminRequest())
+      }, 200);
     }
+  }
+  const id_post = notify?.id_post
+  const infoPost = posts.find((post) => post._id === id_post)
+  let title = ''
+  let icons = <></>
+  let className = ''
+  const classIcon = "h-4 w-4 text-white"
+  switch (notify?.typeNotify) {
+    case 'createPost':
+      title = <span> đã đăng bài viết <span className='font-bold text-primary'> {infoPost?.title}</span> </span>
+      icons = <ArrowUpTrayIcon className={classIcon}></ArrowUpTrayIcon>
+      className = 'bg-green-400'
+      break;
+    case 'editPost':
+      title = 'Đã cập nhật lại bài viết'
+      icons = <PencilSquareIcon className="h-3 w-3 "></PencilSquareIcon>
+      className = 'bg-yellow-400 !text-black'
+      break;
+    case 'comment':
+      icons = <ChatBubbleOvalLeftEllipsisIcon className={classIcon} />
+      className = 'bg-green-400',
+        title = <span>đã bình luận bài viết <span className='font-bold text-primary'> {infoPost?.title}</span> của bạn</span>
+      break;
+    case 'reply':
+      icons = <ChatBubbleLeftRightIcon className={classIcon} />,
+        className = 'bg-blue-400',
+        title = <span>đã trả lời bình luận của bạn trong bài viết
+          <span className='font-bold text-primary'> {infoPost?.title}</span></span>
+      break;
+    case 'approved':
+      icons = <ArrowUpTrayIcon className={classIcon} />,
+        className = 'bg-primary',
+        title = <span>đã duyệt bài viết
+          <span className='font-bold text-primary'> {infoPost?.title}</span> của bạn</span>
+      break;
+    case 'destroy':
+      icons = <ArchiveBoxXMarkIcon className={classIcon} />,
+        className = 'bg-red-600',
+        title = <span>đã vô hiệu hóa bài viết
+          <span className='font-bold text-primary'> {infoPost?.title} </span> của bạn</span>
+      break;
+    case 'like':
+      icons = <HeartIcon className={classIcon} />,
+        className = 'bg-red-400',
+        title = <span>đã thích bài viết <span className='font-bold text-primary'>
+          {infoPost?.title}</span></span>
+      break;
+    default:
+
+      icons = <NoSymbolIcon className={classIcon} />,
+        className = 'bg-black',
+        title = <span>Thông báo không hợp lệ</span>
+      break;
   }
 
   return (
     <Link to={`/admin/posts#id_post=${notify?.id_post}`}>
       <MenuItem className={`flex items-center gap-3 ${notify?.status ? 'bg-primary bg-opacity-10' : ''}`} onClick={handleUpdateNotification}>
-        <Avatar
-          src={infoCustomer?.image}
-          alt="item-1"
-          size="sm"
-          variant="circular"
-        />
         <div>
+          <Badge
+            content={icons}
+            className={`${className} border-2 border-white shadow-lg shadow-black/20`}
+            placement="bottom-end"
+          >
+            <Avatar
+              src={infoCustomer?.image}
+              alt="item-1"
+              size="md"
+              variant="circular"
+            />
+          </Badge>
+        </div>
+        <div className="ml-5">
           <Typography
             variant="small"
             color="blue-gray"
-            className="mb-1 font-normal"
+            className="mb-1 font-normal max-w-[400px]"
           >
-            <strong>{infoCustomer?.full_name}</strong> Đã đăng bài viết mới!
+            <strong>{infoCustomer?.full_name}</strong> {title}
           </Typography>
           <Typography
             variant="small"

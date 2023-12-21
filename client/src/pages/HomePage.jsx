@@ -31,7 +31,6 @@ const HomePage = () => {// Gửi dữ liệu đến server
             <Section className='mb-10'>
                 <Banner></Banner>
             </Section>
-            {/* <SlideSwiper></SlideSwiper> */}
             <Heading isHeading className='mb-10 mx-2 text-center'>
                 - Danh mục  -
             </Heading>

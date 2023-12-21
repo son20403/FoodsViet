@@ -40,4 +40,7 @@ export function uploadImage(entity, config) {
         },
     })
 }
+export function deletePost(id) {
+    return axios.delete(`/${COLLECTION_NAME}/deletePost?id=${id}`)
+}
 // "Content-Type": "multipart/form-data",

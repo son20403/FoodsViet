@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects";
 import { setErrorGlobal, setNotifyGlobal } from "../global/globalSlice";
-import { addNotification, addNotificationAdmin, deleteAllNotificationByCustomer, deleteNotificationByCustomer, getAllNotification, getNotificationByAdmin, getNotificationByCustomer, updateAllNotificationByCustomer, updateNotificationByAdmin, updateNotificationByCustomer } from "./request";
-import { addNotificationSuccess, deleteAllNotificationSuccess, deleteNotificationSuccess, getAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationSuccess, updateNotificationAdminSuccess, updateNotificationSuccess } from "./notificationSlice";
+import { addNotification, addNotificationAdmin, deleteAllNotificationByAdmin, deleteAllNotificationByCustomer, deleteNotificationByCustomer, getAllNotification, getNotificationByAdmin, getNotificationByAuthAdmin, getNotificationByCustomer, updateAllNotificationByAdmin, updateAllNotificationByCustomer, updateNotificationByAdmin, updateNotificationByCustomer } from "./request";
+import { addNotificationSuccess, deleteAllNotificationAdminSuccess, deleteAllNotificationSuccess, deleteNotificationSuccess, getAllNotificationSuccess, getNotificationByAdminRequest, getNotificationByAdminSuccess, getNotificationByAuthAdminRequest, getNotificationByAuthAdminSuccess, getNotificationByCustomerRequest, getNotificationByCustomerSuccess, requestFailure, updateAllNotificationSuccess, updateNotificationAdminSuccess, updateNotificationAuthAdminSuccess, updateNotificationSuccess } from "./notificationSlice";
 
 
 export function* handleAddNotification({ payload }) {
@@ -54,6 +54,19 @@ export function* handleGetNotificationByAdmin({ payload }) {
         yield handleCommonError(error)
     }
 }
+export function* handleGetNotificationByAuthAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(getNotificationByAuthAdmin, payload);
+        if (response) {
+            yield put(getNotificationByAuthAdminSuccess(response.data?.reverse()))
+        }
+
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
 export function* handleAllGetNotification({ payload }) {
     try {
         yield put(setNotifyGlobal(''))
@@ -75,6 +88,34 @@ export function* handleUpdateNotificationByCustomer({ payload }) {
         if (response) {
             yield put(updateNotificationSuccess())
             yield put(getNotificationByCustomerRequest())
+
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleUpdateNotificationByAuthAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(updateAllNotificationByAdmin, payload);
+        if (response) {
+            yield put(updateNotificationAuthAdminSuccess())
+            yield put(getNotificationByAuthAdminRequest())
+
+        }
+    } catch (error) {
+        yield handleCommonError(error)
+    }
+}
+export function* handleDeleteNotificationByAuthAdmin({ payload }) {
+    try {
+        yield put(setNotifyGlobal(''))
+        yield put(setErrorGlobal(''))
+        const response = yield call(deleteAllNotificationByAdmin, payload);
+        if (response) {
+            yield put(deleteAllNotificationAdminSuccess())
+            yield put(getNotificationByAuthAdminRequest())
 
         }
     } catch (error) {
