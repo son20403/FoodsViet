@@ -6,34 +6,37 @@ import useSetTitle from "../hooks/useSetTitle";
 const teamMembers = [
   {
     id: 1,
-    img: "../src/assets/image/banner-post.jpg",
+    img: "../src/assets/image/son.jpg",
     name: "Nguyễn Trường Sơn",
     position: "Nhóm trưởng",
   },
   {
     id: 2,
-    img: "../src/assets/image/banner-post.jpg",
+    img: "../src/assets/image/chuong.jpg",
     name: "Nguyễn Văn Chương",
     position: "Thành viên",
   },
   {
     id: 3,
-    img: "../src/assets/image/banner-post.jpg",
+    img: "../src/assets/image/thu.jpg",
     name: "Lê Minh Thư",
     position: "Thành viên",
   },
   {
     id: 4,
-    img: "../src/assets/image/banner-post.jpg",
+    img: "../src/assets/image/hoai.jpg",
     name: "Nguyễn Văn Hoài",
     position: "Thành viên",
   },
 ];
 const AboutPage = () => {
-  useSetTitle('Về FoodsViet')
+  useSetTitle("Về FoodsViet");
   return (
     <div className="bg-white ">
-      <BannerCommon image={'../src/assets/image/banner-post.jpg'} title='Về FOODSVIET' />
+      <BannerCommon
+        image={"../src/assets/image/banner-post.jpg"}
+        title="Về FOODSVIET"
+      />
       <div className="py-5">
         <div className="grid h-full grid-cols-2 px-5">
           <div className="flex-1 col-span-2 lg:col-span-1">
